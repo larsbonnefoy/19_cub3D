@@ -1,43 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.h                                          :+:      :+:    :+:   */
+/*   ft_malloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/23 15:14:01 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/03/23 16:45:19 by lbonnefo         ###   ########.fr       */
+/*   Created: 2023/02/11 16:09:19 by lbonnefo          #+#    #+#             */
+/*   Updated: 2023/02/11 16:11:29 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSING_H
-#define PARSING_H
+#include"libft.h"
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include "../libft/libft.h"
-
-typedef enum e_id
+void	*ft_malloc(size_t bytes)
 {
-	NO = 1,
-	SO,
-	WE,
-	EA,
-	F,
-	C,
-} t_id;
+	void	*mem;
 
-typedef struct s_map
-{
-	char	*NO;
-	char	*SO;
-	char	*WE;
-	char	*EA;
-	unsigned char F_C[3];
-	unsigned char C_C[3];
-	char	**map;
-}	t_map;
-
-char	*get_next_line(int fd);
-#endif
+	mem = malloc(bytes);
+	if (!mem)
+		exit(EXIT_FAILURE);
+	return (mem);
+}
