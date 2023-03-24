@@ -34,9 +34,10 @@ typedef struct s_map
 	char	*SO;
 	char	*WE;
 	char	*EA;
-	unsigned char F_C[3];
-	unsigned char C_C[3];
+	int 	F_C[3];
+	int 	C_C[3];
 	char	**map;
+	char 	*str_map;
 }	t_map;
 
 char	*get_next_line(int fd);

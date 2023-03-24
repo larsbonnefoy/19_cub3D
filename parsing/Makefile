@@ -12,13 +12,13 @@
 
 NAME = cub3D 
 
-FILES = check_map.c
+FILES = check_map.c \
 
-SRCS = $(FILES))
+SRCS = $(FILES)
 
 OBJ = $(SRCS:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 
 ###LIB INCLUDES###
 
