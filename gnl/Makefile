@@ -19,7 +19,7 @@ SRCS=  $(FILES)
 
 OBJ = $(SRCS:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=100
+CAFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=100 
 
 $(NAME): $(OBJ)
 		ar -rc $(NAME) $(OBJ)
