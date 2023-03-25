@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/24 23:18:14 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/25 12:41:27 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,36 @@ void	rays_gen(t_player *player, t_ray rays[X_RES])
 		y = player->cam.start.y + ((ray_incr.y * i) * (cam_dir.y));
 		rays[i].dir.x = x - player->pos.x;
 		rays[i].dir.y = y - player->pos.y;
+	}
+}
+
+int	in_wall(t_point pos, int **map)
+{
+	if (map[(int)pos.y, (int)pos.x])
+		return (1);
+	return (0);
+}
+
+t_point goto_next_edge(t_point pos)
+{
+	t_point	res;
+	
+	return res;
+}
+
+void	rays_len(t_player player, t_ray rays, int **map)
+{
+	int	i;
+	t_point	pos;
+
+	i = -1;
+	while (++i < X_RES)
+	{
+		pos = rays.dir;
+		while (!in_wall(pos, map))
+		{
+			pos = goto_next_edge(pos);
+		}
 	}
 }
 
