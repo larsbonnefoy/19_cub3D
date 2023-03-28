@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/28 18:50:44 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/29 00:44:41 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	rays_gen(t_player *player, t_ray rays[X_RES])
 	cam_dir_norm = sqrtf(powf(cam_dir.x, 2) + powf(cam_dir.y, 2));
 	cam_dir.x = cam_dir.x / cam_dir_norm;
 	cam_dir.y = cam_dir.y / cam_dir_norm;
+	printf("ray dir %f %f\n", cam_dir.x, cam_dir.y);
 	while (++i < X_RES)
 	{
 		x = player->cam.start.x + ((ray_incr.x * i) * (cam_dir.x));

@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/27 20:25:46 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/29 00:41:15 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 #  define DOWN 65364
 #  define LEFT 65361
 #  define ESC 65307  
+
+# define PI 3.141592653589793
 typedef struct s_point
 {
 	double	x;

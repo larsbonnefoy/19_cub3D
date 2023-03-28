@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/28 18:29:34 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/29 00:57:18 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,21 @@ void	put_rays(t_arg *arg, t_ray *rays)
 	while (++i < X_RES)
 	{
 		ray_pos = arg->player.pos;
-		printf("ray initial pos > %f %f\n", ray_pos.x, ray_pos.y);
+		// printf("ray initial pos > %f %f\n", ray_pos.x, ray_pos.y);d
 		while (!in_wall(ray_pos, arg->map))
 			ray_pos = draw_ray(arg, ray_pos, &(arg->rays[i]));
 	}
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
+}
+
+void	turn(t_arg *arg, int rad)
+{
+	printf("prev cam dir %f %f %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y, cos(rad), sin(rad));
+	arg->player.cam.dir.x = arg->player.cam.dir.x * cos(rad) + arg->player.cam.dir.x * sin(rad);
+	arg->player.cam.dir.y = arg->player.cam.dir.y * -sin(rad) + arg->player.cam.dir.y * cos(rad);
+	arg->player.cam.start.x = arg->player.cam.start.x * cos(rad) + arg->player.cam.start.x * sin(rad);
+	arg->player.cam.start.y = arg->player.cam.start.y * -sin(rad) + arg->player.cam.start.y * cos(rad);
+	printf("cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
 }
 
 int	key_hook(int keycode, t_arg *arg)
@@ -86,6 +96,7 @@ int	key_hook(int keycode, t_arg *arg)
 	// char	*steps;
 
 	// check = -1;
+	printf("%d\n", keycode);
 	 if (keycode == ESC)
 		ft_exit_success(arg);
 	if (keycode == W || keycode == UP)
@@ -96,12 +107,16 @@ int	key_hook(int keycode, t_arg *arg)
 		draw_first_frame(arg);
 		mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	}	
-	// if (keycode == D || keycode == RIGHT)
-	// 	check = moveright(arg);
-	// if (keycode == A || keycode == LEFT)
-	// 	check = moveleft(arg);
+	if (keycode == D || keycode == RIGHT)
+		turn(arg, 1);
+	if (keycode == A || keycode == LEFT)
+		turn(arg, -1);
 	// if (check == -1)
 	// 	return (-1);
+	rays_gen(&(arg->player), arg->rays);
+	draw_first_frame(arg);
+	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
+	put_rays(arg, arg->rays);
 	return (0);
 }
 
