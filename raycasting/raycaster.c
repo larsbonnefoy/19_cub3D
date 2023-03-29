@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/29 15:47:44 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/29 22:11:51 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,12 @@ void	rays_gen(t_player *player, t_ray rays[X_RES])
 		rays[i].dir.x = rays[i].dir.x /ray_norm;
 		rays[i].dir.y = rays[i].dir.y /ray_norm;
 	}
+	printf("x=%f y=%f\n", x, y);
 }
 
 int	in_wall(t_point pos, int **map)
 {
-	if (/*!(pos.x < X_RES && pos.x >= 0 && pos.y < Y_RES && pos.y >= 0) || */map[(int)pos.y][(int)pos.x])
+	if (!(pos.x < X_RES && pos.x >= 0 && pos.y < Y_RES && pos.y >= 0) || map[(int)pos.y][(int)pos.x])
 		return (1);
 	return (0);
 }

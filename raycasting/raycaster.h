@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/29 09:09:42 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/29 20:06:32 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # define X_RES 1000
 # define Y_RES 1000
 # ifdef __linux__
-#  include "../mlx_linux/mlx.h"
+#  include "mlx_linux/mlx.h"
 #  define W 119
 #  define S 115
 #  define D 100

@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/29 16:12:56 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/29 22:08:34 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static t_point draw_ray(t_arg *arg, t_point pos, int i)
 	res.y += arg->rays[i].dir.y;
 	pxl.x = res.x;
 	pxl.y = res.y;
-	printf("%d :  %f %f %d %d %f %f\n", i, arg->rays[i].dir.x, arg->rays[i].dir.y, pxl.x, pxl.y, res.x, res.y);
+	// printf("%d :  %f %f %d %d %f %f\n", i, arg->rays[i].dir.x, arg->rays[i].dir.y, pxl.x, pxl.y, res.x, res.y);
 	set_pixel_color(arg->frame, pxl, 0xece75f);
 	// res.x = res.x;
 	// res.y = res.y;
@@ -88,21 +88,28 @@ void	put_rays(t_arg *arg, t_ray *rays)
 
 void	turn(t_arg *arg, double rad)
 {
+	t_point	rel_cam_prev;
+	t_point	rel_start_prev;
 	t_point	rel_cam;
 	t_point	rel_start;
+	double	csin;
+	double	ccos;
 
-	rel_cam.x = arg->player.cam.dir.x - arg->player.pos.x;
-	rel_cam.y = arg->player.cam.dir.y - arg->player.pos.y;
-	rel_start.x = arg->player.cam.start.x - arg->player.pos.x;
-	rel_start.y = arg->player.cam.start.y - arg->player.pos.y;
-	printf("prev cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
-	printf("prev rel cam dir %f %f \n", rel_cam.x, rel_cam.y);
-	printf("prev start dir %f %f\n", arg->player.cam.start.x, arg->player.cam.start.y);
-	printf("prev rel start dir %f %f \n", rel_start.x, rel_start.y);
-	rel_cam.x = rel_cam.x * cos(rad) - rel_cam.x * sin(rad);
-	rel_cam.y = rel_cam.y * -sin(rad) + rel_cam.y * cos(rad);
-	rel_start.x = rel_start.x * cos(rad) - rel_start.x * sin(rad);
-	rel_start.y = rel_start.y * -sin(rad) + rel_start.y * cos(rad);
+	csin = sin(rad);
+	ccos = cos(rad);
+	rel_cam_prev.x = arg->player.cam.dir.x - arg->player.pos.x;
+	rel_cam_prev.y = arg->player.cam.dir.y - arg->player.pos.y;
+	rel_start_prev.x = arg->player.cam.start.x - arg->player.pos.x;
+	rel_start_prev.y = arg->player.cam.start.y - arg->player.pos.y;
+	// printf("prev cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
+	// printf("prev rel cam dir %f %f | %f %f\n", rel_cam_prev.x, rel_cam_prev.y, ccos, csin);
+	// printf("prev start dir %f %f\n", arg->player.cam.start.x, arg->player.cam.start.y);
+	// printf("prev rel start dir %f %f \n", rel_start.x, rel_start.y);
+	rel_cam.x = rel_cam_prev.x * ccos + rel_cam_prev.y * csin; 
+	rel_cam.y = -rel_cam_prev.x * csin + rel_cam_prev.y * ccos;
+
+	rel_start.x = rel_start_prev.x * ccos + rel_start_prev.y * csin;
+	rel_start.y = -rel_start_prev.x * csin + rel_start_prev.y * ccos;
 	arg->player.cam.dir.x = rel_cam.x + arg->player.pos.x;
 	arg->player.cam.dir.y = rel_cam.y + arg->player.pos.y;
 	arg->player.cam.start.x = rel_start.x + arg->player.pos.x;
@@ -131,12 +138,23 @@ int	key_hook(int keycode, t_arg *arg)
 		mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	}	
 	if (keycode == D || keycode == RIGHT)
-		turn(arg, PI);
+		turn(arg, -PI / 2);
 	if (keycode == A || keycode == LEFT)
-		turn(arg, -PI);
+	{
+		// arg->player.pos.x = 500;
+		// arg->player.pos.y = 500;
+		// arg->player.cam.size = 100;
+		// arg->player.cam.dir.x = arg->player.pos.x;
+		// arg->player.cam.dir.y = arg->player.pos.y + 100;
+		// arg->player.cam.start.x = arg->player.cam.dir.x + arg->player.cam.size / 2;
+		// arg->player.cam.start.y = arg->player.cam.dir.y;
+		// printf("cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
+		// printf(" start dir %f %f\n", arg->player.cam.start.x, arg->player.cam.start.y);
+		turn(arg, PI / 2);
+	}
 	// if (check == -1)
 	// 	return (-1);
-	printf(">>> HOOK cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
+	// printf(">>> HOOK cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
 	rays_gen(&(arg->player), arg->rays);
 
 	draw_first_frame(arg);
