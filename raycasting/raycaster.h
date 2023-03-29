@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/29 00:41:15 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/29 09:09:42 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 
 # define X_RES 1000
 # define Y_RES 1000
-
-#  include "mlx_linux/mlx.h"
+# ifdef __linux__
+#  include "../mlx_linux/mlx.h"
 #  define W 119
 #  define S 115
 #  define D 100
@@ -28,9 +28,22 @@
 #  define RIGHT 65363
 #  define DOWN 65364
 #  define LEFT 65361
-#  define ESC 65307  
+#  define ESC 65307   
+# else
+#  include "mlx/mlx.h"
+#  define W 13
+#  define S 1
+#  define D 2
+#  define A 0
+#  define UP 126
+#  define RIGHT 124
+#  define DOWN 125
+#  define LEFT 123
+#  define ESC 53
+# endif
 
 # define PI 3.141592653589793
+
 typedef struct s_point
 {
 	double	x;
@@ -86,7 +99,7 @@ typedef struct s_arg
 	t_player	player;
 	void		*mlx;
 	void		*mlx_win;
-	t_ray 		*rays;
+	t_ray		*rays;
 	t_img		*frame;
 }	t_arg;
 

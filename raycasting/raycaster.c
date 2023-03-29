@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/29 00:44:41 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/29 15:47:44 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	rays_gen(t_player *player, t_ray rays[X_RES])
 
 	ray_incr.x = (fabs(player->cam.dir.x - player->cam.start.x) * 2) / (X_RES - 1);
 	ray_incr.y = (fabs(player->cam.dir.y - player->cam.start.y) * 2) / (X_RES - 1);
+	printf(">incr %f %f\n", ray_incr.x, ray_incr.y);
 	i = -1;
 	cam_dir.x = player->cam.dir.x - player->cam.start.x;
 	cam_dir.y = player->cam.dir.y - player->cam.start.y;
@@ -45,7 +46,7 @@ void	rays_gen(t_player *player, t_ray rays[X_RES])
 
 int	in_wall(t_point pos, int **map)
 {
-	if (!(pos.x < X_RES && pos.x >= 0 && pos.y < Y_RES && pos.y >= 0) || map[(int)pos.y][(int)pos.x])
+	if (/*!(pos.x < X_RES && pos.x >= 0 && pos.y < Y_RES && pos.y >= 0) || */map[(int)pos.y][(int)pos.x])
 		return (1);
 	return (0);
 }
@@ -62,7 +63,7 @@ static t_point goto_next_edge(t_point pos, t_ray *ray)
 	}
 	res.x = res.x;
 	res.y = res.y;
-	return res;
+	return (res);
 }
 
 void	rays_len(t_player *player, t_ray rays[X_RES], int **map)
@@ -108,10 +109,10 @@ int	main()
 	player.pos.x = 500;
 	player.pos.y = 500;
 	player.cam.size = 100;
-	player.cam.dir.x = 500;
-	player.cam.dir.y = 400;
-	player.cam.start.x = 450;
-	player.cam.start.y = 400;
+	player.cam.dir.x = player.pos.x;
+	player.cam.dir.y = player.pos.y - 100;
+	player.cam.start.x = player.cam.dir.x - player.cam.size / 2;
+	player.cam.start.y = player.cam.dir.y;
 	rays_gen(&player, rays);
 	i = -1;
 	// while (++i < X_RES)
