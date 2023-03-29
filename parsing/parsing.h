@@ -44,6 +44,7 @@ typedef struct s_map
 	int 	F_C[3];
 	int 	C_C[3];
 	char	**map;
+    char    *str_map;
 }	t_map;
 
 char	*get_next_line(int fd);

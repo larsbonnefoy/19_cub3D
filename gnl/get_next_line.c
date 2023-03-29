@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 10:24:33 by lbonnefo          #+#    #+#             */
-/*   Updated: 2022/11/08 16:46:56 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2022/11/15 08:28:30 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*get_next_line(int fd)
 	{
 		ft_bzero(buf, BUFFER_SIZE + 1);
 		endl = check_read(read(fd, buf, BUFFER_SIZE), buf, st_chr);
-		next_line = ft_strjoin(next_line, buf);
+		next_line = ft_strjoinf(next_line, buf);
 		if (!next_line || (next_line[0] == '\0' && buf[0] == '\0'))
 		{	
 			free(next_line);

@@ -34,6 +34,7 @@ int main(int argc, char **argv)
 	int		fd;
 	int check_array[NB_ID];
 
+	line = NULL;
 	ft_bzero(check_array, NB_ID	* sizeof(int));
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
@@ -43,20 +44,20 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	valid_extension(argc, argv);
-	line = NULL;
 	while (1)
 	{
-		line = get_next_line(fd);	
-		printf("%s", line);
+		line = get_next_line(fd);
 		if (!line)
 			break;
 		set_map(&map, line, check_array);
 	}
-//	map.map = ft_split(map.str_map, '\n');
 	printf("---------------\n");
+    //map.map = ft_split(map.str_map, '\n'); 
 	print_map(&map);
 	return (0);
 }
+
+
 
 int valid_extension(int argc, char **argv)
 {
@@ -108,24 +109,33 @@ int set_map(t_map *map, char *line, int check_array[NB_ID])
 		tmp_tab = ft_split(line, ' ');
 		if (tmp_tab[2] != NULL && ft_strncmp(tmp_tab[2], "\n", 1) != 0) 
 		{
-			printf("tmp_tab = [%s]\n", tmp_tab[2]);
 			write(1, "Error\n", 6);
 			exit(EXIT_FAILURE);
 		}
 		handle_id(id, tmp_tab, map);
 		free_tab(tmp_tab);
 	}
-
+    else if (is_meta_data(line) == MAP)
+    {
+        if (map->str_map == NULL)
+            map->str_map = ft_strdup(line);
+        else
+            map->str_map = ft_strjoinf(map->str_map, line);
+    }
 	return (0);
 }
 
+
+/*
+ * on peut mettre le check du \n ici
+ */
 int is_meta_data(char *line)
 {
 	int i;
 	int id;
 
 	i = 0;
-	while (line[i] && line[i] == ' ')
+	while (line[i] && (line[i] == ' ' || line[i] == 9) )
 		i++;
 	line += i;
 	id = get_id(line);	
@@ -225,16 +235,19 @@ char *del_endl(char *s)
 
 void print_map(t_map *map)
 {
-	int i;
+	//int i;
 
 	printf("NO = %s\nSO = %s\nWE = %s\nEA = %s\n", map->NO, map->SO, map->WE, map->EA);
 	printf("F = %d,%d,%d\nC = %d,%d,%d\n", map->F_C[0], map->F_C[1],map->F_C[2],map->C_C[0],map->C_C[1],map->C_C[2]);
-	i = 0;
+	//i = 0;
+    printf("%s", map->str_map);
+    /*
 	while(map->map[i])
 	{
 		printf("%s\n", map->map[i]);
 		i++;
 	}
+    */
 }
 
 void print_tab(char **tab)

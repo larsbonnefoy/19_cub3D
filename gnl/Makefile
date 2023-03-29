@@ -1,31 +1,29 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    makefile                                           :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/01/27 13:56:33 by lbonnefo          #+#    #+#              #
-#    Updated: 2023/03/23 15:29:57 by lbonnefo         ###   ########.fr        #
+#    Created: 2022/11/15 08:30:21 by lbonnefo          #+#    #+#              #
+#    Updated: 2022/11/28 09:09:37 by lbonnefo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = gnl.a
 
-FILES = get_next_line.c \
-	   get_next_line_utils.c \
-
-SRCS=  $(FILES)
+SRCS =	get_next_line.c \
+		get_next_line_utils.c \
 
 OBJ = $(SRCS:.c=.o)
 
-CAFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=100 
+CFLAGS = -Wall -Wextra -Werror
 
 $(NAME): $(OBJ)
-		ar -rc $(NAME) $(OBJ)
+		@ar -rc $(NAME) $(OBJ)
 
 .c.o:
-		cc $(CFLAGS) -c $< -o $(<:.c=.o)
+		@cc $(CFLAGS) -c $< -o $(<:.c=.o)
 
 all: $(NAME)
 
@@ -38,4 +36,3 @@ fclean: clean
 re :	fclean $(NAME)
 	
 .PHONY: all clean fclean re 
-
