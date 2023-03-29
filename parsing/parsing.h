@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:14:01 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/03/23 16:45:19 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/03/29 09:17:45 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,23 @@
 #include <stdlib.h>
 #include "../libft/libft.h"
 
+#define NB_ID 6
+
 typedef enum e_id
 {
-	NO = 1,
+	NO = 0,
 	SO,
 	WE,
 	EA,
 	F,
 	C,
+	MAP,
 } t_id;
 
+
+/*
+ * str_map && check_array in function not struct
+ */
 typedef struct s_map
 {
 	char	*NO;
@@ -37,7 +44,6 @@ typedef struct s_map
 	int 	F_C[3];
 	int 	C_C[3];
 	char	**map;
-	char 	*str_map;
 }	t_map;
 
 char	*get_next_line(int fd);
