@@ -6,36 +6,39 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/03/29 15:03:00 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/03/30 16:28:18 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 #include <stdio.h>
 
+int check_valid_line(char *line);
 void debug_print_check_array(int check_array[NB_ID]);
-int set_map(t_map *map, char *line, int check_array[NB_ID]);
+int set_map(t_map *map, t_tmp_info *info);
 int get_id(char *s);
 int handle_id(int id, char **tab, t_map *map);
 void free_tab(char **tab);
-void print_map(t_map *map);
+void print_map(t_map *map, t_tmp_info *info);
 void print_tab(char **tab);
 char *del_endl(char *s);
 int is_meta_data(char *line);
 int add_map(t_map *map, char *line);
 int ids_done(int check_array[NB_ID]);
 int valid_extension(int argc, char **argv);
+int	valid_line(t_tmp_info *info, t_map *map);
+t_tmp_info	*init_tmp_info();
 
 int main(int argc, char **argv)
 {
 	(void) argc;
-	char *line;
 	t_map map;
 	int		fd;
-	int check_array[NB_ID];
+	t_tmp_info *tmp_info;
 
-	line = NULL;
-	ft_bzero(check_array, NB_ID	* sizeof(int));
+	map.height = 0;
+	tmp_info = malloc(sizeof(t_tmp_info));
+	init_tmp_info(tmp_info);
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 	{
@@ -46,18 +49,35 @@ int main(int argc, char **argv)
 	valid_extension(argc, argv);
 	while (1)
 	{
-		line = get_next_line(fd);
-		if (!line)
+		tmp_info->line = get_next_line(fd);
+		if (!tmp_info->line) 
 			break;
-		set_map(&map, line, check_array);
+		set_map(&map, tmp_info);
+		free(tmp_info->line);
+	}
+	if (tmp_info->dir_player == '0')
+	{
+		printf("No player on the map");
+		exit(EXIT_FAILURE);
 	}
 	printf("---------------\n");
-    //map.map = ft_split(map.str_map, '\n'); 
-	print_map(&map);
+    map.map = ft_split(tmp_info->str_map, '\n'); 
+	//free tmp_INFO!!!
+	print_map(&map, tmp_info);
 	return (0);
 }
 
+t_tmp_info	*init_tmp_info(t_tmp_info *info)
+{
+	info->str_map = NULL;
+	ft_bzero(info->check_id_array, NB_ID *sizeof(int));
+	info->dir_player = '0';
+	info->x_player = -1;
+	info->y_player = -1;
+	info->line = NULL;
 
+	return (info);
+}
 
 int valid_extension(int argc, char **argv)
 {
@@ -76,6 +96,7 @@ int valid_extension(int argc, char **argv)
 	}
 	return (0);
 }
+
 /*
  * Map doit tjrs etre en last
  * Le reste peut etre dans n'importe quel ordre
@@ -83,30 +104,30 @@ int valid_extension(int argc, char **argv)
  *		->peut etre separer par pleins d'espaces 
  *	On doit skipper tous les espaces vides tant que check_array n'est pas rempli de 1;
  */
-int set_map(t_map *map, char *line, int check_array[NB_ID])
+int set_map(t_map *map, t_tmp_info *tmp_info)
 {
 	int	id;
 	char **tmp_tab;
 
 	//debug_print_check_array(check_array);
-	if (!ids_done(check_array))
+	if (!ids_done(tmp_info->check_id_array))
 	{
-		if (ft_strncmp(line, "\n", 1) == 0)
+		if (ft_strncmp(tmp_info->line, "\n", 1) == 0)
 			return (0);
-		id = is_meta_data(line);
+		id = is_meta_data(tmp_info->line);
 		if (id < 0 || id == 6) //read map char 
 		{
 			write(1, "Error\n", 6);
 			exit(EXIT_FAILURE);
 		}
-		if (check_array[id] == 0)
-			check_array[id] = 1;
+		if (tmp_info->check_id_array[id] == 0)
+			tmp_info->check_id_array[id] = 1;
 		else
 		{
 			write(1, "Error\n", 6);
 			exit(EXIT_FAILURE);
 		}
-		tmp_tab = ft_split(line, ' ');
+		tmp_tab = ft_split(tmp_info->line, ' ');
 		if (tmp_tab[2] != NULL && ft_strncmp(tmp_tab[2], "\n", 1) != 0) 
 		{
 			write(1, "Error\n", 6);
@@ -115,13 +136,78 @@ int set_map(t_map *map, char *line, int check_array[NB_ID])
 		handle_id(id, tmp_tab, map);
 		free_tab(tmp_tab);
 	}
-    else if (is_meta_data(line) == MAP)
+    else if (is_meta_data(tmp_info->line) == MAP)
     {
-        if (map->str_map == NULL)
-            map->str_map = ft_strdup(line);
-        else
-            map->str_map = ft_strjoinf(map->str_map, line);
-    }
+		map->height += 1;
+		valid_line(tmp_info, map);
+        if (tmp_info->str_map == NULL)
+		{
+			map->width = (int)ft_strlen(tmp_info->line) - 1;
+            tmp_info->str_map = ft_strdup(tmp_info->line);
+		}
+		else
+		{
+            tmp_info->str_map = ft_strjoinf(tmp_info->str_map, tmp_info->line);
+			if ((int)ft_strlen(tmp_info->line) - 1 > map->width)
+				map->width = ft_strlen(tmp_info->line) - 1;
+    	}
+	}
+	return (0);
+}
+
+
+int is_map_char(char c)
+{
+	if (c == '0')
+		return (1);
+	else if (c == '1')
+		return (1);
+	else if (c == 'N')
+		return (2);
+	else if (c == 'S')
+		return (2);
+	else if (c == 'E')
+		return (2);
+	else if (c == 'W')
+		return (2);
+	else if (c == '\n')
+		return (1);
+	else if (c == ' ')
+		return (1);
+	else
+		return (0);
+}
+
+int	valid_line(t_tmp_info *info, t_map *map)
+{
+	int i;
+	int char_type;
+	
+	i = 0; 
+	while(info->line[i])
+	{
+		char_type = is_map_char(info->line[i]);
+		if (!char_type)	
+		{
+			printf("Unvalid character in map");
+			exit(EXIT_FAILURE);
+		}
+		else if (char_type == 2)
+		{
+			if (info->dir_player == '0')
+			{
+				info->dir_player = info->line[i];
+				info->x_player = i; 
+				info->y_player = map->height - 1;
+			}
+			else
+			{
+				printf("Too many players\n");
+				exit(EXIT_FAILURE);
+			}
+		}
+		i++;
+	}
 	return (0);
 }
 
@@ -233,21 +319,20 @@ char *del_endl(char *s)
 	return (s);
 }
 
-void print_map(t_map *map)
+void print_map(t_map *map, t_tmp_info *info)
 {
-	//int i;
+	int i;
 
 	printf("NO = %s\nSO = %s\nWE = %s\nEA = %s\n", map->NO, map->SO, map->WE, map->EA);
 	printf("F = %d,%d,%d\nC = %d,%d,%d\n", map->F_C[0], map->F_C[1],map->F_C[2],map->C_C[0],map->C_C[1],map->C_C[2]);
-	//i = 0;
-    printf("%s", map->str_map);
-    /*
+	i = 0;
 	while(map->map[i])
 	{
-		printf("%s\n", map->map[i]);
+		printf("%d	|%s|\n",i , map->map[i]);
 		i++;
 	}
-    */
+	printf("width = %d, height = %d\n", map->width, map->height);
+	printf("player dir = %c,  x_player = %d, y_player  = %d\n", info->dir_player, info->x_player, info->y_player);
 }
 
 void print_tab(char **tab)
@@ -288,4 +373,3 @@ void debug_print_check_array(int check_array[NB_ID])
 	}
 	printf("\n");
 }
-

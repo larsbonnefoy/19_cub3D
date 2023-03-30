@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:14:01 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/03/29 09:17:45 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/03/30 15:55:08 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ typedef enum e_id
 	MAP,
 } t_id;
 
+typedef struct s_tmp_pars_info
+{
+	char	*str_map;
+	int		check_id_array[NB_ID];
+	char	dir_player;
+	int		x_player;
+	int		y_player;
+	char	*line;
+} t_tmp_info;
 
 /*
  * str_map && check_array in function not struct
@@ -44,7 +53,8 @@ typedef struct s_map
 	int 	F_C[3];
 	int 	C_C[3];
 	char	**map;
-    char    *str_map;
+	int		width;
+	int 	height;
 }	t_map;
 
 char	*get_next_line(int fd);
