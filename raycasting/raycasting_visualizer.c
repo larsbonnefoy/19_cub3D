@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/30 16:18:10 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/30 20:30:40 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,7 @@ static void	draw_line(t_point start, t_point end, t_img *frame)
 
 	vect_dir.x = end.x - start.x;
 	vect_dir.y = end.y - start.y;
-	printf("end.x = %f start.y = %f \n", end.x, start.x);
-	printf("end.y = %f start.y = %f \n", end.y, start.y);
+	printf("draw line : end.x = %f end.y =  %f start.x = %f start.y = %f\n", end.x, end.y, start.x, start.y);
 	slope = vect_dir.y / vect_dir.y;
 	vect_dir_norm = sqrt(pow(vect_dir.x, 2) + pow(vect_dir.y, 2));
 	printf("vect_dir.x = %f\n", vect_dir.x);
@@ -81,9 +80,9 @@ static void	draw_line(t_point start, t_point end, t_img *frame)
 	printf("vect_dir_norm = %f\n", vect_dir_norm);
 	vect_dir.x = vect_dir.x / vect_dir_norm;
 	vect_dir.y = vect_dir.y / vect_dir_norm;
-	printf("vect_dir.x = %f\n", vect_dir.x);
-	printf("vect_dir.y = %f\n", vect_dir.y);
-	printf("vect_dir_norm = %f\n", vect_dir_norm);
+	printf(">vect_dir.x = %f\n", vect_dir.x);
+	printf(">vect_dir.y = %f\n", vect_dir.y);
+	printf(">vect_dir_norm = %f\n", vect_dir_norm);
 	pixel.x = start.x;
 	pixel.y = start.y;
 	while (vect_dir_norm > 0)
@@ -107,7 +106,7 @@ void	put_rays(t_arg *arg, t_ray *rays)
 	{
 		ray_pos = arg->player.pos;
 		ray_len(ray_pos, &(rays[i]), arg->map);
-		printf("ray %d initial pos > %f %f %f %f\n", i, ray_pos.x, ray_pos.y, rays[i].start.x, rays[i].start.y);
+		printf("put ray %d initial pos > %f %f %f %f dir = %f %f\n", i, ray_pos.x, ray_pos.y, rays[i].start.x, rays[i].start.y, rays[i].dir.x, rays[i].dir.y);
 		draw_line(rays[i].start, rays[i].end, arg->frame);
 		// printf("ray %d end pos > %f %f\n", i, ray_pos.x, ray_pos.y);
 	}

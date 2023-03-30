@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/30 16:09:09 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/30 20:33:48 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,17 @@ void	rays_gen(t_player *player, t_ray rays[X_RES])
 
 	ray_incr.x = (fabs(player->cam.dir.x - player->cam.start.x) * 2) / (X_RES - 1);
 	ray_incr.y = (fabs(player->cam.dir.y - player->cam.start.y) * 2) / (X_RES - 1);
-	printf(">incr %f %f\n", ray_incr.x, ray_incr.y);
+	printf("ray gen >incr %f %f\n", ray_incr.x, ray_incr.y);
 	i = -1;
 	cam_dir.x = player->cam.dir.x - player->cam.start.x;
 	cam_dir.y = player->cam.dir.y - player->cam.start.y;
 	cam_dir_norm = sqrtf(pow(cam_dir.x, 2) + pow(cam_dir.y, 2));
-	printf("cam %d norm %f\n", i, cam_dir_norm);
+	printf("ray  gen :cam %d norm %f\n", i, cam_dir_norm);
 	cam_dir.x = cam_dir.x / cam_dir_norm;
 	cam_dir.y = cam_dir.y / cam_dir_norm;
 	cam_end.x = player->cam.start.x + ((ray_incr.x * X_RES - 1) * (cam_dir.x));
 	cam_end.y = player->cam.start.y + ((ray_incr.y * X_RES - 1) * (cam_dir.y));
-	printf("ray dir %f %f\n", cam_dir.x, cam_dir.y);
+	printf("ray gen :cam dir %f %f\n", cam_dir.x, cam_dir.y);
 	while (++i < X_RES)
 	{
 		x = (player->cam.start.x) + ((ray_incr.x * i) * (cam_dir.x));
@@ -82,7 +82,9 @@ void	ray_len(t_point start, t_ray *ray, int **map)
 		ray->start.x = start.x;
 		ray->start.y = start.y;
 		ray->size = sqrt(pow(ray_pos.x - start.x, 2) + pow(ray_pos.y - start.y, 2));
-		ray->end = ray_pos;
+		ray->end.x = ray_pos.x;
+		ray->end.y = ray_pos.y;
+		printf("ray len : rayend.x = %f .y = %f\n", ray->end.x, ray->end.y);
 }
 
 void	rays_len(t_player *player, t_ray rays[X_RES], int **map)
