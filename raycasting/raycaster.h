@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/29 20:06:32 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/30 16:01:08 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ typedef struct s_ray
 {
 	double	size;
 	t_point	dir;
+	t_point	start;
+	t_point	end;
 }	t_ray;
 
 typedef struct s_pixel
@@ -107,5 +109,5 @@ void	rays_gen(t_player *player, t_ray rays[X_RES]);
 void	rays_len(t_player *player, t_ray rays[X_RES], int **map);
 void	window(int **map, t_player player, t_ray rays[X_RES]);
 int		in_wall(t_point pos, int **map);
-
+void	ray_len(t_point start, t_ray *ray, int **map);
 #endif

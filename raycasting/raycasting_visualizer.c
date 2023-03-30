@@ -6,12 +6,11 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/29 22:08:34 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/30 16:18:10 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycaster.h"
-
 
 int	ft_exit_success(t_arg *arg)
 {
@@ -25,6 +24,7 @@ static void	set_pixel_color(t_img *dst, t_pixel pxl, size_t	clr)
 {
 	char	*pxl_addr;
 
+	// printf("->%d %d\n", pxl.x, pxl.y);
 	pxl_addr = dst->addr + ((pxl.y) * dst->line_len + (pxl.x) * (dst->bpp / 8));
 	*(size_t *)pxl_addr = clr;
 }
@@ -46,44 +46,71 @@ static void	draw_first_frame(t_arg *arg)
 	}
 }
 
-static t_point draw_ray(t_arg *arg, t_point pos, int i)
+// static t_point draw_ray(t_arg *arg, t_point pos, int i)
+// {
+// 	t_point	res;
+// 	t_pixel	pxl;
+
+// 	res = pos;
+// 	res.x += arg->rays[i].dir.x;
+// 	res.y += arg->rays[i].dir.y;
+// 	pxl.x = res.x;
+// 	pxl.y = res.y;
+// 	// printf("%d :  %f %f %d %d %f %f\n", i, arg->rays[i].dir.x, arg->rays[i].dir.y, pxl.x, pxl.y, res.x, res.y);
+// 	set_pixel_color(arg->frame, pxl, 0xece75f);
+// 	// res.x = res.x;
+// 	// res.y = res.y;
+// 	return (res);
+// }
+
+static void	draw_line(t_point start, t_point end, t_img *frame)
 {
-	t_point	res;
-	t_pixel	pxl;
+	t_point	vect_dir;
+	t_pixel	pixel;
+	double vect_dir_norm;
+	double	slope;
 
-	res = pos;
-	res.x += arg->rays[i].dir.x;
-	res.y += arg->rays[i].dir.y;
-	pxl.x = res.x;
-	pxl.y = res.y;
-	// printf("%d :  %f %f %d %d %f %f\n", i, arg->rays[i].dir.x, arg->rays[i].dir.y, pxl.x, pxl.y, res.x, res.y);
-	set_pixel_color(arg->frame, pxl, 0xece75f);
-	// res.x = res.x;
-	// res.y = res.y;
-	return (res);
+	vect_dir.x = end.x - start.x;
+	vect_dir.y = end.y - start.y;
+	printf("end.x = %f start.y = %f \n", end.x, start.x);
+	printf("end.y = %f start.y = %f \n", end.y, start.y);
+	slope = vect_dir.y / vect_dir.y;
+	vect_dir_norm = sqrt(pow(vect_dir.x, 2) + pow(vect_dir.y, 2));
+	printf("vect_dir.x = %f\n", vect_dir.x);
+	printf("vect_dir.y = %f\n", vect_dir.y);
+	printf("vect_dir_norm = %f\n", vect_dir_norm);
+	vect_dir.x = vect_dir.x / vect_dir_norm;
+	vect_dir.y = vect_dir.y / vect_dir_norm;
+	printf("vect_dir.x = %f\n", vect_dir.x);
+	printf("vect_dir.y = %f\n", vect_dir.y);
+	printf("vect_dir_norm = %f\n", vect_dir_norm);
+	pixel.x = start.x;
+	pixel.y = start.y;
+	while (vect_dir_norm > 0)
+	{
+		set_pixel_color(frame, pixel, 0x3CB371);
+		pixel.x += vect_dir.x;
+		if (vect_dir.x)
+			pixel.y = slope * (pixel.x - start.x) + start.y;
+		else 
+			pixel.y += vect_dir.y;
+		--vect_dir_norm;
+	}
 }
-
 void	put_rays(t_arg *arg, t_ray *rays)
 {
 	int			i;
 	t_point	ray_pos;
 	
 	i = -1;
-	// printf("rays\n");
-	// 	int j = -1;
-	// while (++i < X_RES)
-	// 	printf("%d :  %f %f \n", i, arg->rays[i].dir.x, arg->rays[i].dir.y);
 	while (++i < X_RES)
 	{
 		ray_pos = arg->player.pos;
-		// printf("ray %d initial pos > %f %f %d\n", i, ray_pos.x, ray_pos.y, !in_wall(ray_pos, arg->map));
-		while (!in_wall(ray_pos, arg->map))
-		{
-			ray_pos = draw_ray(arg, ray_pos, i);
-		}
+		ray_len(ray_pos, &(rays[i]), arg->map);
+		printf("ray %d initial pos > %f %f %f %f\n", i, ray_pos.x, ray_pos.y, rays[i].start.x, rays[i].start.y);
+		draw_line(rays[i].start, rays[i].end, arg->frame);
 		// printf("ray %d end pos > %f %f\n", i, ray_pos.x, ray_pos.y);
 	}
-	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 }
 
 void	turn(t_arg *arg, double rad)
@@ -107,17 +134,25 @@ void	turn(t_arg *arg, double rad)
 	// printf("prev rel start dir %f %f \n", rel_start.x, rel_start.y);
 	rel_cam.x = rel_cam_prev.x * ccos + rel_cam_prev.y * csin; 
 	rel_cam.y = -rel_cam_prev.x * csin + rel_cam_prev.y * ccos;
-
 	rel_start.x = rel_start_prev.x * ccos + rel_start_prev.y * csin;
 	rel_start.y = -rel_start_prev.x * csin + rel_start_prev.y * ccos;
 	arg->player.cam.dir.x = rel_cam.x + arg->player.pos.x;
 	arg->player.cam.dir.y = rel_cam.y + arg->player.pos.y;
 	arg->player.cam.start.x = rel_start.x + arg->player.pos.x;
 	arg->player.cam.start.y = rel_start.y + arg->player.pos.y;
-	printf("cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
-	printf("rel cam dir %f %f\n", rel_cam.x, rel_cam.y);
-	printf(" start dir %f %f\n", arg->player.cam.start.x, arg->player.cam.start.y);
-	printf(" rel start dir %f %f \n", rel_start.x, rel_start.y);
+	// printf("cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
+	// printf("rel cam dir %f %f\n", rel_cam.x, rel_cam.y);
+	// printf(" start dir %f %f\n", arg->player.cam.start.x, arg->player.cam.start.y);
+	// printf(" rel start dir %f %f \n", rel_start.x, rel_start.y);
+}
+void	move(t_arg *arg, double x, double y)
+{
+	arg->player.pos.x += x;
+	arg->player.pos.y += y;
+	arg->player.cam.dir.x += x;
+	arg->player.cam.dir.y += y;
+	arg->player.cam.start.x += x;
+	arg->player.cam.start.y += y;
 }
 
 int	key_hook(int keycode, t_arg *arg)
@@ -130,36 +165,25 @@ int	key_hook(int keycode, t_arg *arg)
 	 if (keycode == ESC)
 		ft_exit_success(arg);
 	if (keycode == W || keycode == UP)
-		put_rays(arg, arg->rays);
-		// check = moveup(arg);
+		move(arg, 0, -10);
 	if (keycode == S || keycode == DOWN)
-	{
-		draw_first_frame(arg);
-		mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
-	}	
-	if (keycode == D || keycode == RIGHT)
-		turn(arg, -PI / 2);
-	if (keycode == A || keycode == LEFT)
-	{
-		// arg->player.pos.x = 500;
-		// arg->player.pos.y = 500;
-		// arg->player.cam.size = 100;
-		// arg->player.cam.dir.x = arg->player.pos.x;
-		// arg->player.cam.dir.y = arg->player.pos.y + 100;
-		// arg->player.cam.start.x = arg->player.cam.dir.x + arg->player.cam.size / 2;
-		// arg->player.cam.start.y = arg->player.cam.dir.y;
-		// printf("cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
-		// printf(" start dir %f %f\n", arg->player.cam.start.x, arg->player.cam.start.y);
-		turn(arg, PI / 2);
-	}
+		move(arg, 0, 10);
+	if (keycode == D)
+		move(arg, 10, 0);
+	if (keycode == A)
+		move(arg, -10, 0);
+	if (keycode == RIGHT)
+		turn(arg, -PI / 24);
+	if (keycode == LEFT)
+		turn(arg, PI / 6);
 	// if (check == -1)
 	// 	return (-1);
 	// printf(">>> HOOK cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
 	rays_gen(&(arg->player), arg->rays);
-
 	draw_first_frame(arg);
-	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	put_rays(arg, arg->rays);
+	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
+
 	return (0);
 }
 
