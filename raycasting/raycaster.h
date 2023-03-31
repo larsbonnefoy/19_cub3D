@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/30 16:01:08 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/31 22:22:57 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,9 @@ typedef struct s_camera
 {
 	t_point	dir;
 	t_point	start;
+	t_point	end;
+	// double	fov;
+	// double	theta;
 	double	size;
 }	t_camera;
 
