@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/31 22:29:16 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/31 23:09:58 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,12 +182,12 @@ int	main()
 	player.pos.x = X_RES / 2 ;
 	player.pos.y = Y_RES / 2;
 	player.cam.size = 10;
-	player.cam.dir.x = player.pos.x  + 10 ;
-	player.cam.dir.y = player.pos.y;
-	player.cam.start.x = player.cam.dir.x;
-	player.cam.start.y = player.cam.dir.y  + player.cam.size / 2;
-	player.cam.end.x = player.cam.dir.x ;
-	player.cam.end.y = player.cam.dir.y - player.cam.size / 2;
+	player.cam.dir.x = player.pos.x ;
+	player.cam.dir.y = player.pos.y - 10;
+	player.cam.start.x = player.cam.dir.x - player.cam.size / 2;
+	player.cam.start.y = player.cam.dir.y;
+	player.cam.end.x = player.cam.dir.x + player.cam.size / 2;
+	player.cam.end.y = player.cam.dir.y;
 	// player.cam.fov = PI / 6;
 	// player.cam.theta = (3 * PI) / 2;
 	printf("cam end y %f\n", player.cam.end.y);

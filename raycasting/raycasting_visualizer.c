@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/31 22:37:52 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/31 23:19:53 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,45 @@ static void	draw_line(t_ray *line, t_img *frame)
 		--vect_dir_norm;
 	}
 }
-static void	draw_line(t_ray *ray, t_img *frame)
+static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 {
-	
+	int		y;
+	double	len_tan_alpha;
+	double	y_res_div2;
+	t_pixel	pxl;
+
+	y = -1;
+	len_tan_alpha = ray->size * tan(ALPHA);
+	y_res_div2 = Y_RES / 2;
+	pxl.x = x;
+	while (++y < Y_RES)
+	{
+		pxl.y = y;
+		printf("%d %d\n", y, y_res_div2 - len_tan_alpha);
+		if (y < y_res_div2 - len_tan_alpha)
+			set_pixel_color(frame, pxl, arg->ground_color);
+		else if (y > y_res_div2 + len_tan_alpha)
+			set_pixel_color(frame, pxl, arg->roof_color);
+		else
+			set_pixel_color(frame, pxl, 0x0000ff);
+	}
 }
 
+void	put_walls(t_arg *arg, t_ray *rays)
+{
+	int			i;
+	t_point	ray_pos;
+	
+	i = -1;
+	while (++i < X_RES)
+	{
+		ray_len(ray_pos, &(rays[i]), arg->map);
+		draw_wall(arg, &(rays[i]), arg->frame, i);
+	}
+}
 void	put_rays(t_arg *arg, t_ray *rays)
 {
 	int			i;
-	int			j;
 	t_point	ray_pos;
 	
 	i = -1;
@@ -154,6 +184,8 @@ void	turn(t_arg *arg, double rad)
 	arg->player.cam.start.y = rel_start.y + arg->player.pos.y;
 	arg->player.cam.end.x = rel_end.x + arg->player.pos.x;
 	arg->player.cam.end.y = rel_end.y + arg->player.pos.y;
+	arg->ground_color = 0x0;
+	arg->roof_color = 0x0;
 	// printf("cam dir %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y);
 	// printf("rel cam dir %f %f\n", rel_cam.x, rel_cam.y);
 	// printf(" start dir %f %f\n", arg->player.cam.start.x, arg->player.cam.start.y);
@@ -203,7 +235,8 @@ int	key_hook(int keycode, t_arg *arg)
 	// oi.y = 955;
 	// draw_line(arg->player.pos, oi, arg->frame);
 	printf("oi\n");
-	put_rays(arg, arg->rays);
+	// put_rays(arg, arg->rays);
+	put_walls(arg, arg->rays);
 	printf("oi1\n");
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 

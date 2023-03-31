@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/31 22:22:57 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/03/31 22:53:39 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@
 # include <stdlib.h>
 # include <math.h>
 
+# define PI 3.141592653589793
 # define X_RES 1000
 # define Y_RES 1000
+# define ALPHA (PI / 3)
 # ifdef __linux__
 #  include "mlx_linux/mlx.h"
 #  define W 119
@@ -42,7 +44,7 @@
 #  define ESC 53
 # endif
 
-# define PI 3.141592653589793
+
 
 typedef struct s_point
 {
@@ -100,12 +102,14 @@ typedef struct s_img
 
 typedef struct s_arg
 {
-	int			**map;
-	t_player	player;
-	void		*mlx;
-	void		*mlx_win;
-	t_ray		*rays;
-	t_img		*frame;
+	int				**map;
+	t_player		player;
+	void			*mlx;
+	void			*mlx_win;
+	t_ray			*rays;
+	t_img			*frame;
+	unsigned int	roof_color;
+	unsigned int	ground_color;
 }	t_arg;
 
 void	rays_gen(t_player *player, t_ray rays[X_RES]);
