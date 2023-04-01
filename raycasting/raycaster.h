@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/03/31 22:53:39 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/01 02:30:19 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # define PI 3.141592653589793
 # define X_RES 1000
 # define Y_RES 1000
-# define ALPHA (PI / 3)
+# define ALPHA (PI / 6)
 # ifdef __linux__
 #  include "mlx_linux/mlx.h"
 #  define W 119
@@ -77,8 +77,6 @@ typedef struct s_camera
 	t_point	dir;
 	t_point	start;
 	t_point	end;
-	// double	fov;
-	// double	theta;
 	double	size;
 }	t_camera;
 
@@ -108,6 +106,7 @@ typedef struct s_arg
 	void			*mlx_win;
 	t_ray			*rays;
 	t_img			*frame;
+	t_img			*mini;
 	unsigned int	roof_color;
 	unsigned int	ground_color;
 }	t_arg;
