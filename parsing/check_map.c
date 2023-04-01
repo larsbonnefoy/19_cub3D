@@ -12,6 +12,8 @@
 
 #include "parsing.h"
 #include <stdio.h>
+#include <string.h>
+#include <errno.h>
 
 int check_valid_line(char *line);
 void debug_print_check_array(int check_array[NB_ID]);
@@ -29,6 +31,9 @@ int valid_extension(int argc, char **argv);
 int	valid_line(t_tmp_info *info, t_map *map);
 t_tmp_info	*init_tmp_info();
 
+/*
+ * init both struct
+ */
 int main(int argc, char **argv)
 {
 	(void) argc;
@@ -41,11 +46,7 @@ int main(int argc, char **argv)
 	init_tmp_info(tmp_info);
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
-	{
-		write(1, "Error\n", 6);
-		perror("");
-		exit(EXIT_FAILURE);
-	}
+        ft_error((char *)strerror(errno), 1);
 	valid_extension(argc, argv);
 	while (1)
 	{
@@ -55,14 +56,13 @@ int main(int argc, char **argv)
 		set_map(&map, tmp_info);
 		free(tmp_info->line);
 	}
+    //is on met un joueur en y == 0 on a quand meme cette erreur
 	if (tmp_info->dir_player == '0')
-	{
-		printf("No player on the map");
-		exit(EXIT_FAILURE);
-	}
+        ft_error("No player on the map", 1);
 	printf("---------------\n");
     map.map = ft_split(tmp_info->str_map, '\n'); 
 	//free tmp_INFO!!!
+    pathfinding(&map, tmp_info->y_player, tmp_info->x_player);
 	print_map(&map, tmp_info);
 	return (0);
 }
@@ -75,7 +75,6 @@ t_tmp_info	*init_tmp_info(t_tmp_info *info)
 	info->x_player = -1;
 	info->y_player = -1;
 	info->line = NULL;
-
 	return (info);
 }
 
@@ -84,16 +83,10 @@ int valid_extension(int argc, char **argv)
 	int	len;
 
 	if (argc != 2)
-	{
-		printf("Error\nWrong number of argumets provided\n");
-		exit(EXIT_FAILURE);
-	}	
+        ft_error("Wrong number of argumets provided\n", 1);
 	len = (int)ft_strlen(argv[1]);
 	if (ft_strncmp(&argv[1][len - 4], ".cub", 4) != 0)
-	{
-		printf("Error\nNot a .cub map file\n");
-		exit(EXIT_FAILURE);
-	}
+        ft_error("Not a .cub map file", 1);
 	return (0);
 }
 
@@ -155,27 +148,26 @@ int set_map(t_map *map, t_tmp_info *tmp_info)
 	return (0);
 }
 
-
 int is_map_char(char c)
 {
 	if (c == '0')
-		return (1);
+		return (MAP_CHAR);
 	else if (c == '1')
-		return (1);
+		return (MAP_CHAR);
 	else if (c == 'N')
-		return (2);
+		return (PLAYER_CHAR);
 	else if (c == 'S')
-		return (2);
+		return (PLAYER_CHAR);
 	else if (c == 'E')
-		return (2);
+		return (PLAYER_CHAR);
 	else if (c == 'W')
-		return (2);
+		return (PLAYER_CHAR);
 	else if (c == '\n')
-		return (1);
+		return (MAP_CHAR);
 	else if (c == ' ')
-		return (1);
+		return (MAP_CHAR);
 	else
-		return (0);
+		return (UNVALID);
 }
 
 int	valid_line(t_tmp_info *info, t_map *map)
@@ -187,11 +179,8 @@ int	valid_line(t_tmp_info *info, t_map *map)
 	while(info->line[i])
 	{
 		char_type = is_map_char(info->line[i]);
-		if (!char_type)	
-		{
-			printf("Unvalid character in map");
-			exit(EXIT_FAILURE);
-		}
+		if (char_type == UNVALID)	
+            ft_error("Unvalid character in map", 1);
 		else if (char_type == 2)
 		{
 			if (info->dir_player == '0')
@@ -201,16 +190,12 @@ int	valid_line(t_tmp_info *info, t_map *map)
 				info->y_player = map->height - 1;
 			}
 			else
-			{
-				printf("Too many players\n");
-				exit(EXIT_FAILURE);
-			}
+                ft_error("Too many players\n", 1);
 		}
 		i++;
 	}
 	return (0);
 }
-
 
 /*
  * on peut mettre le check du \n ici
@@ -247,11 +232,11 @@ int get_id(char *s)
 		return (F);
 	else if (ft_strncmp(s, "C ", 2) == 0)
 		return (C);
-	else if (ft_strncmp(s, "1", 1) == 0)
+    else if (ft_strncmp(s, "1", 1) == 0)
 		return (MAP);
 	else if (ft_strncmp(s, "0", 1) == 0)
 		return (MAP);
-	return (-1);
+    return (-1);
 }
 
 int handle_id(int id, char **tab, t_map *map)

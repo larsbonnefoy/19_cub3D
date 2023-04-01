@@ -12,7 +12,7 @@
 
 NAME = cub3D 
 
-FILES = check_map.c \
+FILES = check_map.c pathfinding.c pathfinding_mvt.c error.c\
 
 SRCS = $(FILES)
 

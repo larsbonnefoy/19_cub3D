@@ -31,6 +31,13 @@ typedef enum e_id
 	MAP,
 } t_id;
 
+typedef enum e_map_char
+{
+    UNVALID = 0, 
+    MAP_CHAR,
+    PLAYER_CHAR,
+} t_map_char;
+
 typedef struct s_tmp_pars_info
 {
 	char	*str_map;
@@ -57,5 +64,7 @@ typedef struct s_map
 	int 	height;
 }	t_map;
 
+int ft_error(char *s, int ret_val);
+int pathfinding(t_map *s_map, int start_y, int start_x);
 char	*get_next_line(int fd);
 #endif
