@@ -5,7 +5,7 @@
 //soit la case n'existe pas, soit il y a un espace => dans ce cas on a une erreur
 //si y == 0 || y == height - 1 (on est aux deux extrem haut bas)
 //si x == 0 || x == \0 on est aux deux extrem gauche et droite
-int move_up(t_map *s_map, int start_y, int start_x, int *mvt_values[2])
+int move_up(t_map *s_map, int start_y, int start_x, int *mvt_values)
 {
     char next_pos;
 
@@ -16,15 +16,15 @@ int move_up(t_map *s_map, int start_y, int start_x, int *mvt_values[2])
         return (0);
     if (next_pos == '0')
     {
-        *mvt_values[0] = -1;
-        *mvt_values[1] = 0;
+        mvt_values[0] = -1;
+        mvt_values[1] = 0;
         return (1);
     }
     else
         return(ft_error("Unvalid Map", 3));
 }
 
-int move_right(t_map *s_map, int start_y, int start_x, int *mvt_values[2])
+int move_right(t_map *s_map, int start_y, int start_x, int *mvt_values)
 {
     char next_pos;
 
@@ -33,15 +33,15 @@ int move_right(t_map *s_map, int start_y, int start_x, int *mvt_values[2])
         return (0);
     if (next_pos == '0')
     {
-        *mvt_values[0] = 0;
-        *mvt_values[1] = 1;
+        mvt_values[0] = 0;
+        mvt_values[1] = 1;
         return (1);
     }
     else
         return(ft_error("Unvalid Map", 4));
 }
 
-int move_down(t_map *s_map, int start_y, int start_x, int *mvt_values[2])
+int move_down(t_map *s_map, int start_y, int start_x, int *mvt_values)
 {
     char next_pos;
 
@@ -52,15 +52,15 @@ int move_down(t_map *s_map, int start_y, int start_x, int *mvt_values[2])
         return (0);
     if (next_pos == '0')
     {
-        *mvt_values[0] = 1; 
-        *mvt_values[1] = 0;
+        mvt_values[0] = 1; 
+        mvt_values[1] = 0;
         return (1);
     }
     else
         return(ft_error("Unvalid Map", 4));
 }
 
-int move_left(t_map *s_map, int start_y, int start_x, int *mvt_values[2])
+int move_left(t_map *s_map, int start_y, int start_x, int *mvt_values)
 {
     char next_pos;
 
@@ -69,8 +69,8 @@ int move_left(t_map *s_map, int start_y, int start_x, int *mvt_values[2])
         return (0);
     if (next_pos == '0')
     {
-        *mvt_values[0] = 0; 
-        *mvt_values[1] = -1;
+        mvt_values[0] = 0; 
+        mvt_values[1] = -1;
         return (1);
     }
     else

@@ -25,10 +25,10 @@ int pathfinding(t_map *s_map, int start_y, int start_x)
     {
         if (move[i](s_map, start_y, start_x, mvt_values))
         {
-            printf("mvt_values[0]= %d, mvt_values[1] = %d\n", mvt_values[0], mvt_values[1]);
             s_map->map[start_y][start_x] = 'x';
             pathfinding(s_map, start_y + mvt_values[0] , start_x + mvt_values[1]);
         }
+        s_map->map[start_y][start_x] = 'x';
         i++;
     }
     return (0);    
