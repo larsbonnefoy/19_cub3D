@@ -6,13 +6,13 @@
 #    By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/11 13:10:56 by lbonnefo          #+#    #+#              #
-#    Updated: 2023/03/23 17:00:01 by lbonnefo         ###   ########.fr        #
+#    Updated: 2023/04/03 16:03:24 by lbonnefo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3D 
 
-FILES = check_map.c pathfinding.c pathfinding_mvt.c error.c\
+FILES = parsing.c pathfinding.c pathfinding_mvt.c error.c check_id.c\
 
 SRCS = $(FILES)
 

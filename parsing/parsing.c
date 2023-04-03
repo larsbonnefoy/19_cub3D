@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/03 15:23:26 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/03 16:02:35 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,12 @@
 #include <errno.h>
 
 int check_valid_line(char *line);
+int ids_done(int check_array[NB_ID]);
 void debug_print_check_array(int check_array[NB_ID]);
-int set_map(t_map *map, t_tmp_info *info);
+int set_data(t_map *map, t_tmp_info *info);
 int get_id(char *s);
-int handle_id(int id, char **tab, t_map *map);
-void free_tab(char **tab);
 void print_map(t_map *map, t_tmp_info *info);
 void print_tab(char **tab);
-char *del_endl(char *s);
-int is_meta_data(char *line);
-int add_map(t_map *map, char *line);
-int ids_done(int check_array[NB_ID]);
 int valid_extension(int argc, char **argv);
 int	valid_line(t_tmp_info *info, t_map *map);
 t_tmp_info	*init_tmp_info();
@@ -53,7 +48,7 @@ int main(int argc, char **argv)
 		tmp_info->line = get_next_line(fd);
 		if (!tmp_info->line) 
 			break;
-		set_map(&map, tmp_info);
+		set_data(&map, tmp_info);
 		free(tmp_info->line);
 	}
     //is on met un joueur en y == 0 on a quand meme cette erreur
@@ -97,29 +92,10 @@ int valid_extension(int argc, char **argv)
  *		->peut etre separer par pleins d'espaces 
  *	On doit skipper tous les espaces vides tant que check_array n'est pas rempli de 1;
  */
-int set_map(t_map *map, t_tmp_info *tmp_info)
+int set_data(t_map *map, t_tmp_info *tmp_info)
 {
-	int	id;
-	char **tmp_tab;
-
 	if (!ids_done(tmp_info->check_id_array))
-	{
-		printf("meta line = %s", tmp_info->line);
-		if (ft_strncmp(tmp_info->line, "\n", 1) == 0)
-			return (0);
-		id = is_meta_data(tmp_info->line);
-		if (id < 0 || id == MAP) //read map char 
-			ft_error("Unvalid Meta Data", 1);
-		if (tmp_info->check_id_array[id] == 0)
-			tmp_info->check_id_array[id] = 1;
-		else
-			ft_error("Duplicate Meta Data", 1);
-		tmp_tab = ft_split(tmp_info->line, ' ');
-		if (tmp_tab[2] != NULL && ft_strncmp(tmp_tab[2], "\n", 1) != 0) 
-			ft_error("Unvalid Meta Data", 2);
-		handle_id(id, tmp_tab, map);
-		free_tab(tmp_tab);
-	}
+		set_meta_data(tmp_info, map);
     else if (is_meta_data(tmp_info->line) == MAP)
     {
 		if (ft_strncmp(tmp_info->line, "\n", 1) == 0)
@@ -212,117 +188,6 @@ int	valid_line(t_tmp_info *info, t_map *map)
 		i++;
 	}
 	return (0);
-}
-
-/*
- * on peut mettre le check du \n ici
- */
-int is_meta_data(char *line)
-{
-	int i;
-	int id;
-
-	i = 0;
-	while (line[i] && (line[i] == ' ' || line[i] == 9) )
-		i++;
-	line += i;
-	id = get_id(line);	
-	return (id);
-}
-
-/*
- * Returns enum value of id
- */
-int get_id(char *s)
-{
-	if (!s)
-		return (-1);
-	if (ft_strncmp(s, "NO ", 3) == 0)
-		return (NO);
-	else if (ft_strncmp(s, "SO ", 3) == 0)
-		return (SO);
-	else if (ft_strncmp(s, "WE ", 3) == 0)
-		return (WE);
-	else if (ft_strncmp(s, "EA ", 3) == 0)
-		return (EA);
-	else if (ft_strncmp(s, "F ", 2) == 0)
-		return (F);
-	else if (ft_strncmp(s, "C ", 2) == 0)
-		return (C);
-	else if (is_map_char(s[0]) != 0)
-		return (MAP);
-	/*
-    else if (ft_strncmp(s, "1", 1) == 0)
-		return (MAP);
-	else if (ft_strncmp(s, "0", 1) == 0)
-		return (MAP);
-	*/
-    return (-1);
-}
-
-int handle_id(int id, char **tab, t_map *map)
-{
-	char **color;
-
-	color = NULL;
-	if ( 0 <= id && id <= 3 )
-	{
-		if (id == NO)
-			map->NO = del_endl(ft_strdup(tab[1]));
-		else if (id == SO)
-			map->SO = del_endl(ft_strdup(tab[1]));
-		else if (id == WE)
-			map->WE = del_endl(ft_strdup(tab[1]));
-		else if (id == EA)
-			map->EA = del_endl(ft_strdup(tab[1]));
-	}
-	else if ( id == 4 || id == 5)
-	{
-		color = ft_split(tab[1], ',');
-		if (!color)
-			return (0);
-		if (id == F)
-		{
-			map->F_C[0] = ft_atoi(color[0]);	
-			map->F_C[1] = ft_atoi(color[1]);	
-			map->F_C[2] = ft_atoi(color[2]);	
-		}
-		else
-		{
-			map->C_C[0] = ft_atoi(color[0]);	
-			map->C_C[1] = ft_atoi(color[1]);	
-			map->C_C[2] = ft_atoi(color[2]);	
-		}
-		free_tab(color);
-	}
-	return (1);
-}
-
-void free_tab(char **tab)
-{
-	int i;
-	
-	i = 0;
-	while(tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
-
-char *del_endl(char *s)
-{
-	int i;
-
-	i = 0;
-	while(s[i])
-	{
-		if (s[i] == '\n')
-			s[i] = '\0';
-		i++;
-	}
-	return (s);
 }
 
 void print_map(t_map *map, t_tmp_info *info)
