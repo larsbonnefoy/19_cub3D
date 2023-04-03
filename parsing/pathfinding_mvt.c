@@ -1,4 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pathfinding_mvt.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/03 12:26:56 by lbonnefo          #+#    #+#             */
+/*   Updated: 2023/04/03 13:27:43 by lbonnefo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parsing.h"
+#include <stdio.h>
 
 //soit la case suivant == 1 || == 0 OK
 //soit la case vaut x => on a deja ete sur cette case il faut pas y retourner
@@ -21,7 +34,9 @@ int move_up(t_map *s_map, int start_y, int start_x, int *mvt_values)
         return (1);
     }
     else
+	{
         return(ft_error("Unvalid Map", 3));
+	}
 }
 
 int move_right(t_map *s_map, int start_y, int start_x, int *mvt_values)

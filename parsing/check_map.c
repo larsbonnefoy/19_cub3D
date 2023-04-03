@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/03/30 16:28:18 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/03 15:23:26 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,35 +102,28 @@ int set_map(t_map *map, t_tmp_info *tmp_info)
 	int	id;
 	char **tmp_tab;
 
-	//debug_print_check_array(check_array);
 	if (!ids_done(tmp_info->check_id_array))
 	{
+		printf("meta line = %s", tmp_info->line);
 		if (ft_strncmp(tmp_info->line, "\n", 1) == 0)
 			return (0);
 		id = is_meta_data(tmp_info->line);
-		if (id < 0 || id == 6) //read map char 
-		{
-			write(1, "Error\n", 6);
-			exit(EXIT_FAILURE);
-		}
+		if (id < 0 || id == MAP) //read map char 
+			ft_error("Unvalid Meta Data", 1);
 		if (tmp_info->check_id_array[id] == 0)
 			tmp_info->check_id_array[id] = 1;
 		else
-		{
-			write(1, "Error\n", 6);
-			exit(EXIT_FAILURE);
-		}
+			ft_error("Duplicate Meta Data", 1);
 		tmp_tab = ft_split(tmp_info->line, ' ');
 		if (tmp_tab[2] != NULL && ft_strncmp(tmp_tab[2], "\n", 1) != 0) 
-		{
-			write(1, "Error\n", 6);
-			exit(EXIT_FAILURE);
-		}
+			ft_error("Unvalid Meta Data", 2);
 		handle_id(id, tmp_tab, map);
 		free_tab(tmp_tab);
 	}
     else if (is_meta_data(tmp_info->line) == MAP)
     {
+		if (ft_strncmp(tmp_info->line, "\n", 1) == 0)
+			return (0);
 		map->height += 1;
 		valid_line(tmp_info, map);
         if (tmp_info->str_map == NULL)
@@ -145,6 +138,8 @@ int set_map(t_map *map, t_tmp_info *tmp_info)
 				map->width = ft_strlen(tmp_info->line) - 1;
     	}
 	}
+	else
+		ft_error("Unvalid Map", 3);
 	return (0);
 }
 
@@ -170,6 +165,35 @@ int is_map_char(char c)
 		return (UNVALID);
 }
 
+void	set_player_info(t_tmp_info *info, int x_pos, int y_pos)
+{
+	if (info->dir_player == '0')
+	{
+		info->dir_player = info->line[x_pos];
+		info->x_player = x_pos; 
+		info->y_player = y_pos;
+	}
+	else
+		ft_error("Too many players\n", 1);
+}
+
+int unvalid_space(char *line, int pos)
+{
+	char cur;
+	char next;
+
+	cur = line[pos];
+	next = line[pos + 1];
+	if (cur == '0' && next == ' ')
+		return (1);
+	else if (cur == ' ' && next == '0')
+		return (1);
+	else if (cur == '0' && next == '\n')
+		return (1);
+	return (0);
+}
+
+//erreur si 0 ' ' || ' ' 0 || 0 '\n' || ( ' ' \n si que ce char la sur la ligne)
 int	valid_line(t_tmp_info *info, t_map *map)
 {
 	int i;
@@ -179,19 +203,12 @@ int	valid_line(t_tmp_info *info, t_map *map)
 	while(info->line[i])
 	{
 		char_type = is_map_char(info->line[i]);
-		if (char_type == UNVALID)	
+		if (char_type == UNVALID)
             ft_error("Unvalid character in map", 1);
+		else if (unvalid_space(info->line, i))
+			ft_error("Invalid Map", 1);
 		else if (char_type == 2)
-		{
-			if (info->dir_player == '0')
-			{
-				info->dir_player = info->line[i];
-				info->x_player = i; 
-				info->y_player = map->height - 1;
-			}
-			else
-                ft_error("Too many players\n", 1);
-		}
+			set_player_info(info, i, map->height-1);
 		i++;
 	}
 	return (0);
@@ -232,10 +249,14 @@ int get_id(char *s)
 		return (F);
 	else if (ft_strncmp(s, "C ", 2) == 0)
 		return (C);
+	else if (is_map_char(s[0]) != 0)
+		return (MAP);
+	/*
     else if (ft_strncmp(s, "1", 1) == 0)
 		return (MAP);
 	else if (ft_strncmp(s, "0", 1) == 0)
 		return (MAP);
+	*/
     return (-1);
 }
 
