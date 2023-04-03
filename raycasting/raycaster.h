@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/01 02:30:19 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/03 14:59:48 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_line
 typedef struct s_ray
 {
 	double	size;
+	char	*face;
 	t_point	dir;
 	t_point	start;
 	t_point	end;
@@ -78,6 +79,7 @@ typedef struct s_camera
 	t_point	start;
 	t_point	end;
 	double	size;
+	double	dist;
 }	t_camera;
 
 typedef struct s_player
@@ -100,7 +102,7 @@ typedef struct s_img
 
 typedef struct s_arg
 {
-	int				**map;
+	char			**map;
 	t_player		player;
 	void			*mlx;
 	void			*mlx_win;
@@ -112,8 +114,8 @@ typedef struct s_arg
 }	t_arg;
 
 void	rays_gen(t_player *player, t_ray rays[X_RES]);
-void	rays_len(t_player *player, t_ray rays[X_RES], int **map);
-void	window(int **map, t_player player, t_ray rays[X_RES]);
-int		in_wall(t_point pos, int **map);
-void	ray_len(t_point start, t_ray *ray, int **map);
+void	rays_len(t_player *player, t_ray rays[X_RES], char **map);
+void	window(char **map, t_player player, t_ray rays[X_RES]);
+int		in_wall(t_point pos, char **map);
+void	ray_len(t_point start, t_ray *ray, char **map);
 #endif
