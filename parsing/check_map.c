@@ -6,14 +6,14 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 12:20:58 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/04 16:37:43 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/04 17:28:56 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 #include <stdio.h> 
 
-static int unvalid_space(char *line, int pos);
+//static int unvalid_space(char *line, int pos);
 int	valid_line(t_tmp_info *info, t_map *map);
 void	set_player_info(t_tmp_info *info, int x_pos, int y_pos);
 
@@ -47,8 +47,8 @@ int	valid_line(t_tmp_info *info, t_map *map)
 		char_type = is_map_char(info->line[i]);
 		if (char_type == UNVALID)
             ft_error("Unvalid character in map", 1);
-		else if (unvalid_space(info->line, i))
-			ft_error("Unvalid Map", 4);
+		//else if (unvalid_space(info->line, i))
+			//ft_error("Unvalid Map", 4);
 		else if (char_type == 2)
 			set_player_info(info, i, map->height-1);
 		i++;
@@ -56,6 +56,7 @@ int	valid_line(t_tmp_info *info, t_map *map)
 	return (0);
 }
 
+/*
 int unvalid_space(char *line, int pos)
 {
 	char cur;
@@ -71,7 +72,7 @@ int unvalid_space(char *line, int pos)
 		return (1);
 	return (0);
 }
-
+*/
 void	set_player_info(t_tmp_info *info, int x_pos, int y_pos)
 {
 	if (info->dir_player == '0')

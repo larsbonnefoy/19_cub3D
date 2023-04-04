@@ -36,12 +36,8 @@ int pathfinding(t_map *s_map, int start_y, int start_x)
 
 int valid_position(t_map *s_map, int start_y, int start_x)
 {
-	printf("x = %d, y = %d\n", start_x, start_y);
     if (start_y == 0 || start_y == s_map->height - 1)
-	{
-		printf("alloptdr\n");
         return(ft_error("Unvalid Map", 1));
-	}
 	else if (start_x == 0 || s_map->map[start_y][start_x + 1] == '\0')
         return(ft_error("Unvalid Map", 2));
     return (1);

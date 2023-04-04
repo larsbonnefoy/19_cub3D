@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/04 16:43:37 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/04 16:58:39 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 	printf("---------------\n");
     map.map = ft_split(tmp_info->str_map, '\n'); 
 	//free tmp_INFO!!!
-    //pathfinding(&map, tmp_info->y_player, tmp_info->x_player);
+    pathfinding(&map, tmp_info->y_player, tmp_info->x_player);
 	print_map(&map, tmp_info);
 	return (0);
 }
@@ -72,7 +72,6 @@ void set_data(t_map *map, t_tmp_info *tmp_info)
 	else
 	{
 		ret = is_map_line(tmp_info->line);
-		printf("line = 	%s | ret = %d\n",tmp_info->line, ret);
 		if ((ret == NOT_MAP_LINE && tmp_info->in_map == 1) || !ret)
 			ft_error("Unvalid Map", 3);
 		if (ret == NOT_MAP_LINE && tmp_info->in_map == 0)
@@ -81,16 +80,6 @@ void set_data(t_map *map, t_tmp_info *tmp_info)
 			tmp_info->in_map = 1;
 		set_map(tmp_info, map);
 	}
-	/*
-    else if (is_map_line(tmp_info->line))
-	{
-		ret_map = is_map_line(tmp_info->line);
-		printf("ret_map = %d\n", ret_map);
-		set_map(tmp_info, map);
-	}
-	else
-		ft_error("Unvalid Map", 3);
-	*/
 }
 
 t_tmp_info	*init_tmp_info(t_tmp_info *info)
