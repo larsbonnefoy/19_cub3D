@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/03 14:05:41 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/04 23:15:11 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ static void	draw_first_frame(t_arg *arg)
 	t_pixel	pixel;
 
 	pixel.y = 0;
-	while (pixel.y < 400)
+	while (pixel.y < Y_RES)
 	{
 		pixel.x = 0;
-		while (pixel.x < 400)
+		while (pixel.x < X_RES)
 		{
-			set_pixel_color(arg->mini, pixel, 0x3CB371);
+			set_pixel_color(arg->frame, pixel, 0x0);
 			pixel.x+= 1;
 		}
 		pixel.y+= 1;
@@ -61,7 +61,7 @@ static t_point draw_ray(t_arg *arg, t_point pos, int i)
 	return (res);
 }
 
-static void	draw_line(t_ray *line, t_img *frame)
+static void	draw_line(t_ray *line, t_img *frame, unsigned int color)
 {
 	t_point	vect_dir;
 	t_point	pixel;
@@ -71,30 +71,33 @@ static void	draw_line(t_ray *line, t_img *frame)
 
 	vect_dir.x = line->dir.x;
 	vect_dir.y = line->dir.y;
-	vect_dir_norm = line->size - 1;
+	vect_dir_norm = line->size;
 	pixel.x = line->start.x;
 	pixel.y = line->start.y;
+	// printf("1>%f %f \n", line->dir);
 	while (vect_dir_norm >= 0)
 	{
 		pxl.x = pixel.x;
 		pxl.y = pixel.y;
-		set_pixel_color(frame, pxl, 0x0);
+		// printf("%f %f %d %d\n", pixel, pxl);
+		set_pixel_color(frame, pxl, color);
 		pixel.x += vect_dir.x;
-			pixel.y += (vect_dir.y);
+		pixel.y += (vect_dir.y);
 		--vect_dir_norm;
 	}
 }
 static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 {	 
-	int		y;
-	double	len_tan_alpha;
-	double	y_res_div2;
-	double beta; 
-	t_pixel	pxl;
+	int				y;
+	double			len_tan_alpha;
+	double			y_res_div2;
+	double			beta; 
+	t_pixel			pxl;
+	unsigned int	color;
 
 	y = -1;
-	beta =  arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2));
-	ray->size = ray->size * sin(atan(beta));
+	beta =  atan(arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2)));
+	ray->size = ray->size * sin(beta);
 	len_tan_alpha = (Y_RES / 2 - (ray->size * tan(ALPHA)));
 	y_res_div2 = Y_RES / 2;
 	pxl.x = x;
@@ -102,7 +105,16 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 	while (++y < Y_RES)
 	{
 		pxl.y = y;
-		set_pixel_color(frame, pxl, 0x0000ff);
+		color = 0xff00ff;
+		if (ray->face[0] == 'W')
+			color = 0x0000ff;
+		if (ray->face[0] == 'N')
+			color = 0x00ff00;
+		if (ray->face[0] == 'S')
+			color = 0xff0000;
+		if (ray->face[0] == 'E')
+			color = 0xff00ff;
+		set_pixel_color(frame, pxl, color);
 		if (y < y_res_div2 - len_tan_alpha)
 			set_pixel_color(frame, pxl, arg->ground_color);
 		else if (y > y_res_div2 + len_tan_alpha)
@@ -128,13 +140,27 @@ void	put_rays(t_arg *arg, t_ray *rays)
 {
 	int			i;
 	t_point	ray_pos;
+	unsigned long int	color;
 	
 	i = -1;
 	ray_pos = arg->player.pos;
+
 	while (++i < X_RES)
 	{
-		ray_len(ray_pos, &(rays[i]), arg->map);
-		draw_line(&(rays[i]), arg->mini);
+		color = 0xff00ff;
+		ray_len(arg->player.pos, &(rays[i]), arg->map);
+		if ((rays[i]).face[0] == 'W')
+			color = 0x0000ff;
+		if ((rays[i]).face[0] == 'N')
+			color = 0x00ff00;
+		if ((rays[i]).face[0] == 'S')
+		{
+			color = 0xff0000;
+			printf("%s %x\n", (rays[i]).face, color);
+		}
+		if ((rays[i]).face[0] == 'E')
+			color = 0xfffff;
+		draw_line(&(rays[i]), arg->frame, color);
 	}
 }
 
@@ -143,9 +169,11 @@ void	turn(t_arg *arg, double rad)
 	t_point	rel_cam_prev;
 	t_point	rel_start_prev;
 	t_point	rel_end_prev;
+	t_point	rel_line_prev;
 	t_point	rel_cam;
 	t_point	rel_start;
 	t_point	rel_end;
+	t_point	rel_line;
 	double	csin;
 	double	ccos;
 	double	start_sin;
@@ -161,19 +189,26 @@ void	turn(t_arg *arg, double rad)
 	rel_start_prev.y = arg->player.cam.start.y - arg->player.pos.y;
 	rel_end_prev.x = arg->player.cam.end.x - arg->player.pos.x;
 	rel_end_prev.y = arg->player.cam.end.y - arg->player.pos.y;
+	rel_line_prev.x = arg->player.cam.line.x - arg->player.pos.x;
+	rel_line_prev.y = arg->player.cam.line.y - arg->player.pos.y;
 	rel_cam.x = rel_cam_prev.x * ccos + rel_cam_prev.y * csin; 
 	rel_cam.y = -rel_cam_prev.x * csin + rel_cam_prev.y * ccos;
 	rel_start.x = rel_start_prev.x * ccos + rel_start_prev.y * csin;
 	rel_start.y = -rel_start_prev.x * csin + rel_start_prev.y * ccos;
 	rel_end.x = rel_end_prev.x * ccos + rel_end_prev.y * csin;
 	rel_end.y = -rel_end_prev.x * csin + rel_end_prev.y * ccos;
+	rel_line.x = rel_line_prev.x * ccos + rel_line_prev.y * csin;
+	rel_line.y = -rel_line_prev.x * csin + rel_line_prev.y * ccos;
 	arg->player.cam.dir.x = rel_cam.x + arg->player.pos.x;
 	arg->player.cam.dir.y = rel_cam.y + arg->player.pos.y;
 	arg->player.cam.start.x = rel_start.x + arg->player.pos.x;
 	arg->player.cam.start.y = rel_start.y + arg->player.pos.y;
-	arg->player.cam.end.x = rel_end.x + arg->player.pos.x;
-	arg->player.cam.end.y = rel_end.y + arg->player.pos.y;
+	arg->player.cam.line.x = rel_line.x + arg->player.pos.x;
+	arg->player.cam.line.y = rel_line.y + arg->player.pos.y;
+	arg->player.cam.line.x = rel_line.x + arg->player.pos.x;
+	arg->player.cam.line.y = rel_line.y + arg->player.pos.y;
 }
+
 void	move(t_arg *arg, char *key)
 {
 	double	cam_dist;
@@ -214,6 +249,8 @@ void	move(t_arg *arg, char *key)
 	arg->player.cam.start.y += y;
 	arg->player.cam.end.x += x;
 	arg->player.cam.end.y += y;
+	arg->player.cam.line.x += x;
+	arg->player.cam.line.y += y;
 }
 
 int	key_hook(int keycode, t_arg *arg)
@@ -236,9 +273,8 @@ int	key_hook(int keycode, t_arg *arg)
 	draw_first_frame(arg);
 	rays_gen(&(arg->player), arg->rays);
 	// draw_first_frame(arg);
-	// draw_line(arg->player.pos, oi, arg->frame);
-	// put_rays(arg, arg->rays);
-	put_walls(arg, arg->rays);
+	put_rays(arg, arg->rays);
+	// put_walls(arg, arg->rays);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	// mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->mini->img, 0, 0);
 	return (0);

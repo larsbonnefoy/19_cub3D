@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/03 14:59:48 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/04 21:27:22 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define X_RES 1000
 # define Y_RES 1000
 # define ALPHA (PI / 6)
+# define DIV 1
 # ifdef __linux__
 #  include "mlx_linux/mlx.h"
 #  define W 119
@@ -79,6 +80,7 @@ typedef struct s_camera
 	t_point	start;
 	t_point	end;
 	double	size;
+	t_point	line;
 	double	dist;
 }	t_camera;
 
