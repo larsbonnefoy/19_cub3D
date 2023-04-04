@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 15:37:40 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/03 16:02:03 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/04 15:21:28 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static int get_id(char *s);
 static char *del_endl(char *s);
 static int handle_id(int id, char **tab, t_map *map);
+int is_meta_data(char *line);
 
 int set_meta_data(t_tmp_info *tmp_info, t_map *map)
 {
@@ -47,7 +48,7 @@ int is_meta_data(char *line)
 	int id;
 
 	i = 0;
-	while (line[i] && (line[i] == ' ' || line[i] == 9) )
+	while (line[i] && (line[i] == ' '))
 		i++;
 	line += i;
 	id = get_id(line);	
@@ -75,12 +76,6 @@ int get_id(char *s)
 		return (C);
 	else if (is_map_char(s[0]) != 0)
 		return (MAP);
-	/*
-    else if (ft_strncmp(s, "1", 1) == 0)
-		return (MAP);
-	else if (ft_strncmp(s, "0", 1) == 0)
-		return (MAP);
-	*/
     return (-1);
 }
 

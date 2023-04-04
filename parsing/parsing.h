@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:14:01 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/03 15:56:58 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/04 15:37:15 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,12 @@ typedef enum e_id
 
 typedef enum e_map_char
 {
-    UNVALID = 0, 
+	NOT_MAP_LINE = -1,
+    UNVALID, 
     MAP_CHAR,
     PLAYER_CHAR,
+	NEW_LINE,
+	SPACE,
 } t_map_char;
 
 typedef struct s_tmp_pars_info
@@ -45,6 +48,7 @@ typedef struct s_tmp_pars_info
 	char	dir_player;
 	int		x_player;
 	int		y_player;
+	int		in_map;
 	char	*line;
 } t_tmp_info;
 
@@ -66,8 +70,10 @@ typedef struct s_map
 
 //check_map.c
 int is_map_char(char c);
+int	valid_line(t_tmp_info *info, t_map *map);
+int set_map(t_tmp_info *tmp_info, t_map *map);
+int is_map_line(char *line);
 //check_id.c
-int is_meta_data(char *line);
 int set_meta_data(t_tmp_info *tmp_info, t_map *map);
 void free_tab(char **tab);
 //
