@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/04 16:06:47 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/04 16:43:37 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 int ids_done(int check_array[NB_ID]);
 void debug_print_check_array(int check_array[NB_ID]);
-int set_data(t_map *map, t_tmp_info *info);
+void set_data(t_map *map, t_tmp_info *info);
 void print_map(t_map *map, t_tmp_info *info);
 void print_tab(char **tab);
 int valid_extension(int argc, char **argv);
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 	printf("---------------\n");
     map.map = ft_split(tmp_info->str_map, '\n'); 
 	//free tmp_INFO!!!
-    pathfinding(&map, tmp_info->y_player, tmp_info->x_player);
+    //pathfinding(&map, tmp_info->y_player, tmp_info->x_player);
 	print_map(&map, tmp_info);
 	return (0);
 }
@@ -63,12 +63,25 @@ int main(int argc, char **argv)
  * Quand on voit un char N S W E 0 1 on est dans la map
  * =>plus le droit au \n seuls ou a une ligne avec que des espaces
  */
-int set_data(t_map *map, t_tmp_info *tmp_info)
+void set_data(t_map *map, t_tmp_info *tmp_info)
 {
-	int ret_map;
+	int ret;
 
 	if (!ids_done(tmp_info->check_id_array))
 		set_meta_data(tmp_info, map);
+	else
+	{
+		ret = is_map_line(tmp_info->line);
+		printf("line = 	%s | ret = %d\n",tmp_info->line, ret);
+		if ((ret == NOT_MAP_LINE && tmp_info->in_map == 1) || !ret)
+			ft_error("Unvalid Map", 3);
+		if (ret == NOT_MAP_LINE && tmp_info->in_map == 0)
+			return ;
+		if ((ret == MAP_CHAR || ret == PLAYER_CHAR) && tmp_info->in_map == 0)
+			tmp_info->in_map = 1;
+		set_map(tmp_info, map);
+	}
+	/*
     else if (is_map_line(tmp_info->line))
 	{
 		ret_map = is_map_line(tmp_info->line);
@@ -77,7 +90,7 @@ int set_data(t_map *map, t_tmp_info *tmp_info)
 	}
 	else
 		ft_error("Unvalid Map", 3);
-	return (0);
+	*/
 }
 
 t_tmp_info	*init_tmp_info(t_tmp_info *info)

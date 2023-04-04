@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:26:56 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/03 13:27:43 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/04 16:28:57 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,7 @@ int move_up(t_map *s_map, int start_y, int start_x, int *mvt_values)
         return (1);
     }
     else
-	{
-        return(ft_error("Unvalid Map", 3));
-	}
+        return(ft_error("Unvalid Map", 2));
 }
 
 int move_right(t_map *s_map, int start_y, int start_x, int *mvt_values)
@@ -53,7 +51,7 @@ int move_right(t_map *s_map, int start_y, int start_x, int *mvt_values)
         return (1);
     }
     else
-        return(ft_error("Unvalid Map", 4));
+        return(ft_error("Unvalid Map", 3));
 }
 
 int move_down(t_map *s_map, int start_y, int start_x, int *mvt_values)
@@ -61,7 +59,7 @@ int move_down(t_map *s_map, int start_y, int start_x, int *mvt_values)
     char next_pos;
 
     if ((int)ft_strlen(s_map->map[start_y + 1]) <= start_x)
-        ft_error("Unvalid Map", 0);
+        ft_error("Unvalid Map", 4);
     next_pos = s_map->map[start_y + 1][start_x];
     if (next_pos == 'x' || next_pos == '1')
         return (0);
@@ -72,7 +70,7 @@ int move_down(t_map *s_map, int start_y, int start_x, int *mvt_values)
         return (1);
     }
     else
-        return(ft_error("Unvalid Map", 4));
+        return(ft_error("Unvalid Map", 5));
 }
 
 int move_left(t_map *s_map, int start_y, int start_x, int *mvt_values)
@@ -89,5 +87,5 @@ int move_left(t_map *s_map, int start_y, int start_x, int *mvt_values)
         return (1);
     }
     else
-        return(ft_error("Unvalid Map", 4));
+        return(ft_error("Unvalid Map", 6));
 }

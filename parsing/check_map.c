@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 12:20:58 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/04 15:58:22 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/04 16:37:43 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,6 @@ void	set_player_info(t_tmp_info *info, int x_pos, int y_pos);
 
 int set_map(t_tmp_info *tmp_info, t_map *map)
 {
-	if (ft_strncmp(tmp_info->line, "\n", 1) == 0)
-	{
-		printf("c'est chao = [%s]", tmp_info->line);
-		return (0);
-	}
 	map->height += 1;
 	valid_line(tmp_info, map);
 	if (tmp_info->str_map == NULL)
