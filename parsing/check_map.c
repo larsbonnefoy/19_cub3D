@@ -6,34 +6,16 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 12:20:58 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/04 17:28:56 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/05 10:06:09 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 #include <stdio.h> 
 
-//static int unvalid_space(char *line, int pos);
-int	valid_line(t_tmp_info *info, t_map *map);
-void	set_player_info(t_tmp_info *info, int x_pos, int y_pos);
-
-int set_map(t_tmp_info *tmp_info, t_map *map)
-{
-	map->height += 1;
-	valid_line(tmp_info, map);
-	if (tmp_info->str_map == NULL)
-	{
-		map->width = (int)ft_strlen(tmp_info->line) - 1;
-		tmp_info->str_map = ft_strdup(tmp_info->line);
-	}
-	else
-	{
-		tmp_info->str_map = ft_strjoinf(tmp_info->str_map, tmp_info->line);
-		if ((int)ft_strlen(tmp_info->line) - 1 > map->width)
-			map->width = ft_strlen(tmp_info->line) - 1;
-	}
-	return (1);
-}
+static int unvalid_space(char *line, int pos);
+static int	valid_line(t_tmp_info *info, t_map *map);
+static void	set_player_info(t_tmp_info *info, int x_pos, int y_pos);
 
 //erreur si 0 ' ' || ' ' 0 || 0 '\n' || '             \n' ||  ( ' ' \n si que ce char la sur la ligne)
 int	valid_line(t_tmp_info *info, t_map *map)
@@ -47,8 +29,8 @@ int	valid_line(t_tmp_info *info, t_map *map)
 		char_type = is_map_char(info->line[i]);
 		if (char_type == UNVALID)
             ft_error("Unvalid character in map", 1);
-		//else if (unvalid_space(info->line, i))
-			//ft_error("Unvalid Map", 4);
+		else if (unvalid_space(info->line, i))
+			ft_error("Unvalid Map", 4);
 		else if (char_type == 2)
 			set_player_info(info, i, map->height-1);
 		i++;
@@ -56,7 +38,6 @@ int	valid_line(t_tmp_info *info, t_map *map)
 	return (0);
 }
 
-/*
 int unvalid_space(char *line, int pos)
 {
 	char cur;
@@ -72,7 +53,7 @@ int unvalid_space(char *line, int pos)
 		return (1);
 	return (0);
 }
-*/
+
 void	set_player_info(t_tmp_info *info, int x_pos, int y_pos)
 {
 	if (info->dir_player == '0')

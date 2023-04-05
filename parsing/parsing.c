@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/04 16:58:39 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/05 15:14:49 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <string.h>
 #include <errno.h>
 
+int set_map(t_tmp_info *tmp_info, t_map *map);
 int ids_done(int check_array[NB_ID]);
 void debug_print_check_array(int check_array[NB_ID]);
 void set_data(t_map *map, t_tmp_info *info);
@@ -48,13 +49,13 @@ int main(int argc, char **argv)
 		set_data(&map, tmp_info);
 		free(tmp_info->line);
 	}
-    //is on met un joueur en y == 0 on a quand meme cette erreur
-	if (tmp_info->dir_player == '0')
-        ft_error("No player on the map", 1);
-	printf("---------------\n");
     map.map = ft_split(tmp_info->str_map, '\n'); 
+	map_validation(&map, tmp_info);
+	if (tmp_info->dir_player == '0')
+		ft_error("No player on the map", 1);
+	printf("---------------\n");
 	//free tmp_INFO!!!
-    pathfinding(&map, tmp_info->y_player, tmp_info->x_player);
+    //pathfinding(&map, tmp_info->y_player, tmp_info->x_player);
 	print_map(&map, tmp_info);
 	return (0);
 }
@@ -80,6 +81,23 @@ void set_data(t_map *map, t_tmp_info *tmp_info)
 			tmp_info->in_map = 1;
 		set_map(tmp_info, map);
 	}
+}
+
+int set_map(t_tmp_info *tmp_info, t_map *map)
+{
+	map->height += 1;
+	if (tmp_info->str_map == NULL)
+	{
+		map->width = (int)ft_strlen(tmp_info->line) - 1;
+		tmp_info->str_map = ft_strdup(tmp_info->line);
+	}
+	else
+	{
+		tmp_info->str_map = ft_strjoinf(tmp_info->str_map, tmp_info->line);
+		if ((int)ft_strlen(tmp_info->line) - 1 > map->width)
+			map->width = ft_strlen(tmp_info->line) - 1;
+	}
+	return (1);
 }
 
 t_tmp_info	*init_tmp_info(t_tmp_info *info)

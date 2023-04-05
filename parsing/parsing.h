@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:14:01 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/04 15:37:15 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/05 14:18:46 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,13 @@ typedef struct s_map
 	int 	height;
 }	t_map;
 
-//check_map.c
+	//check_map.c
+	//int set_map(t_tmp_info *tmp_info, t_map *map);
+	//int is_map_line(char *line);
+
+//map_validation.c
+void map_validation(t_map *map, t_tmp_info *tmp_info);
 int is_map_char(char c);
-int	valid_line(t_tmp_info *info, t_map *map);
-int set_map(t_tmp_info *tmp_info, t_map *map);
 int is_map_line(char *line);
 //check_id.c
 int set_meta_data(t_tmp_info *tmp_info, t_map *map);
