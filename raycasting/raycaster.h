@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/04 21:27:22 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/05 12:01:57 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # define X_RES 1000
 # define Y_RES 1000
 # define ALPHA (PI / 6)
-# define DIV 1
+# define DIV 64
 # ifdef __linux__
 #  include "mlx_linux/mlx.h"
 #  define W 119
@@ -117,6 +117,7 @@ typedef struct s_arg
 
 void	rays_gen(t_player *player, t_ray rays[X_RES]);
 void	rays_len(t_player *player, t_ray rays[X_RES], char **map);
+t_point	goto_next_edge(t_point start, t_ray *ray);
 void	window(char **map, t_player player, t_ray rays[X_RES]);
 int		in_wall(t_point pos, char **map);
 void	ray_len(t_point start, t_ray *ray, char **map);

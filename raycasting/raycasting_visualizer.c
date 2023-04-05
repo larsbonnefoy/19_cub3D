@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/04 23:15:11 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/05 18:34:01 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,14 @@ static void	draw_line(t_ray *line, t_img *frame, unsigned int color)
 	// printf("1>%f %f \n", line->dir);
 	while (vect_dir_norm >= 0)
 	{
-		pxl.x = pixel.x;
-		pxl.y = pixel.y;
+		pxl.x = round(pixel.x);
+		pxl.y = round(pixel.y);
 		// printf("%f %f %d %d\n", pixel, pxl);
 		set_pixel_color(frame, pxl, color);
+		// pixel = goto_next_edge(pixel, line);
 		pixel.x += vect_dir.x;
 		pixel.y += (vect_dir.y);
+
 		--vect_dir_norm;
 	}
 }
@@ -96,8 +98,8 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 	unsigned int	color;
 
 	y = -1;
-	beta =  atan(arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2)));
-	ray->size = ray->size * sin(beta);
+	// beta =  atan(arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2)));
+	// ray->size = ray->size * sin(beta);
 	len_tan_alpha = (Y_RES / 2 - (ray->size * tan(ALPHA)));
 	y_res_div2 = Y_RES / 2;
 	pxl.x = x;
@@ -129,7 +131,7 @@ void	put_walls(t_arg *arg, t_ray *rays)
 	t_point	ray_pos;
 	
 	i = -1;
-	ray_pos = rays->start;
+	ray_pos = arg->player.pos;
 	while (++i < X_RES)
 	{
 		ray_len(ray_pos, &(rays[i]), arg->map);
@@ -156,7 +158,7 @@ void	put_rays(t_arg *arg, t_ray *rays)
 		if ((rays[i]).face[0] == 'S')
 		{
 			color = 0xff0000;
-			printf("%s %x\n", (rays[i]).face, color);
+			// printf("%s %x\n", (rays[i]).face, color);
 		}
 		if ((rays[i]).face[0] == 'E')
 			color = 0xfffff;
@@ -167,90 +169,152 @@ void	put_rays(t_arg *arg, t_ray *rays)
 void	turn(t_arg *arg, double rad)
 {
 	t_point	rel_cam_prev;
-	t_point	rel_start_prev;
-	t_point	rel_end_prev;
 	t_point	rel_line_prev;
 	t_point	rel_cam;
-	t_point	rel_start;
-	t_point	rel_end;
-	t_point	rel_line;
 	double	csin;
 	double	ccos;
-	double	start_sin;
-	double	start_cos;
-	double	end_sin;
-	double	end_cos;
 
 	csin = sin(rad);
 	ccos = cos(rad);
-	rel_cam_prev.x = arg->player.cam.dir.x - arg->player.pos.x;
-	rel_cam_prev.y = arg->player.cam.dir.y - arg->player.pos.y;
-	rel_start_prev.x = arg->player.cam.start.x - arg->player.pos.x;
-	rel_start_prev.y = arg->player.cam.start.y - arg->player.pos.y;
-	rel_end_prev.x = arg->player.cam.end.x - arg->player.pos.x;
-	rel_end_prev.y = arg->player.cam.end.y - arg->player.pos.y;
-	rel_line_prev.x = arg->player.cam.line.x - arg->player.pos.x;
-	rel_line_prev.y = arg->player.cam.line.y - arg->player.pos.y;
-	rel_cam.x = rel_cam_prev.x * ccos + rel_cam_prev.y * csin; 
-	rel_cam.y = -rel_cam_prev.x * csin + rel_cam_prev.y * ccos;
-	rel_start.x = rel_start_prev.x * ccos + rel_start_prev.y * csin;
-	rel_start.y = -rel_start_prev.x * csin + rel_start_prev.y * ccos;
-	rel_end.x = rel_end_prev.x * ccos + rel_end_prev.y * csin;
-	rel_end.y = -rel_end_prev.x * csin + rel_end_prev.y * ccos;
-	rel_line.x = rel_line_prev.x * ccos + rel_line_prev.y * csin;
-	rel_line.y = -rel_line_prev.x * csin + rel_line_prev.y * ccos;
-	arg->player.cam.dir.x = rel_cam.x + arg->player.pos.x;
-	arg->player.cam.dir.y = rel_cam.y + arg->player.pos.y;
-	arg->player.cam.start.x = rel_start.x + arg->player.pos.x;
-	arg->player.cam.start.y = rel_start.y + arg->player.pos.y;
-	arg->player.cam.line.x = rel_line.x + arg->player.pos.x;
-	arg->player.cam.line.y = rel_line.y + arg->player.pos.y;
-	arg->player.cam.line.x = rel_line.x + arg->player.pos.x;
-	arg->player.cam.line.y = rel_line.y + arg->player.pos.y;
+	rel_cam_prev.x = arg->player.cam.dir.x;
+	rel_cam_prev.y = arg->player.cam.dir.y;
+	rel_line_prev.x = arg->player.cam.line.x;
+	rel_line_prev.y = arg->player.cam.line.y;
+	arg->player.cam.dir.x  = rel_cam_prev.x * ccos + rel_cam_prev.y * csin; 
+	arg->player.cam.dir.y= -rel_cam_prev.x * csin + rel_cam_prev.y * ccos;
+	arg->player.cam.line.x = rel_line_prev.x * ccos + rel_line_prev.y * csin;
+	arg->player.cam.line.y = -rel_line_prev.x * csin + rel_line_prev.y * ccos;
 }
 
+// void	turn(t_arg *arg, double rad)
+// {
+// 	t_point	rel_cam_prev;
+// 	t_point	rel_start_prev;
+// 	t_point	rel_end_prev;
+// 	t_point	rel_line_prev;
+// 	t_point	rel_cam;
+// 	t_point	rel_start;
+// 	t_point	rel_end;
+// 	t_point	rel_line;
+// 	double	csin;
+// 	double	ccos;
+// 	double	start_sin;
+// 	double	start_cos;
+// 	double	end_sin;
+// 	double	end_cos;
+
+// 	csin = sin(rad);
+// 	ccos = cos(rad);
+// 	rel_cam_prev.x = arg->player.cam.dir.x - arg->player.pos.x;
+// 	rel_cam_prev.y = arg->player.cam.dir.y - arg->player.pos.y;
+// 	rel_start_prev.x = arg->player.cam.start.x - arg->player.pos.x;
+// 	rel_start_prev.y = arg->player.cam.start.y - arg->player.pos.y;
+// 	rel_end_prev.x = arg->player.cam.end.x - arg->player.pos.x;
+// 	rel_end_prev.y = arg->player.cam.end.y - arg->player.pos.y;
+// 	rel_line_prev.x = arg->player.cam.line.x - arg->player.pos.x;
+// 	rel_line_prev.y = arg->player.cam.line.y - arg->player.pos.y;
+// 	rel_cam.x = rel_cam_prev.x * ccos + rel_cam_prev.y * csin; 
+// 	rel_cam.y = -rel_cam_prev.x * csin + rel_cam_prev.y * ccos;
+// 	rel_start.x = rel_start_prev.x * ccos + rel_start_prev.y * csin;
+// 	rel_start.y = -rel_start_prev.x * csin + rel_start_prev.y * ccos;
+// 	rel_end.x = rel_end_prev.x * ccos + rel_end_prev.y * csin;
+// 	rel_end.y = -rel_end_prev.x * csin + rel_end_prev.y * ccos;
+// 	rel_line.x = rel_line_prev.x * ccos + rel_line_prev.y * csin;
+// 	rel_line.y = -rel_line_prev.x * csin + rel_line_prev.y * ccos;
+// 	arg->player.cam.dir.x = rel_cam.x + arg->player.pos.x;
+// 	arg->player.cam.dir.y = rel_cam.y + arg->player.pos.y;
+// 	arg->player.cam.start.x = rel_start.x + arg->player.pos.x;
+// 	arg->player.cam.start.y = rel_start.y + arg->player.pos.y;
+// 	arg->player.cam.end.x = rel_end.x + arg->player.pos.x;
+// 	arg->player.cam.end.y = rel_end.y + arg->player.pos.y;
+// 	arg->player.cam.line.x = rel_line.x + arg->player.pos.x;
+// 	arg->player.cam.line.y = rel_line.y + arg->player.pos.y;
+// }
+// void	move(t_arg *arg, char *key)
+// {
+// 	double	cam_dist;
+// 	double	x;
+// 	double	y;
+// 	t_point	vect_cam;
+
+// 	vect_cam.x = arg->player.cam.dir.x;
+// 	vect_cam.y = arg->player.cam.dir.y;
+// 	cam_dist = sqrt(pow(vect_cam.x , 2) + pow(vect_cam.y, 2));
+// 	vect_cam.x = vect_cam.x;
+// 	vect_cam.y = vect_cam.y;
+// 	printf(">%f %f\n", vect_cam.x, vect_cam.y);
+// 	if (key[0] == 'w')
+// 	{
+// 		x = vect_cam.x * 3.4;
+// 		y = vect_cam.y * 10;
+// 	}
+// 	if (key[0] == 's')
+// 	{
+// 		x = -vect_cam.x * 10;
+// 		y = -vect_cam.y * 10;
+// 	}
+// 	if (key[0] == 'a')
+// 	{
+// 		y = vect_cam.x * 10;
+// 		x = vect_cam.y * 10;
+// 	}
+// 	if (key[0] == 'd')
+// 	{
+// 		y = -vect_cam.x * 10;
+// 		x = -vect_cam.y * 10;
+// 	}
+// 	arg->player.pos.x += x;
+// 	arg->player.pos.y += y;
+// 	arg->player.cam.dir.x += x;
+// 	arg->player.cam.dir.y += y;
+// 	arg->player.cam.start.x += x;
+// 	arg->player.cam.start.y += y;
+// 	arg->player.cam.end.x += x;
+// 	arg->player.cam.end.y += y;
+// }
 void	move(t_arg *arg, char *key)
 {
 	double	cam_dist;
 	double	x;
 	double	y;
+	t_point	pos;
 	t_point	vect_cam;
 
-	vect_cam.x = arg->player.cam.dir.x - arg->player.pos.x;
-	vect_cam.y = arg->player.cam.dir.y - arg->player.pos.y;
+	vect_cam.x = arg->player.cam.dir.x;
+	vect_cam.y = arg->player.cam.dir.y;
 	cam_dist = sqrt(pow(vect_cam.x , 2) + pow(vect_cam.y, 2));
-	vect_cam.x = vect_cam.x / cam_dist;
-	vect_cam.y = vect_cam.y / cam_dist;
+	vect_cam.x = vect_cam.x;
+	vect_cam.y = vect_cam.y;
+	// printf(">%f %f\n", vect_cam.x, vect_cam.y);
 	if (key[0] == 'w')
 	{
-		x = vect_cam.x * 10;
-		y = vect_cam.y * 10;
+		x = vect_cam.x * 3.4;
+		y = vect_cam.y * 3.4;
 	}
 	if (key[0] == 's')
 	{
-		x = -vect_cam.x * 10;
-		y = -vect_cam.y * 10;
+		x = -vect_cam.x * 3.4;
+		y = -vect_cam.y * 3.4;
 	}
 	if (key[0] == 'a')
 	{
-		y = vect_cam.x * 10;
-		x = vect_cam.y * 10;
+		y = -vect_cam.x * 3.4;
+		x = vect_cam.y * 3.4;
 	}
 	if (key[0] == 'd')
 	{
-		y = -vect_cam.x * 10;
-		x = -vect_cam.y * 10;
+		y = vect_cam.x * 3.4;
+		x = -vect_cam.y * 3.4;
 	}
-	arg->player.pos.x += x;
-	arg->player.pos.y += y;
-	arg->player.cam.dir.x += x;
-	arg->player.cam.dir.y += y;
-	arg->player.cam.start.x += x;
-	arg->player.cam.start.y += y;
-	arg->player.cam.end.x += x;
-	arg->player.cam.end.y += y;
-	arg->player.cam.line.x += x;
-	arg->player.cam.line.y += y;
+	x += arg->player.pos.x;
+	y += arg->player.pos.y;
+	pos.x = x;
+	pos.y = y;
+	if (!in_wall(pos, arg->map))
+	{
+		arg->player.pos.x = x;
+		arg->player.pos.y = y;
+	}
 }
 
 int	key_hook(int keycode, t_arg *arg)
@@ -269,12 +333,12 @@ int	key_hook(int keycode, t_arg *arg)
 		turn(arg, -PI / 24);
 	if (keycode == LEFT)
 		turn(arg, PI / 24);
-	printf(">>> HOOK cam dir %f %f cam start %f %f cam end %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y, arg->player.cam.start.x, arg->player.cam.start.y, arg->player.cam.end.x, arg->player.cam.end.y);
+	// printf(">>> HOOK cam dir %f %f cam start %f %f cam end %f %f\n", arg->player.cam.dir.x, arg->player.cam.dir.y, arg->player.cam.start.x, arg->player.cam.start.y, arg->player.cam.end.x, arg->player.cam.end.y);
 	draw_first_frame(arg);
 	rays_gen(&(arg->player), arg->rays);
 	// draw_first_frame(arg);
-	put_rays(arg, arg->rays);
-	// put_walls(arg, arg->rays);
+	// put_rays(arg, arg->rays);
+	put_walls(arg, arg->rays);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	// mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->mini->img, 0, 0);
 	return (0);

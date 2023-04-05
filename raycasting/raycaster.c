@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/04 23:13:29 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/05 18:33:36 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ void	rays_gen(t_player *player, t_ray rays[X_RES])
 		ray_norm = sqrt(pow(rays[i].dir.x, 2) + pow(rays[i].dir.y, 2));
 		rays[i].dir.x = rays[i].dir.x / ray_norm;
 		rays[i].dir.y = rays[i].dir.y / ray_norm;
-		printf("gen %f %f\n", rays[i].dir);
+		// printf("gen %f %f\n", rays[i].dir.x, rays[i].dir.y);
 	}
 }
 int	in_wall(t_point pos, char **map)
@@ -137,21 +137,79 @@ int	in_wall(t_point pos, char **map)
 }
 
 
-static t_point	goto_next_edge(t_point pos, t_ray *ray)
-{
-	t_point	res;
+// static t_point	goto_next_edge(t_point pos, t_ray *ray)
+// {//DDA algorithm
+// 	t_point	res;
 
-	res = pos;
-	// while ((int)res.x == (int)pos.x && (int)res.y == (int)pos.y)
-	// {
-		res.x += ray->dir.x;
-		res.y += ray->dir.y;
-	// }
-	// res.x = (int)res.x;
-	// res.y = (int)res.y;
+// 	res = pos;
+// 	// while ((int)res.x == (int)pos.x && (int)res.y == (int)pos.y)
+// 	// {
+// 		res.x += ray->dir.x;
+// 		res.y += ray->dir.y;
+// 	// }
+// 	// res.x = (int)res.x;
+// 	// res.y = (int)res.y;
+// 	return (res);
+// }
+t_point	goto_next_edge(t_point start, t_ray *ray)
+{//DDA algorithm
+	t_point	res;
+	t_point	incr;
+	t_point	dist_wall;
+	t_point	check;
+	double	max_incr;
+	double	slope;
+	double	b;
+	
+	// printf("fml\n");
+	incr = ray->dir;
+	// slope = incr.y / incr.x;
+	// b = start.y - slope * start.x;
+	check.x = 0;
+	check.y = 0;
+	max_incr = fmax(fabs(incr.x), fabs(incr.y));
+	if (incr.x > 0)
+		dist_wall.x = fabs(ceil(start.x) - start.x);
+	else
+		dist_wall.x = fabs((floor(start.x) - (start.x)));
+	if (incr.y > 0)
+		dist_wall.y = fabs(ceil(start.y) - start.y);
+	else
+		dist_wall.y = fabs((floor(start.y) - (start.y)));
+	// if (dist_wall.x == 0)
+	// 	dist_wall.x = 1;
+	// if (dist_wall.y == 0)
+	// 	dist_wall.y = 1;
+	incr.x /= max_incr; 
+	incr.y /= max_incr; 
+	res.x = ((start.x) + incr.x);
+	res.y = ((start.y) + incr.y);
+	if (ray->dir.y <= 0  && fabs(start.y - res.y) >= dist_wall.y)
+		check.y = -1;
+	if (ray->dir.y > 0 && fabs(start.y - res.y) >= dist_wall.y)
+		check.y = 1;
+	if (ray->dir.x > 0 && fabs(start.x - res.x) >= dist_wall.x)
+		check.x = 1;
+	if (ray->dir.x <= 0 && fabs(start.x - res.x) >= dist_wall.x)
+		check.x = -1;
+	// printf(">> %f %f\n", check.x, check.y);
+	if (fabs(check.x) == 1 && fabs(check.y) == 1)
+	{
+		if (fabs(dist_wall.y) > fabs(dist_wall.x))
+			check.x = 0;
+		else
+			check.y = 0;
+	}
+	if (check.y == -1)
+		ray->face = "S";
+	if (check.y == 1)
+		ray->face = "N";
+	if (check.x == 1)
+		ray->face = "W";
+	if (check.x == -1)
+		ray->face = "E";
 	return (res);
 }
-
 // void	ray_len(t_point start, t_ray *ray, char **map)
 // {		
 // 		t_point	ray_pos;
@@ -178,14 +236,17 @@ void	ray_len(t_point start, t_ray *ray, char **map)
 		double	dist_wall_x;
 		double	dist_wall_y;
 
-		ray_pos = start;
+		ray_pos.x = round(start.x);
+		ray_pos.y = round(start.y);
 		while (!in_wall(ray_pos, map))
 		{
 			last_pos = ray_pos;
+			// printf(">%f %f\n", ray_pos.x, ray_pos.y);
 			ray_pos = goto_next_edge(ray_pos, (ray));
+			// printf(">>%f %f\n", ray_pos.x, ray_pos.y);
 		}
 		ray->start = start;
-		ray->face = set_face(ray_pos, last_pos, ray->dir);
+		// ray->face = set_face(ray_pos, last_pos, ray->dir);
 		ray->size = sqrt(pow(ray_pos.x - start.x, 2) + pow(ray_pos.y - start.y, 2));
 		ray->end.x = ray_pos.x;
 		ray->end.y = ray_pos.y;
@@ -235,8 +296,8 @@ int	main()
 	player.cam.size = 10;
 	player.cam.dir.x = 0;
 	player.cam.dir.y = -1;
-	player.cam.line.x = 0;
-	player.cam.line.y = 0.5;
+	player.cam.line.x = 0.5;
+	player.cam.line.y = 0;
 	// player.cam.start.x = player.cam.dir.x;
 	// player.cam.start.y = player.cam.dir.y - player.cam.size / 2;
 	// player.cam.end.x = player.cam.dir.x ;
@@ -252,13 +313,13 @@ int	main()
 	// while (++i < X_RES)
 	// 	printf("%d : %f %f %f \n", i, rays[i].dir, rays[i].dir.x, rays[i].dir.y);
 	// printf(">>>%d\n", map[5][5]);
-	// map[10][1] = '1';
-	// map[10][2] = '1';
-	// map[10][3] = '1';
-	// map[10][4] = '1';
-	// map[5][6] = '1';
-	// map[5][8] = '1';
-	// map[5][10] = '1';
+	map[10][1] = '1';
+	map[10][2] = '1';
+	map[10][3] = '1';
+	map[10][4] = '1';
+	map[5][6] = '1';
+	map[5][8] = '1';
+	map[5][10] = '1';
 	// i = 400;
 	// j = -50;
 	// while (++i < 600)
