@@ -6,19 +6,19 @@
 #    By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/11 13:10:56 by lbonnefo          #+#    #+#              #
-#    Updated: 2023/04/05 14:17:05 by lbonnefo         ###   ########.fr        #
+#    Updated: 2023/04/06 15:45:11 by lbonnefo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3D 
 
-FILES = parsing.c pathfinding.c pathfinding_mvt.c error.c check_id.c map_validation.c\
+FILES = parsing.c error.c check_id.c check_id_utils.c map_validation.c map_validation_utils.c\
 
 SRCS = $(FILES)
 
 OBJ = $(SRCS:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g
 
 ###LIB INCLUDES###
 

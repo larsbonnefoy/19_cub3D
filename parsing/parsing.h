@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:14:01 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/05 14:18:46 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/06 14:23:45 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,18 @@ typedef enum e_id
 	F,
 	C,
 	MAP,
+	NL,
 } t_id;
 
 typedef enum e_map_char
 {
-	NOT_MAP_LINE = -1,
+	EMPTY_SPACE = -1,
     UNVALID, 
     MAP_CHAR,
     PLAYER_CHAR,
 	NEW_LINE,
 	SPACE,
+	EMPTY,
 } t_map_char;
 
 typedef struct s_tmp_pars_info
@@ -52,9 +54,6 @@ typedef struct s_tmp_pars_info
 	char	*line;
 } t_tmp_info;
 
-/*
- * str_map && check_array in function not struct
- */
 typedef struct s_map
 {
 	char	*NO;
@@ -68,19 +67,26 @@ typedef struct s_map
 	int 	height;
 }	t_map;
 
-	//check_map.c
-	//int set_map(t_tmp_info *tmp_info, t_map *map);
-	//int is_map_line(char *line);
+typedef struct s_check_line
+{
+	char *curr_line;
+	int	curr_i;
+	char *next_line;
+	int	len_next;
+	int len_prev;
+} t_check_line; 
 
 //map_validation.c
 void map_validation(t_map *map, t_tmp_info *tmp_info);
+//map_validation_utils.c
 int is_map_char(char c);
 int is_map_line(char *line);
 //check_id.c
 int set_meta_data(t_tmp_info *tmp_info, t_map *map);
-void free_tab(char **tab);
+//check_id_utils.c
+char	*del_endl(char *s);
+void	free_tab(char **tab);
 //
 int ft_error(char *s, int ret_val);
-int pathfinding(t_map *s_map, int start_y, int start_x);
 char	*get_next_line(int fd);
 #endif

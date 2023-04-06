@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/05 15:14:49 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/06 15:58:38 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@
 
 int set_map(t_tmp_info *tmp_info, t_map *map);
 int ids_done(int check_array[NB_ID]);
-void debug_print_check_array(int check_array[NB_ID]);
 void set_data(t_map *map, t_tmp_info *info);
 void print_map(t_map *map, t_tmp_info *info);
-void print_tab(char **tab);
 int valid_extension(int argc, char **argv);
 t_tmp_info	*init_tmp_info();
 
@@ -54,9 +52,14 @@ int main(int argc, char **argv)
 	if (tmp_info->dir_player == '0')
 		ft_error("No player on the map", 1);
 	printf("---------------\n");
-	//free tmp_INFO!!!
-    //pathfinding(&map, tmp_info->y_player, tmp_info->x_player);
 	print_map(&map, tmp_info);
+	free(map.NO);
+	free(map.SO);
+	free(map.WE);
+	free(map.EA);
+	free(tmp_info->str_map);
+	free(tmp_info);
+	free_tab(map.map);
 	return (0);
 }
 
@@ -73,9 +76,9 @@ void set_data(t_map *map, t_tmp_info *tmp_info)
 	else
 	{
 		ret = is_map_line(tmp_info->line);
-		if ((ret == NOT_MAP_LINE && tmp_info->in_map == 1) || !ret)
+		if ((ret == EMPTY && tmp_info->in_map == 1) || !ret)
 			ft_error("Unvalid Map", 3);
-		if (ret == NOT_MAP_LINE && tmp_info->in_map == 0)
+		if ((ret == EMPTY || ret == EMPTY_SPACE) && tmp_info->in_map == 0)
 			return ;
 		if ((ret == MAP_CHAR || ret == PLAYER_CHAR) && tmp_info->in_map == 0)
 			tmp_info->in_map = 1;
@@ -140,18 +143,6 @@ void print_map(t_map *map, t_tmp_info *info)
 	printf("player dir = %c,  x_player = %d, y_player  = %d\n", info->dir_player, info->x_player, info->y_player);
 }
 
-void print_tab(char **tab)
-{
-	int i;
-
-	i = 0;
-	while(tab[i])
-	{
-		printf("%s\n",tab[i]);
-		i++;
-	}
-}
-
 int ids_done(int check_array[NB_ID])
 {
 	int i;
@@ -164,17 +155,4 @@ int ids_done(int check_array[NB_ID])
 		i++;
 	}
 	return (1);
-}
-
-void debug_print_check_array(int check_array[NB_ID])
-{
-	int i;
-
-	i = 0;
-	while (i < NB_ID)
-	{
-		printf("%d", check_array[i]);
-		i++;
-	}
-	printf("\n");
 }

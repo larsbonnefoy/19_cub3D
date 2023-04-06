@@ -1,22 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   check_id_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/06 14:25:06 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/06 14:26:16 by lbonnefo         ###   ########.fr       */
+/*   Created: 2023/04/06 14:22:14 by lbonnefo          #+#    #+#             */
+/*   Updated: 2023/04/06 14:22:49 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	ft_error(char *s, int ret_val)
+char	*del_endl(char *s)
 {
-	write(2, "Error\n", 6);
-	write(2, s, ft_strlen(s));
-	write(2, "\n", 1);
-	exit(ret_val);
-	return (ret_val);
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == '\n')
+			s[i] = '\0';
+		i++;
+	}
+	return (s);
+}
+
+void	free_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
 }
