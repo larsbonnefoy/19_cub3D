@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/05 18:33:36 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/06 17:31:58 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ void	rays_gen(t_player *player, t_ray rays[X_RES])
 		// printf("gen %f %f\n", rays[i].dir.x, rays[i].dir.y);
 	}
 }
+
 int	in_wall(t_point pos, char **map)
 {
 	if (!(pos.x < X_RES && pos.x >= 0 && pos.y < Y_RES && pos.y >= 0) || map[(int)pos.y / DIV][(int)pos.x / DIV] == '1')
@@ -151,65 +152,181 @@ int	in_wall(t_point pos, char **map)
 // 	// res.y = (int)res.y;
 // 	return (res);
 // }
+// t_point	goto_next_edge(t_point start, t_ray *ray)
+// {//DDA algorithm
+// 	t_point	res;
+// 	t_point	incr;
+// 	t_point	dist_wall;
+// 	t_point	dist_inter;
+// 	t_point	inter_hor;
+// 	t_point	inter_ver;
+// 	t_point	check;
+// 	double	max_incr;
+// 	double	slope;
+// 	double	b;
+	
+// 	// printf("fml\n");
+// 	incr = ray->dir;
+// 	slope = incr.y / incr.x;
+// 	b = start.y - slope * start.x;
+// 	check.x = 0;
+// 	check.y = 0;
+// 	max_incr = fmax(fabs(incr.x), fabs(incr.y));
+// 	if (incr.x > 0)
+// 		dist_wall.x = ((int)(start.x - 1)/ DIV) - start.x + DIV;
+// 	else
+// 		dist_wall.x = ((int)(start.x - 1) / DIV) - (start.x);
+// 	if (incr.y > 0)
+// 		dist_wall.y = ((int)(start.y - 1) / DIV) - start.y + DIV;
+// 	else
+// 		dist_wall.y = ((int)(start.y - 1) / DIV)  - (start.y);
+// 	// if (dist_wall.x == 0)
+// 	// 	dist_wall.x = 1;
+// 	// if (dist_wall.y == 0)
+// 	// 	dist_wall.y = 1;
+// 	inter_hor.y = dist_wall.y;
+// 	inter_ver.x = dist_wall.x;
+// 	inter_hor.x = (inter_hor.y - b) / slope;
+// 	inter_ver.y = slope * inter_ver.x + b;
+// 	if (incr.x == 0)
+// 	{
+// 		dist_inter.y = 0;
+// 		dist_inter.x = DIV;
+// 	}
+// 	else if (incr.y == 0)
+// 	{
+// 		dist_inter.y = DIV;
+// 		dist_inter.x = 0;
+// 	}
+// 	else
+// 	{
+// 		dist_inter.x = sqrt(pow(inter_hor.x, 2) + pow(inter_hor.y, 2));
+// 		dist_inter.y = sqrt(pow(inter_ver.x, 2) + pow(inter_ver.y, 2));
+// 	}
+// 	incr.x /= max_incr; 
+// 	incr.y /= max_incr; 
+// 	// res.x = ((start.x) + incr.x);
+// 	// res.y = ((start.y) + incr.y);
+// 	if (ray->dir.y <= 0  && dist_inter.y >= dist_inter.x)
+// 		check.y = -1;
+// 	if (ray->dir.y > 0 &&  dist_inter.y >= dist_inter.x)
+// 		check.y = 1;
+// 	if (ray->dir.x > 0 &&  dist_inter.x >= dist_inter.y)
+// 		check.x = 1;
+// 	if (ray->dir.x <= 0 &&  dist_inter.x >= dist_inter.y)
+// 		check.x = -1;
+// 	// printf(">> %f %f\n", check.x, check.y);
+// 	if (fabs(check.x) == 1 && fabs(check.y) == 1)
+// 	{
+// 		if (dist_inter.x > dist_inter.y)
+// 			check.x = 0;
+// 		else
+// 			check.y = 0;
+// 	}
+// 	if (check.y == -1)
+// 		ray->face = "S";
+// 	if (check.y == 1)
+// 		ray->face = "N";
+// 	if (check.x == 1)
+// 		ray->face = "W";
+// 	if (check.x == -1)
+// 		ray->face = "E";
+// 	if (fabs(check.x) == 1)
+// 	{
+// 		// res = inter_hor;
+// 		incr.x /= dist_inter.x; 
+// 		incr.y /= dist_inter.x; 
+// 	}
+// 	else
+// 	{
+// 		// res = inter_ver;
+// 		incr.x /= dist_inter.y; 
+// 		incr.y /= dist_inter.y; 
+// 	}
+// 	// res.x = ((start.x) + incr.x);
+// 	// res.y = ((start.y) + incr.y);
+// 	printf("next inter %f %f\n", res.x, res.y);
+// 	return (res);
+// }
+
 t_point	goto_next_edge(t_point start, t_ray *ray)
 {//DDA algorithm
 	t_point	res;
 	t_point	incr;
 	t_point	dist_wall;
+	t_point	dist_inter;
+	t_point	wall_h;
+	double dist_wall_h;
+	t_point	wall_v;
+	double dist_wall_v;
 	t_point	check;
 	double	max_incr;
 	double	slope;
 	double	b;
 	
-	// printf("fml\n");
-	incr = ray->dir;
-	// slope = incr.y / incr.x;
-	// b = start.y - slope * start.x;
-	check.x = 0;
-	check.y = 0;
-	max_incr = fmax(fabs(incr.x), fabs(incr.y));
-	if (incr.x > 0)
-		dist_wall.x = fabs(ceil(start.x) - start.x);
+	//set slope and b
+	slope = ray->dir.y / ray->dir.x;
+	b = start.y - (slope * start.x);
+	//find next wall
+	if (ray->dir.x > 0)
+		wall_v.x = (((int)start.x / DIV) * DIV) + DIV;
 	else
-		dist_wall.x = fabs((floor(start.x) - (start.x)));
-	if (incr.y > 0)
-		dist_wall.y = fabs(ceil(start.y) - start.y);
+		wall_v.x = ((((int)start.x / DIV)) * DIV);
+	if (ray->dir.y > 0)
+		wall_h.y = (((int)start.y / DIV) * DIV);
 	else
-		dist_wall.y = fabs((floor(start.y) - (start.y)));
-	// if (dist_wall.x == 0)
-	// 	dist_wall.x = 1;
-	// if (dist_wall.y == 0)
-	// 	dist_wall.y = 1;
-	incr.x /= max_incr; 
-	incr.y /= max_incr; 
-	res.x = ((start.x) + incr.x);
-	res.y = ((start.y) + incr.y);
-	if (ray->dir.y <= 0  && fabs(start.y - res.y) >= dist_wall.y)
-		check.y = -1;
-	if (ray->dir.y > 0 && fabs(start.y - res.y) >= dist_wall.y)
-		check.y = 1;
-	if (ray->dir.x > 0 && fabs(start.x - res.x) >= dist_wall.x)
-		check.x = 1;
-	if (ray->dir.x <= 0 && fabs(start.x - res.x) >= dist_wall.x)
-		check.x = -1;
-	// printf(">> %f %f\n", check.x, check.y);
-	if (fabs(check.x) == 1 && fabs(check.y) == 1)
+		wall_h.y = (((int)start.y / DIV)) * DIV;
+	//v wall
+	wall_v.y = slope * wall_v.x + b;
+	//h wall
+	wall_h.x = (wall_h.y - b) / slope;
+	//find the shortest dist
+	dist_wall_v = sqrt(pow(start.x - wall_v.x, 2) + pow(start.y - wall_v.y, 2));
+	dist_wall_h = sqrt(pow(start.x - wall_h.x, 2) + pow(start.y - wall_h.y, 2));
+	if (dist_wall_v == 0)
 	{
-		if (fabs(dist_wall.y) > fabs(dist_wall.x))
-			check.x = 0;
+		if (ray->dir.x > 0)
+			wall_v.x = (((int)start.x / DIV) * DIV) + DIV;
 		else
-			check.y = 0;
+			wall_v.x = ((((int)start.x / DIV) - 1) * DIV) - DIV;
+		dist_wall_v = sqrt(pow(start.x - wall_v.x, 2) + pow(start.y - wall_v.y, 2));
 	}
-	if (check.y == -1)
-		ray->face = "S";
-	if (check.y == 1)
-		ray->face = "N";
-	if (check.x == 1)
-		ray->face = "W";
-	if (check.x == -1)
-		ray->face = "E";
+	if (dist_wall_h == 0)
+	{
+		if (ray->dir.y > 0)
+			wall_h.x = (((int)start.x / DIV) * DIV) + DIV;
+		else
+			wall_h.x = ((((int)start.x / DIV) - 1) * DIV) - DIV;
+		dist_wall_h	 = sqrt(pow(start.x - wall_v.x, 2) + pow(start.y - wall_v.y, 2));
+	}
+	printf("start %f %f\n",start.x, start.y);
+	printf("dir %f %f\n", ray->dir.x, ray->dir.y);
+	printf("slope %f\n", slope);
+	printf("dist wall %f %f\n",dist_wall_v, dist_wall_h);
+	printf("wall v %f %f\n",wall_v.x, wall_v.y);
+	printf("wall h %f %f\n",wall_h.x, wall_h.y);
+	if (dist_wall_h < dist_wall_v)
+		res = wall_h;
+	else
+		res = wall_v;
 	return (res);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // void	ray_len(t_point start, t_ray *ray, char **map)
 // {		
 // 		t_point	ray_pos;

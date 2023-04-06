@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/05 18:34:01 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/06 13:01:35 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,23 +288,23 @@ void	move(t_arg *arg, char *key)
 	// printf(">%f %f\n", vect_cam.x, vect_cam.y);
 	if (key[0] == 'w')
 	{
-		x = vect_cam.x * 3.4;
-		y = vect_cam.y * 3.4;
+		x = vect_cam.x * 10;
+		y = vect_cam.y * 10;
 	}
 	if (key[0] == 's')
 	{
-		x = -vect_cam.x * 3.4;
-		y = -vect_cam.y * 3.4;
+		x = -vect_cam.x * 10;
+		y = -vect_cam.y * 10;
 	}
 	if (key[0] == 'a')
 	{
-		y = -vect_cam.x * 3.4;
-		x = vect_cam.y * 3.4;
+		y = -vect_cam.x * 10;
+		x = vect_cam.y * 10;
 	}
 	if (key[0] == 'd')
 	{
-		y = vect_cam.x * 3.4;
-		x = -vect_cam.y * 3.4;
+		y = vect_cam.x * 10;
+		x = -vect_cam.y * 10;
 	}
 	x += arg->player.pos.x;
 	y += arg->player.pos.y;
@@ -337,8 +337,8 @@ int	key_hook(int keycode, t_arg *arg)
 	draw_first_frame(arg);
 	rays_gen(&(arg->player), arg->rays);
 	// draw_first_frame(arg);
-	// put_rays(arg, arg->rays);
-	put_walls(arg, arg->rays);
+	put_rays(arg, arg->rays);
+	// put_walls(arg, arg->rays);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	// mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->mini->img, 0, 0);
 	return (0);
