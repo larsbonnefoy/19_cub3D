@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 15:37:40 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/06 15:49:31 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/06 17:26:55 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,19 +99,23 @@ int	handle_id(int id, char **tab, t_map *map)
 void	handle_color(int id, char **tab, t_map *map)
 {
 	char	**color;
+	int		rgb_val;
+	int		i;
 
 	color = ft_split(tab[1], ',');
-	if (id == F)
+	if (!is_rgb(color))
+		ft_error("Not a valid RGB colour", 1);
+	i = 0;
+	while (i < 3)
 	{
-		map->F_C[0] = ft_atoi(color[0]);
-		map->F_C[1] = ft_atoi(color[1]);
-		map->F_C[2] = ft_atoi(color[2]);
-	}
-	else
-	{
-		map->C_C[0] = ft_atoi(color[0]);
-		map->C_C[1] = ft_atoi(color[1]);
-		map->C_C[2] = ft_atoi(color[2]);
+		rgb_val = ft_atoi(color[i]);
+		if (rgb_val < 0 || rgb_val > 255)
+			ft_error("Not a valid RGB colour", 1);
+		if (id == F)
+			map->F_C[i] = rgb_val;
+		else
+			map->C_C[i] = rgb_val;
+		i++;
 	}
 	free_tab(color);
 }

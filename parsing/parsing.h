@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:14:01 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/06 14:23:45 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/06 16:30:49 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int is_map_line(char *line);
 //check_id.c
 int set_meta_data(t_tmp_info *tmp_info, t_map *map);
 //check_id_utils.c
+int		is_rgb(char **color);
 char	*del_endl(char *s);
 void	free_tab(char **tab);
 //
