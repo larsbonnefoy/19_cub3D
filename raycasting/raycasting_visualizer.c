@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/07 13:34:37 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/07 19:04:10 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,14 +98,19 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 	int				y;
 	double			len_tan_alpha;
 	double			y_res_div2;
-	double			beta; 
+	double			beta;
+	double			p_size;
 	t_pixel			pxl;
 	unsigned int	color;
+	t_point			perp;
 
 	y = -1;
-	// beta =  atan(arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2)));
-	// ray->size = ray->size * sin(beta);
-	len_tan_alpha = (Y_RES / 2 - (ray->size * tan(ALPHA)));
+	
+	// beta =  atan(1 / sqrt(pow(arg->player.cam.dir.x, 2) + pow(arg->player.cam.dir.y, 2)));
+	// ray->size = ray->size * cos(beta);
+	beta = atan(arg->player.cam.dir.y / arg->player.cam.dir.x);
+	p_size = -ray->end.x * cos(beta) + ray->end.y * sin(beta);
+	len_tan_alpha = (Y_RES / 2 - (p_size * tan(ALPHA)));
 	y_res_div2 = Y_RES / 2;
 	pxl.x = x;
 	// printf("%d  %f %f %f\n", x,  y_res_div2 - len_tan_alpha, y_res_div2 + len_tan_alpha, ray->size);
@@ -161,12 +166,9 @@ void	put_rays(t_arg *arg, t_ray *rays)
 		if ((rays[i]).face[0] == 'N')
 			color = 0x00ff00;
 		if ((rays[i]).face[0] == 'S')
-		{
 			color = 0xff0000;
-			// printf("%s %x\n", (rays[i]).face, color);
-		}
 		if ((rays[i]).face[0] == 'E')
-			color = 0xfffff;
+			color = 0xff00ff;
 		draw_line(&(rays[i]), arg->frame, color);
 	}
 }
@@ -175,7 +177,6 @@ void	turn(t_arg *arg, double rad)
 {
 	t_point	rel_cam_prev;
 	t_point	rel_line_prev;
-	t_point	rel_cam;
 	double	csin;
 	double	ccos;
 
@@ -191,92 +192,6 @@ void	turn(t_arg *arg, double rad)
 	arg->player.cam.line.y = -rel_line_prev.x * csin + rel_line_prev.y * ccos;
 }
 
-// void	turn(t_arg *arg, double rad)
-// {
-// 	t_point	rel_cam_prev;
-// 	t_point	rel_start_prev;
-// 	t_point	rel_end_prev;
-// 	t_point	rel_line_prev;
-// 	t_point	rel_cam;
-// 	t_point	rel_start;
-// 	t_point	rel_end;
-// 	t_point	rel_line;
-// 	double	csin;
-// 	double	ccos;
-// 	double	start_sin;
-// 	double	start_cos;
-// 	double	end_sin;
-// 	double	end_cos;
-
-// 	csin = sin(rad);
-// 	ccos = cos(rad);
-// 	rel_cam_prev.x = arg->player.cam.dir.x - arg->player.pos.x;
-// 	rel_cam_prev.y = arg->player.cam.dir.y - arg->player.pos.y;
-// 	rel_start_prev.x = arg->player.cam.start.x - arg->player.pos.x;
-// 	rel_start_prev.y = arg->player.cam.start.y - arg->player.pos.y;
-// 	rel_end_prev.x = arg->player.cam.end.x - arg->player.pos.x;
-// 	rel_end_prev.y = arg->player.cam.end.y - arg->player.pos.y;
-// 	rel_line_prev.x = arg->player.cam.line.x - arg->player.pos.x;
-// 	rel_line_prev.y = arg->player.cam.line.y - arg->player.pos.y;
-// 	rel_cam.x = rel_cam_prev.x * ccos + rel_cam_prev.y * csin; 
-// 	rel_cam.y = -rel_cam_prev.x * csin + rel_cam_prev.y * ccos;
-// 	rel_start.x = rel_start_prev.x * ccos + rel_start_prev.y * csin;
-// 	rel_start.y = -rel_start_prev.x * csin + rel_start_prev.y * ccos;
-// 	rel_end.x = rel_end_prev.x * ccos + rel_end_prev.y * csin;
-// 	rel_end.y = -rel_end_prev.x * csin + rel_end_prev.y * ccos;
-// 	rel_line.x = rel_line_prev.x * ccos + rel_line_prev.y * csin;
-// 	rel_line.y = -rel_line_prev.x * csin + rel_line_prev.y * ccos;
-// 	arg->player.cam.dir.x = rel_cam.x + arg->player.pos.x;
-// 	arg->player.cam.dir.y = rel_cam.y + arg->player.pos.y;
-// 	arg->player.cam.start.x = rel_start.x + arg->player.pos.x;
-// 	arg->player.cam.start.y = rel_start.y + arg->player.pos.y;
-// 	arg->player.cam.end.x = rel_end.x + arg->player.pos.x;
-// 	arg->player.cam.end.y = rel_end.y + arg->player.pos.y;
-// 	arg->player.cam.line.x = rel_line.x + arg->player.pos.x;
-// 	arg->player.cam.line.y = rel_line.y + arg->player.pos.y;
-// }
-// void	move(t_arg *arg, char *key)
-// {
-// 	double	cam_dist;
-// 	double	x;
-// 	double	y;
-// 	t_point	vect_cam;
-
-// 	vect_cam.x = arg->player.cam.dir.x;
-// 	vect_cam.y = arg->player.cam.dir.y;
-// 	cam_dist = sqrt(pow(vect_cam.x , 2) + pow(vect_cam.y, 2));
-// 	vect_cam.x = vect_cam.x;
-// 	vect_cam.y = vect_cam.y;
-// 	printf(">%f %f\n", vect_cam.x, vect_cam.y);
-// 	if (key[0] == 'w')
-// 	{
-// 		x = vect_cam.x * 3.4;
-// 		y = vect_cam.y * 10;
-// 	}
-// 	if (key[0] == 's')
-// 	{
-// 		x = -vect_cam.x * 10;
-// 		y = -vect_cam.y * 10;
-// 	}
-// 	if (key[0] == 'a')
-// 	{
-// 		y = vect_cam.x * 10;
-// 		x = vect_cam.y * 10;
-// 	}
-// 	if (key[0] == 'd')
-// 	{
-// 		y = -vect_cam.x * 10;
-// 		x = -vect_cam.y * 10;
-// 	}
-// 	arg->player.pos.x += x;
-// 	arg->player.pos.y += y;
-// 	arg->player.cam.dir.x += x;
-// 	arg->player.cam.dir.y += y;
-// 	arg->player.cam.start.x += x;
-// 	arg->player.cam.start.y += y;
-// 	arg->player.cam.end.x += x;
-// 	arg->player.cam.end.y += y;
-// }
 void	move(t_arg *arg, char *key)
 {
 	double	cam_dist;
