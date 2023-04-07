@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/06 13:01:35 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/07 13:34:37 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static void	set_pixel_color(t_img *dst, t_pixel pxl, size_t	clr)
 
 	// printf("->%d %d\n", pxl.x, pxl.y);
 	pxl_addr = dst->addr + ((pxl.y) * dst->line_len + (pxl.x) * (dst->bpp / 8));
+	// printf("pxl %d %d\n", pxl.x, pxl.y);
 	*(size_t *)pxl_addr = clr;
 }
 
@@ -66,7 +67,7 @@ static void	draw_line(t_ray *line, t_img *frame, unsigned int color)
 	t_point	vect_dir;
 	t_point	pixel;
 	t_pixel	pxl;
-	double vect_dir_norm;
+	int vect_dir_norm;
 	double	slope;
 
 	vect_dir.x = line->dir.x;
@@ -74,20 +75,24 @@ static void	draw_line(t_ray *line, t_img *frame, unsigned int color)
 	vect_dir_norm = line->size;
 	pixel.x = line->start.x;
 	pixel.y = line->start.y;
-	// printf("1>%f %f \n", line->dir);
+	printf("1>%d %f %f\n", vect_dir_norm, pixel.x, pixel.y);
 	while (vect_dir_norm >= 0)
 	{
 		pxl.x = round(pixel.x);
 		pxl.y = round(pixel.y);
-		// printf("%f %f %d %d\n", pixel, pxl);
+		// printf("%f %f %d %d %d\n", pixel.x, pixel.y, pxl.x, pxl.y, vect_dir_norm);
 		set_pixel_color(frame, pxl, color);
 		// pixel = goto_next_edge(pixel, line);
 		pixel.x += vect_dir.x;
 		pixel.y += (vect_dir.y);
-
+		// if (pixel.x < 0)
+		// 	pixel.x = 0;
+		// if (pixel.y < 0)
+		// 	pixel.y = 0;
 		--vect_dir_norm;
 	}
 }
+
 static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 {	 
 	int				y;
@@ -337,8 +342,8 @@ int	key_hook(int keycode, t_arg *arg)
 	draw_first_frame(arg);
 	rays_gen(&(arg->player), arg->rays);
 	// draw_first_frame(arg);
-	put_rays(arg, arg->rays);
-	// put_walls(arg, arg->rays);
+	// put_rays(arg, arg->rays);
+	put_walls(arg, arg->rays);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	// mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->mini->img, 0, 0);
 	return (0);

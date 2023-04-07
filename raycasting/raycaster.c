@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/06 17:31:58 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/07 13:57:30 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,48 +267,75 @@ t_point	goto_next_edge(t_point start, t_ray *ray)
 	//set slope and b
 	slope = ray->dir.y / ray->dir.x;
 	b = start.y - (slope * start.x);
+	// printf("ray dir > %f %f\n", ray->dir.x, ray->dir.y);
 	//find next wall
 	if (ray->dir.x > 0)
-		wall_v.x = (((int)start.x / DIV) * DIV) + DIV;
+		wall_v.x = ((((int)start.x / DIV) + 1) * DIV);
 	else
-		wall_v.x = ((((int)start.x / DIV)) * DIV);
+		wall_v.x = (((((int)start.x) / DIV)) * DIV) - 1;
 	if (ray->dir.y > 0)
-		wall_h.y = (((int)start.y / DIV) * DIV);
+		wall_h.y = ((((int)start.y / DIV) + 1) * DIV);
 	else
-		wall_h.y = (((int)start.y / DIV)) * DIV;
+		wall_h.y = ((((int)start.y / DIV)) * DIV) - 1;
 	//v wall
 	wall_v.y = slope * wall_v.x + b;
 	//h wall
 	wall_h.x = (wall_h.y - b) / slope;
 	//find the shortest dist
+	// if (wall_v.y < 0)
+	// 	wall_v.y = 0;
+	// if (wall_h.x < 0)
+	// 	wall_h.x = 0;
 	dist_wall_v = sqrt(pow(start.x - wall_v.x, 2) + pow(start.y - wall_v.y, 2));
 	dist_wall_h = sqrt(pow(start.x - wall_h.x, 2) + pow(start.y - wall_h.y, 2));
-	if (dist_wall_v == 0)
-	{
-		if (ray->dir.x > 0)
-			wall_v.x = (((int)start.x / DIV) * DIV) + DIV;
-		else
-			wall_v.x = ((((int)start.x / DIV) - 1) * DIV) - DIV;
-		dist_wall_v = sqrt(pow(start.x - wall_v.x, 2) + pow(start.y - wall_v.y, 2));
-	}
-	if (dist_wall_h == 0)
-	{
-		if (ray->dir.y > 0)
-			wall_h.x = (((int)start.x / DIV) * DIV) + DIV;
-		else
-			wall_h.x = ((((int)start.x / DIV) - 1) * DIV) - DIV;
-		dist_wall_h	 = sqrt(pow(start.x - wall_v.x, 2) + pow(start.y - wall_v.y, 2));
-	}
-	printf("start %f %f\n",start.x, start.y);
-	printf("dir %f %f\n", ray->dir.x, ray->dir.y);
-	printf("slope %f\n", slope);
-	printf("dist wall %f %f\n",dist_wall_v, dist_wall_h);
-	printf("wall v %f %f\n",wall_v.x, wall_v.y);
-	printf("wall h %f %f\n",wall_h.x, wall_h.y);
+	// if (ray->dir.x == 0)
+	// 	dist_wall_v = INT_MAX;
+	// if (ray->dir.y == 0)
+	// 	dist_wall_h = INT_MAX;
+	// if (dist_wall_v == 0)
+	// {
+	// 	printf("hey\n");
+	// 	if (ray->dir.x <= 0)
+	// 	{
+	// 		wall_v.x = ((((int)start.x / DIV) - 1) * DIV);
+	// 		wall_v.y = slope * wall_v.x + b;
+	// 	}
+	// 	dist_wall_v = sqrt(pow(start.x - wall_v.x, 2) + pow(start.y - wall_v.y, 2));
+	// }
+	// if (dist_wall_h == 0)
+	// {
+	// 	printf("listen\n");
+	// 	if (ray->dir.y <= 0)
+	// 	{
+	// 		wall_h.y = ((((int)start.y / DIV) - 1) * DIV);
+	// 		wall_h.x = (wall_h.y - b) / slope;
+	// 	}
+	// 	dist_wall_h	 = sqrt(pow(start.x - wall_v.x, 2) + pow(start.y - wall_v.y, 2));
+	// }
+	// printf("start %f %f\n",start.x, start.y);
+	// printf("dir %f %f\n", ray->dir.x, ray->dir.y);
+	// printf("slope %f\n", slope);
+	// printf("dist wall %f %f\n",dist_wall_v, dist_wall_h);
+	// printf("wall v %f %f\n",wall_v.x, wall_v.y);
+	// printf("wall h %f %f\n",wall_h.x, wall_h.y);
 	if (dist_wall_h < dist_wall_v)
 		res = wall_h;
 	else
 		res = wall_v;
+	if (dist_wall_h < dist_wall_v)
+	{
+		if (ray->dir.y < 0)
+			ray->face = "S";
+		else
+			ray->face = "N";
+	}
+	else
+	{
+		if (ray->dir.x > 0)
+			ray->face = "W";
+		else
+			ray->face = "E";
+	}
 	return (res);
 }
 
@@ -353,21 +380,25 @@ void	ray_len(t_point start, t_ray *ray, char **map)
 		double	dist_wall_x;
 		double	dist_wall_y;
 
-		ray_pos.x = round(start.x);
-		ray_pos.y = round(start.y);
+		ray_pos.x = start.x;
+		ray_pos.y = start.y;
 		while (!in_wall(ray_pos, map))
 		{
 			last_pos = ray_pos;
-			// printf(">%f %f\n", ray_pos.x, ray_pos.y);
+			// printf("========================================================\n");
+			// printf(">%f %f %f %f\n", ray_pos.x, ray_pos.y, ray->dir.x, ray->dir.y);
+			// printf("in wall %d %d\n",(int)ray_pos.x / DIV, (int)ray_pos.y / DIV);
 			ray_pos = goto_next_edge(ray_pos, (ray));
 			// printf(">>%f %f\n", ray_pos.x, ray_pos.y);
+			// printf("in wall %d %d\n",(int)ray_pos.x / DIV, (int)ray_pos.y / DIV);
+
 		}
 		ray->start = start;
 		// ray->face = set_face(ray_pos, last_pos, ray->dir);
 		ray->size = sqrt(pow(ray_pos.x - start.x, 2) + pow(ray_pos.y - start.y, 2));
 		ray->end.x = ray_pos.x;
 		ray->end.y = ray_pos.y;
-		// printf("ray len :raydir =  %f %f raystart = %f %f rayend.x = %f .y = %f\n", ray->dir.x, ray->dir.y, ray->start.x, ray->start.y, ray_pos.x, ray_pos.y);
+		printf("ray len :raydir =  %f %f raystart = %f %f rayend.x = %f .y = %f\n", ray->dir.x, ray->dir.y, ray->start.x, ray->start.y, ray_pos.x, ray_pos.y);
 }
 
 void	rays_len(t_player *player, t_ray rays[X_RES], char **map)

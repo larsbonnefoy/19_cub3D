@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/05 12:01:57 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/07 12:47:41 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define RAYCASTER_H
 # include <stdio.h>
 # include <stdlib.h>
+# include <limits.h>
 # include <math.h>
 
 # define PI 3.141592653589793
