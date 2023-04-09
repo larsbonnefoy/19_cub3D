@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/07 19:04:10 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/09 15:14:33 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,17 +103,42 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 	t_pixel			pxl;
 	unsigned int	color;
 	t_point			perp;
+	t_point			ppos;
+	double		perp_size;
 
 	y = -1;
 	
-	// beta =  atan(1 / sqrt(pow(arg->player.cam.dir.x, 2) + pow(arg->player.cam.dir.y, 2)));
-	// ray->size = ray->size * cos(beta);
+	// beta =  atan(arg->player.cam.dist / sqrt(pow(arg->player.pos.x, 2) + pow(arg->player.pos.y, 2)));
+	// p_size = ray->size * sin(beta);
+	// beta = 0;
+	// if (arg->player.cam.dir.x != 0)
 	beta = atan(arg->player.cam.dir.y / arg->player.cam.dir.x);
-	p_size = -ray->end.x * cos(beta) + ray->end.y * sin(beta);
-	len_tan_alpha = (Y_RES / 2 - (p_size * tan(ALPHA)));
+	perp.x = ray->end.x * cos(beta) + ray->end.y * sin(beta);
+	perp.y = -ray->end.x * sin(beta) + ray->end.y * cos(beta);
+	ppos.x = arg->player.pos.x * cos(beta) + arg->player.pos.y * sin(beta);
+	ppos.y = -arg->player.pos.x * sin(beta) + arg->player.pos.y * cos(beta);
+	// p_size = sqrt(pow(perp.x - ppos.x, 2) + pow(perp.y - ppos.y, 2));
+	// perp.x = (arg->player.cam.dir.y * ray->end.x) - (arg->player.cam.dir.x * ray->end.y)
+	// 	- (arg->player.cam.dir.x
+	// 		* ((arg->player.cam.line.y * arg->player.pos.x)
+	// 			- (arg->player.cam.line.x * arg->player.pos.y)));
+	// perp.y = ((arg->player.cam.line.y * x)
+	// 	- (arg->player.cam.line.y * arg->player.pos.x)
+	// 	+ (arg->player.cam.line.x * arg->player.pos.y))
+	// 		/  arg->player.cam.line.y;
+	// p_size = sqrt(pow(perp.x , 2) + pow(perp.y , 2));
+	// p_size = fabs(perp.y - arg->player.pos.y);
+	p_size = sqrt(pow(perp.x - ppos.x, 2) + pow(perp.y - ppos.y, 2));
+	// if (ray->dir.x == 0)
+	// 	p_size = perp.y;
+	// if (ray->dir.y == 0)
+	// 	p_size = perp.x;
+	// p_size = ray->size;
+	// len_tan_alpha = (Y_RES / 2 - (p_size * tan(ALPHA)));
 	y_res_div2 = Y_RES / 2;
+	int wall_size = (Y_RES / p_size) * DIV;
 	pxl.x = x;
-	// printf("%d  %f %f %f\n", x,  y_res_div2 - len_tan_alpha, y_res_div2 + len_tan_alpha, ray->size);
+	// printf("%d  %f %f %f %f\n", x,  ray->end.x, ray->end.y, p_size, ray->size);
 	while (++y < Y_RES)
 	{
 		pxl.y = y;
@@ -127,9 +152,9 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 		if (ray->face[0] == 'E')
 			color = 0xff00ff;
 		set_pixel_color(frame, pxl, color);
-		if (y < y_res_div2 - len_tan_alpha)
+		if (y < y_res_div2 - wall_size / 2)
 			set_pixel_color(frame, pxl, arg->ground_color);
-		else if (y > y_res_div2 + len_tan_alpha)
+		else if (y > y_res_div2 + wall_size / 2)
 			set_pixel_color(frame, pxl, arg->roof_color);
 			
 	}
@@ -138,13 +163,24 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 void	put_walls(t_arg *arg, t_ray *rays)
 {
 	int			i;
+	double		x;
 	t_point	ray_pos;
+	t_point pos;
+	double	line_size;
 	
 	i = -1;
 	ray_pos = arg->player.pos;
+	// rays_len(&arg->player, rays, arg->map);
 	while (++i < X_RES)
 	{
 		ray_len(ray_pos, &(rays[i]), arg->map);
+		x = 2 * (double)i / ((double)(X_RES) - 1) - 1;
+		// pos.x = arg->player.pos.x + arg->player.cam.line.x * x;
+		// pos.y = arg->player.pos.y + arg->player.cam.line.y * x;
+		// line_size = pow(pos.x - arg->player.pos.x,2) + pow(pos.y - arg->player.pos.y,2);
+		// printf(">wall ray size %f %f %f %f\n", rays[i].size, x, pos.x, pos.y);
+		rays[i].size = sqrt(pow(rays[i].size, 2) - line_size);
+		// printf(">wall ray size %f\n", rays[i].size);
 		draw_wall(arg, &(rays[i]), arg->frame, i);
 	}
 }
@@ -156,7 +192,6 @@ void	put_rays(t_arg *arg, t_ray *rays)
 	
 	i = -1;
 	ray_pos = arg->player.pos;
-
 	while (++i < X_RES)
 	{
 		color = 0xff00ff;
@@ -226,14 +261,16 @@ void	move(t_arg *arg, char *key)
 		y = vect_cam.x * 10;
 		x = -vect_cam.y * 10;
 	}
-	x += arg->player.pos.x;
-	y += arg->player.pos.y;
-	pos.x = x;
-	pos.y = y;
+	pos.x = x + arg->player.pos.x;
+	pos.y = y + arg->player.pos.y;
 	if (!in_wall(pos, arg->map))
 	{
-		arg->player.pos.x = x;
-		arg->player.pos.y = y;
+		arg->player.pos.x += x;
+		arg->player.pos.y += y;
+		// printf("cam %f %f\n", arg->player.cam.pos.x, arg->player.cam.pos.y);
+		// arg->player.cam.pos.x += x;
+		// arg->player.cam.pos.y += y;
+		// printf(">cam %f %f\n", arg->player.cam.pos.x, arg->player.cam.pos.y);
 	}
 }
 

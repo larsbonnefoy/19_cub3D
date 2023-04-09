@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/07 17:29:20 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/09 15:02:21 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,18 +178,20 @@ void	ray_len(t_point start, t_ray *ray, char **map)
 		ray->size = sqrt(pow(ray_pos.x - start.x, 2) + pow(ray_pos.y - start.y, 2));
 		ray->end.x = ray_pos.x;
 		ray->end.y = ray_pos.y;
-		printf("ray len :raydir =  %f %f raystart = %f %f rayend.x = %f .y = %f\n", ray->dir.x, ray->dir.y, ray->start.x, ray->start.y, ray_pos.x, ray_pos.y);
+		// printf("ray len :raydir =  %f %f raystart = %f %f rayend.x = %f .y = %f\n", ray->dir.x, ray->dir.y, ray->start.x, ray->start.y, ray_pos.x, ray_pos.y);
 }
 
 void	rays_len(t_player *player, t_ray rays[X_RES], char **map)
 {
 	int	i;
+	double	x;
 	t_point	ray_pos;
 
 	i = -1;
 	while (++i < X_RES)
 	{
-		ray_len(player->pos, &(rays[i]), map);
+		x = 2 * (double)i / ((double)(X_RES) - 1) - 1;
+		ray_len(ray_pos, &(rays[i]), map);
 	}
 }
 
@@ -221,9 +223,11 @@ int	main()
 	}
 	player.pos.x = X_RES / 2 ;
 	player.pos.y = Y_RES / 2;
-	player.cam.size = 10;
+	// player.cam.size = 10;
 	player.cam.dir.x = 0;
 	player.cam.dir.y = -1;
+	player.cam.pos.x = player.pos.x;
+	player.cam.pos.y = player.pos.y - 10;
 	player.cam.line.x = 0.5;
 	player.cam.line.y = 0;
 	// player.cam.start.x = player.cam.dir.x;

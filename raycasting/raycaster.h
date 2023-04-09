@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/07 12:47:41 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/09 14:14:54 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct s_line
 typedef struct s_ray
 {
 	double	size;
+	double	p_size;
 	char	*face;
 	t_point	dir;
 	t_point	start;
@@ -78,6 +79,7 @@ typedef struct s_pixel
 typedef struct s_camera
 {
 	t_point	dir;
+	t_point	pos;
 	t_point	start;
 	t_point	end;
 	double	size;
