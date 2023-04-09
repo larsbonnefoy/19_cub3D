@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/09 15:02:21 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/09 18:07:26 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,31 @@ static char	*set_face(t_point pos, t_point last_pos, t_point dir)
 	return ("");          
 }
 
+// void	rays_gen(t_player *player, t_ray rays[X_RES])
+// {
+// 	t_point	ray_incr;
+// 	int		i;
+// 	t_point	cam_dir;
+// 	t_point	cam_end;
+// 	t_point	cam_start;
+// 	double	ray_norm;
+// 	double	y;
+// 	double	x;
+// 	t_point start;
+// 	t_point end;
+
+// 	i = -1;
+// 	while (++i < X_RES)
+// 	{
+// 		x = 2 * (double)i / ((double)(X_RES) - 1) - 1;//x pos line on screen == x pos on the cam line in the cam line space
+// 		rays[i].dir.x = (player->cam.dir.x + player->cam.line.x * x) ;
+// 		rays[i].dir.y = (player->cam.dir.y + player->cam.line.y * x) ;
+// 		ray_norm = sqrt(pow(rays[i].dir.x, 2) + pow(rays[i].dir.y, 2));
+// 		rays[i].dir.x = rays[i].dir.x / ray_norm;
+// 		rays[i].dir.y = rays[i].dir.y / ray_norm;
+// 		// printf("gen %f %f\n", rays[i].dir.x, rays[i].dir.y);
+// 	}
+// }
 void	rays_gen(t_player *player, t_ray rays[X_RES])
 {
 	t_point	ray_incr;
@@ -74,19 +99,27 @@ void	rays_gen(t_player *player, t_ray rays[X_RES])
 	double	ray_norm;
 	double	y;
 	double	x;
-	t_point start;
-	t_point end;
 
+	cam_dir.x = player->cam.end.x - player->cam.start.x;
+	cam_dir.y = player->cam.end.y - player->cam.start.y;
+	cam_dir.x = (cam_dir.x / player->cam.size);
+	cam_dir.y = (cam_dir.y / player->cam.size);
+	ray_incr.x = fabs((player->cam.end.x - player->cam.start.x)) / ((X_RES) - 1);
+	ray_incr.y = fabs((player->cam.end.y - player->cam.start.y)) / ((X_RES) - 1);
 	i = -1;
+	x = player->cam.start.x;
+	y = player->cam.start.y;
 	while (++i < X_RES)
 	{
-		x = 2 * (double)i / ((double)(X_RES) - 1) - 1;//x pos line on screen == x pos on the cam line in the cam line space
-		rays[i].dir.x = (player->cam.dir.x + player->cam.line.x * x) ;
-		rays[i].dir.y = (player->cam.dir.y + player->cam.line.y * x) ;
+		x += ((ray_incr.x) * (cam_dir.x));
+		y += ((ray_incr.y) * (cam_dir.y));
+		rays[i].dir.x = x - player->pos.x;
+		rays[i].dir.y = y - player->pos.y;
+		rays[i].start.x = x;
+		rays[i].start.y = y;
 		ray_norm = sqrt(pow(rays[i].dir.x, 2) + pow(rays[i].dir.y, 2));
 		rays[i].dir.x = rays[i].dir.x / ray_norm;
 		rays[i].dir.y = rays[i].dir.y / ray_norm;
-		// printf("gen %f %f\n", rays[i].dir.x, rays[i].dir.y);
 	}
 }
 
@@ -98,7 +131,7 @@ int	in_wall(t_point pos, char **map)
 }
 
 t_point	goto_next_edge(t_point start, t_ray *ray)
-{//DDAish algorithm
+{
 	t_point	res;
 	t_point	wall_h;
 	double dist_wall_h;
@@ -109,7 +142,6 @@ t_point	goto_next_edge(t_point start, t_ray *ray)
 	
 	slope = ray->dir.y / ray->dir.x;
 	b = start.y - (slope * start.x);
-	// printf("ray dir > %f %f\n", ray->dir.x, ray->dir.y);
 	if (ray->dir.x > 0)
 		wall_v.x = ((((int)start.x / DIV) + 1) * DIV);
 	else
@@ -120,18 +152,9 @@ t_point	goto_next_edge(t_point start, t_ray *ray)
 		wall_h.y = ((((int)start.y / DIV)) * DIV) - 1;
 	wall_v.y = slope * wall_v.x + b;
 	wall_h.x = (wall_h.y - b) / slope;
+
 	dist_wall_v = sqrt(pow(start.x - wall_v.x, 2) + pow(start.y - wall_v.y, 2));
 	dist_wall_h = sqrt(pow(start.x - wall_h.x, 2) + pow(start.y - wall_h.y, 2));
-	if (ray->dir.x == 0)
-		dist_wall_v = INT_MAX;
-	if (ray->dir.y == 0)
-		dist_wall_h = INT_MAX;
-	// printf("start %f %f\n",start.x, start.y);
-	// printf("dir %f %f\n", r		ay->dir.x, ray->dir.y);
-	// printf("slope %f\n", slope);
-	// printf("dist wall %f %f\n",dist_wall_v, dist_wall_h);
-	// printf("wall v %f %f\n",wall_v.x, wall_v.y);
-	// printf("wall h %f %f\n",wall_h.x, wall_h.y);
 	if (dist_wall_h < dist_wall_v)
 		res = wall_h;
 	else
@@ -165,34 +188,13 @@ void	ray_len(t_point start, t_ray *ray, char **map)
 		while (!in_wall(ray_pos, map))
 		{
 			last_pos = ray_pos;
-			// printf("========================================================\n");
-			// printf(">%f %f %f %f\n", ray_pos.x, ray_pos.y, ray->dir.x, ray->dir.y);
-			// printf("in wall %d %d\n",(int)ray_pos.x / DIV, (int)ray_pos.y / DIV);
 			ray_pos = goto_next_edge(ray_pos, (ray));
-			// printf(">>%f %f\n", ray_pos.x, ray_pos.y);
-			// printf("in wall %d %d\n",(int)ray_pos.x / DIV, (int)ray_pos.y / DIV);
 
 		}
 		ray->start = start;
-		// ray->face = set_face(ray_pos, last_pos, ray->dir);
 		ray->size = sqrt(pow(ray_pos.x - start.x, 2) + pow(ray_pos.y - start.y, 2));
 		ray->end.x = ray_pos.x;
 		ray->end.y = ray_pos.y;
-		// printf("ray len :raydir =  %f %f raystart = %f %f rayend.x = %f .y = %f\n", ray->dir.x, ray->dir.y, ray->start.x, ray->start.y, ray_pos.x, ray_pos.y);
-}
-
-void	rays_len(t_player *player, t_ray rays[X_RES], char **map)
-{
-	int	i;
-	double	x;
-	t_point	ray_pos;
-
-	i = -1;
-	while (++i < X_RES)
-	{
-		x = 2 * (double)i / ((double)(X_RES) - 1) - 1;
-		ray_len(ray_pos, &(rays[i]), map);
-	}
 }
 
 int	main()
@@ -223,20 +225,20 @@ int	main()
 	}
 	player.pos.x = X_RES / 2 ;
 	player.pos.y = Y_RES / 2;
-	// player.cam.size = 10;
-	player.cam.dir.x = 0;
-	player.cam.dir.y = -1;
+	player.cam.size = 5;
 	player.cam.pos.x = player.pos.x;
 	player.cam.pos.y = player.pos.y - 10;
-	player.cam.line.x = 0.5;
+	player.cam.line.x = 0.6;
 	player.cam.line.y = 0;
-	// player.cam.start.x = player.cam.dir.x;
-	// player.cam.start.y = player.cam.dir.y - player.cam.size / 2;
-	// player.cam.end.x = player.cam.dir.x ;
-	// player.cam.end.y = player.cam.dir.y + player.cam.size / 2;
-	// player.cam.dist = sqrt(pow(player.cam.dir.x - player.pos.x, 2) + pow(player.cam.dir.y - player.pos.y, 2));
+	player.cam.dir.x = player.pos.x ;
+	player.cam.dir.y = player.pos.y - 10;
+	player.cam.start.x = player.cam.dir.x - player.cam.size / 2;
+	player.cam.start.y = player.cam.dir.y;
+	player.cam.end.x = player.cam.dir.x + player.cam.size / 2;
+	player.cam.end.y = player.cam.dir.y;
+	player.cam.dist = sqrt(pow(player.cam.dir.x - player.pos.x, 2) + pow(player.cam.dir.y - player.pos.y, 2));
 	printf("cam end y %f\n", player.cam.end.y);
-	rays_gen(&player, rays);
+	// rays_gen(&player, rays);
 	printf("cam end y %f\n", player.cam.end.y);
 	// i = -1;
 	// while (++i < X_RES)

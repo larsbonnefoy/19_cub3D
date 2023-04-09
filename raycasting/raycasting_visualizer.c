@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/09 15:14:33 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/09 18:07:01 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,121 +24,79 @@ static void	set_pixel_color(t_img *dst, t_pixel pxl, size_t	clr)
 {
 	char	*pxl_addr;
 
-	// printf("->%d %d\n", pxl.x, pxl.y);
 	pxl_addr = dst->addr + ((pxl.y) * dst->line_len + (pxl.x) * (dst->bpp / 8));
-	// printf("pxl %d %d\n", pxl.x, pxl.y);
 	*(size_t *)pxl_addr = clr;
 }
 
-static void	draw_first_frame(t_arg *arg)
-{
-	t_pixel	pixel;
+// static void	draw_first_frame(t_arg *arg)
+// {
+// 	t_pixel	pixel;
 
-	pixel.y = 0;
-	while (pixel.y < Y_RES)
-	{
-		pixel.x = 0;
-		while (pixel.x < X_RES)
-		{
-			set_pixel_color(arg->frame, pixel, 0x0);
-			pixel.x+= 1;
-		}
-		pixel.y+= 1;
-	}
-}
+// 	pixel.y = 0;
+// 	while (pixel.y < Y_RES)
+// 	{
+// 		pixel.x = 0;
+// 		while (pixel.x < X_RES)
+// 		{
+// 			set_pixel_color(arg->frame, pixel, 0x0);
+// 			pixel.x+= 1;
+// 		}
+// 		pixel.y+= 1;
+// 	}
+// } 
 
-static t_point draw_ray(t_arg *arg, t_point pos, int i)
-{
-	t_point	res;
-	t_pixel	pxl;
+// static t_point draw_ray(t_arg *arg, t_point pos, int i)
+// {
+// 	t_point	res;
+// 	t_pixel	pxl;
 
-	res = pos;
-	res.x += arg->rays[i].dir.x;
-	res.y += arg->rays[i].dir.y;
-	pxl.x = res.x;
-	pxl.y = res.y;
-	// printf("%d :  %f %f %d %d %f %f\n", i, arg->rays[i].dir.x, arg->rays[i].dir.y, pxl.x, pxl.y, res.x, res.y);
-	set_pixel_color(arg->frame, pxl, 0xece75f);
-	return (res);
-}
+// 	res = pos;
+// 	res.x += arg->rays[i].dir.x;
+// 	res.y += arg->rays[i].dir.y;
+// 	pxl.x = res.x;
+// 	pxl.y = res.y;
+// 	set_pixel_color(arg->frame, pxl, 0xece75f);
+// 	return (res);
+// }
 
-static void	draw_line(t_ray *line, t_img *frame, unsigned int color)
-{
-	t_point	vect_dir;
-	t_point	pixel;
-	t_pixel	pxl;
-	int vect_dir_norm;
-	double	slope;
+// static void	draw_line(t_ray *line, t_img *frame, unsigned int color)
+// {
+// 	t_point	vect_dir;
+// 	t_point	pixel;
+// 	t_pixel	pxl;
+// 	int vect_dir_norm;
+// 	double	slope;
 
-	vect_dir.x = line->dir.x;
-	vect_dir.y = line->dir.y;
-	vect_dir_norm = line->size;
-	pixel.x = line->start.x;
-	pixel.y = line->start.y;
-	printf("1>%d %f %f\n", vect_dir_norm, pixel.x, pixel.y);
-	while (vect_dir_norm >= 0)
-	{
-		pxl.x = round(pixel.x);
-		pxl.y = round(pixel.y);
-		// printf("%f %f %d %d %d\n", pixel.x, pixel.y, pxl.x, pxl.y, vect_dir_norm);
-		set_pixel_color(frame, pxl, color);
-		// pixel = goto_next_edge(pixel, line);
-		pixel.x += vect_dir.x;
-		pixel.y += (vect_dir.y);
-		// if (pixel.x < 0)
-		// 	pixel.x = 0;
-		// if (pixel.y < 0)
-		// 	pixel.y = 0;
-		--vect_dir_norm;
-	}
-}
+// 	vect_dir.x = line->dir.x;
+// 	vect_dir.y = line->dir.y;
+// 	vect_dir_norm = line->size;
+// 	pixel.x = line->start.x;
+// 	pixel.y = line->start.y;
+// 	printf("1>%d %f %f\n", vect_dir_norm, pixel.x, pixel.y);
+// 	while (vect_dir_norm >= 0)
+// 	{
+// 		pxl.x = round(pixel.x);
+// 		pxl.y = round(pixel.y);
+// 		set_pixel_color(frame, pxl, color);
+// 		pixel.x += vect_dir.x;
+// 		pixel.y += (vect_dir.y);
+// 		--vect_dir_norm;
+// 	}
+// }
 
 static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 {	 
 	int				y;
-	double			len_tan_alpha;
-	double			y_res_div2;
 	double			beta;
-	double			p_size;
+	int				wall_size ;
 	t_pixel			pxl;
 	unsigned int	color;
-	t_point			perp;
-	t_point			ppos;
-	double		perp_size;
 
 	y = -1;
-	
-	// beta =  atan(arg->player.cam.dist / sqrt(pow(arg->player.pos.x, 2) + pow(arg->player.pos.y, 2)));
-	// p_size = ray->size * sin(beta);
-	// beta = 0;
-	// if (arg->player.cam.dir.x != 0)
-	beta = atan(arg->player.cam.dir.y / arg->player.cam.dir.x);
-	perp.x = ray->end.x * cos(beta) + ray->end.y * sin(beta);
-	perp.y = -ray->end.x * sin(beta) + ray->end.y * cos(beta);
-	ppos.x = arg->player.pos.x * cos(beta) + arg->player.pos.y * sin(beta);
-	ppos.y = -arg->player.pos.x * sin(beta) + arg->player.pos.y * cos(beta);
-	// p_size = sqrt(pow(perp.x - ppos.x, 2) + pow(perp.y - ppos.y, 2));
-	// perp.x = (arg->player.cam.dir.y * ray->end.x) - (arg->player.cam.dir.x * ray->end.y)
-	// 	- (arg->player.cam.dir.x
-	// 		* ((arg->player.cam.line.y * arg->player.pos.x)
-	// 			- (arg->player.cam.line.x * arg->player.pos.y)));
-	// perp.y = ((arg->player.cam.line.y * x)
-	// 	- (arg->player.cam.line.y * arg->player.pos.x)
-	// 	+ (arg->player.cam.line.x * arg->player.pos.y))
-	// 		/  arg->player.cam.line.y;
-	// p_size = sqrt(pow(perp.x , 2) + pow(perp.y , 2));
-	// p_size = fabs(perp.y - arg->player.pos.y);
-	p_size = sqrt(pow(perp.x - ppos.x, 2) + pow(perp.y - ppos.y, 2));
-	// if (ray->dir.x == 0)
-	// 	p_size = perp.y;
-	// if (ray->dir.y == 0)
-	// 	p_size = perp.x;
-	// p_size = ray->size;
-	// len_tan_alpha = (Y_RES / 2 - (p_size * tan(ALPHA)));
-	y_res_div2 = Y_RES / 2;
-	int wall_size = (Y_RES / p_size) * DIV;
+	beta =  arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2));
+	ray->size = ray->size * sin(atan(beta));
+	wall_size = (X_RES / ray->size) * ((arg->player.cam.dist / arg->player.cam.size) * DIV);
 	pxl.x = x;
-	// printf("%d  %f %f %f %f\n", x,  ray->end.x, ray->end.y, p_size, ray->size);
 	while (++y < Y_RES)
 	{
 		pxl.y = y;
@@ -152,11 +110,10 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 		if (ray->face[0] == 'E')
 			color = 0xff00ff;
 		set_pixel_color(frame, pxl, color);
-		if (y < y_res_div2 - wall_size / 2)
+		if (y <= (Y_RES / 2 )- wall_size / 2)
 			set_pixel_color(frame, pxl, arg->ground_color);
-		else if (y > y_res_div2 + wall_size / 2)
-			set_pixel_color(frame, pxl, arg->roof_color);
-			
+		else if (y >= (Y_RES / 2 ) + wall_size / 2)
+			set_pixel_color(frame, pxl, arg->roof_color);	
 	}
 }
 
@@ -174,13 +131,6 @@ void	put_walls(t_arg *arg, t_ray *rays)
 	while (++i < X_RES)
 	{
 		ray_len(ray_pos, &(rays[i]), arg->map);
-		x = 2 * (double)i / ((double)(X_RES) - 1) - 1;
-		// pos.x = arg->player.pos.x + arg->player.cam.line.x * x;
-		// pos.y = arg->player.pos.y + arg->player.cam.line.y * x;
-		// line_size = pow(pos.x - arg->player.pos.x,2) + pow(pos.y - arg->player.pos.y,2);
-		// printf(">wall ray size %f %f %f %f\n", rays[i].size, x, pos.x, pos.y);
-		rays[i].size = sqrt(pow(rays[i].size, 2) - line_size);
-		// printf(">wall ray size %f\n", rays[i].size);
 		draw_wall(arg, &(rays[i]), arg->frame, i);
 	}
 }
@@ -212,19 +162,38 @@ void	turn(t_arg *arg, double rad)
 {
 	t_point	rel_cam_prev;
 	t_point	rel_line_prev;
+	t_point	rel_start_prev;
+	t_point	rel_end_prev;
+	t_point	rel_cam;
+	t_point	rel_start;
+	t_point	rel_end;
 	double	csin;
 	double	ccos;
 
 	csin = sin(rad);
 	ccos = cos(rad);
-	rel_cam_prev.x = arg->player.cam.dir.x;
-	rel_cam_prev.y = arg->player.cam.dir.y;
 	rel_line_prev.x = arg->player.cam.line.x;
 	rel_line_prev.y = arg->player.cam.line.y;
-	arg->player.cam.dir.x  = rel_cam_prev.x * ccos + rel_cam_prev.y * csin; 
-	arg->player.cam.dir.y= -rel_cam_prev.x * csin + rel_cam_prev.y * ccos;
 	arg->player.cam.line.x = rel_line_prev.x * ccos + rel_line_prev.y * csin;
 	arg->player.cam.line.y = -rel_line_prev.x * csin + rel_line_prev.y * ccos;
+	rel_cam_prev.x = arg->player.cam.dir.x - arg->player.pos.x;
+	rel_cam_prev.y = arg->player.cam.dir.y - arg->player.pos.y;
+	rel_start_prev.x = arg->player.cam.start.x - arg->player.pos.x;
+	rel_start_prev.y = arg->player.cam.start.y - arg->player.pos.y;
+	rel_end_prev.x = arg->player.cam.end.x - arg->player.pos.x;
+	rel_end_prev.y = arg->player.cam.end.y - arg->player.pos.y;
+	rel_cam.x = rel_cam_prev.x * ccos + rel_cam_prev.y * csin; 
+	rel_cam.y = -rel_cam_prev.x * csin + rel_cam_prev.y * ccos;
+	rel_start.x = rel_start_prev.x * ccos + rel_start_prev.y * csin;
+	rel_start.y = -rel_start_prev.x * csin + rel_start_prev.y * ccos;
+	rel_end.x = rel_end_prev.x * ccos + rel_end_prev.y * csin;
+	rel_end.y = -rel_end_prev.x * csin + rel_end_prev.y * ccos;
+	arg->player.cam.dir.x = rel_cam.x + arg->player.pos.x;
+	arg->player.cam.dir.y = rel_cam.y + arg->player.pos.y;
+	arg->player.cam.start.x = rel_start.x + arg->player.pos.x;
+	arg->player.cam.start.y = rel_start.y + arg->player.pos.y;
+	arg->player.cam.end.x = rel_end.x + arg->player.pos.x;
+	arg->player.cam.end.y = rel_end.y + arg->player.pos.y;
 }
 
 void	move(t_arg *arg, char *key)
@@ -235,11 +204,11 @@ void	move(t_arg *arg, char *key)
 	t_point	pos;
 	t_point	vect_cam;
 
-	vect_cam.x = arg->player.cam.dir.x;
-	vect_cam.y = arg->player.cam.dir.y;
+	vect_cam.x = arg->player.cam.dir.x - arg->player.pos.x;
+	vect_cam.y = arg->player.cam.dir.y - arg->player.pos.y;
 	cam_dist = sqrt(pow(vect_cam.x , 2) + pow(vect_cam.y, 2));
-	vect_cam.x = vect_cam.x;
-	vect_cam.y = vect_cam.y;
+	vect_cam.x = vect_cam.x / cam_dist;
+	vect_cam.y = vect_cam.y / cam_dist;
 	// printf(">%f %f\n", vect_cam.x, vect_cam.y);
 	if (key[0] == 'w')
 	{
@@ -267,6 +236,12 @@ void	move(t_arg *arg, char *key)
 	{
 		arg->player.pos.x += x;
 		arg->player.pos.y += y;
+		arg->player.cam.dir.x += x;
+		arg->player.cam.dir.y += y;
+		arg->player.cam.start.x += x;
+		arg->player.cam.start.y += y;
+		arg->player.cam.end.x += x;
+		arg->player.cam.end.y += y;
 		// printf("cam %f %f\n", arg->player.cam.pos.x, arg->player.cam.pos.y);
 		// arg->player.cam.pos.x += x;
 		// arg->player.cam.pos.y += y;
