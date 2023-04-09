@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/09 17:57:52 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 00:02:03 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@
 # define PI 3.141592653589793
 # define X_RES 1000
 # define Y_RES 1000
-# define ALPHA (PI / 6)
+# define SLOPE 0
+# define B 1
+# define V 1
+# define H 0
 # define DIV 64
 # ifdef __linux__
 #  include "mlx_linux/mlx.h"
@@ -45,8 +48,6 @@
 #  define LEFT 123
 #  define ESC 53
 # endif
-
-
 
 typedef struct s_point
 {
@@ -116,12 +117,19 @@ typedef struct s_arg
 	t_img			*mini;
 	unsigned int	roof_color;
 	unsigned int	ground_color;
+	int				vertical_vector;
+	int				horizontal_vector;
+	int				moment_vector;
 }	t_arg;
 
 void	rays_gen(t_player *player, t_ray rays[X_RES]);
-void	rays_len(t_player *player, t_ray rays[X_RES], char **map);
 t_point	goto_next_edge(t_point start, t_ray *ray);
 void	window(char **map, t_player player, t_ray rays[X_RES]);
 int		in_wall(t_point pos, char **map);
 void	ray_len(t_point start, t_ray *ray, char **map);
+void	turn(t_arg *arg, double rad, int moment);
+void	put_walls(t_arg *arg, t_ray *rays);
+void	move(t_arg *arg, double speed, int x, int y);
+int		pressed(int keycode, t_arg *arg);
+int		unpressed(int keycode, t_arg *arg);
 #endif

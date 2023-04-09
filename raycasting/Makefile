@@ -8,7 +8,7 @@ NAME = raycaster
 
 FILES =  raycaster.c 
 
-SRCS = raycaster.c raycasting_visualizer.c
+SRCS = raycaster.c raycasting_visualizer.c next_edge.c in_wall.c ray_len.c rays_gen.c turn.c frame.c move.c key_management.c
 
 OBJ = $(SRCS:.c=.o)
 
