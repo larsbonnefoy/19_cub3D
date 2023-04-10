@@ -56,10 +56,12 @@ typedef struct s_tmp_pars_info
 
 typedef struct s_map
 {
-	char	*NO;
-	char	*SO;
-	char	*WE;
-	char	*EA;
+	char	*no;
+	char	*so;
+	char	*we;
+	char	*ea;
+    unsigned int floor_c;
+    unsigned int ceiling_c;
 	int 	F_C[3];
 	int 	C_C[3];
 	char	**map;

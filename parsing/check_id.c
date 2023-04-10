@@ -80,13 +80,13 @@ int	handle_id(int id, char **tab, t_map *map)
 	if (0 <= id && id <= 3)
 	{
 		if (id == NO)
-			map->NO = del_endl(ft_strdup(tab[1]));
+			map->no = del_endl(ft_strdup(tab[1]));
 		else if (id == SO)
-			map->SO = del_endl(ft_strdup(tab[1]));
+			map->so = del_endl(ft_strdup(tab[1]));
 		else if (id == WE)
-			map->WE = del_endl(ft_strdup(tab[1]));
+			map->we = del_endl(ft_strdup(tab[1]));
 		else if (id == EA)
-			map->EA = del_endl(ft_strdup(tab[1]));
+			map->ea = del_endl(ft_strdup(tab[1]));
 	}
 	else if (id == 4 || id == 5)
 		handle_color(id, tab, map);
@@ -114,5 +114,9 @@ void	handle_color(int id, char **tab, t_map *map)
 			map->C_C[i] = rgb_val;
 		i++;
 	}
+    if (id == F)
+        map->floor_c = (map->F_C[0] << 16) | (map->F_C[1] << 8) | map->F_C[2];  
+    else
+        map->ceiling_c = (map->C_C[0] << 16) | (map->C_C[1] << 8) | map->C_C[2];  
 	free_tab(color);
 }
