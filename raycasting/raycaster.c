@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 11:48:08 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 14:19:15 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,17 @@ int	main()
 	char 		*sub;
 	char 		**map;
 	
-	map = (char **)malloc(sizeof(char *) * Y_RES / DIV);
+	map = (char **)malloc(sizeof(char *) * 10000 / DIV);
 	i = -1;
-	while(++i < Y_RES / DIV)
+	while(++i < 10000 / DIV)
 	{
-		sub = (char *)malloc(sizeof(char) * ((X_RES / DIV) + 1));
-		sub[(X_RES / DIV)] = '\0';
+		sub = (char *)malloc(sizeof(char) * ((10000 / DIV) + 1));
+		sub[(10000 / DIV)] = '\0';
 		j = -1;
-		while (++j < X_RES / DIV)
+		while (++j < 10000 / DIV)
 		{
 			val = '0';
-			if (i == 0 || j == 0 || i == (Y_RES / DIV) - 1|| j == (X_RES / DIV) - 1 /*|| i == 400 || j == 400 || i == 600 || j == 600*/)
+			if (i == 0 || j == 0 || i == (10000 / DIV) - 1|| j == (10000 / DIV) - 1 /*|| i == 400 || j == 400 || i == 600 || j == 600*/)
 				val = '1';
 			sub[j] = val;
 		}

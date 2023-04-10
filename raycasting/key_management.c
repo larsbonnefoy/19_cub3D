@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 00:01:05 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 14:06:00 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 14:26:09 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	pressed(int keycode, t_arg *arg)
 		arg->moment_vector -= 1;
 	if (keycode == LEFT)
 		arg->moment_vector += 1;
+	return (0);
 }
 
 int	unpressed(int keycode, t_arg *arg)
@@ -44,6 +45,7 @@ int	unpressed(int keycode, t_arg *arg)
 		arg->moment_vector += 1;
 	if (keycode == LEFT)
 		arg->moment_vector -= 1;
+	return (0);
 }
 
 int	unfocused(int keycode, t_arg *arg)

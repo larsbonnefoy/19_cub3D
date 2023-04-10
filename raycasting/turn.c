@@ -6,12 +6,11 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:27:00 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/09 22:42:52 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 14:08:06 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycaster.h"
-
 
 static t_point	rotate_point(t_point point, t_point center,
 	double ccos, double csin)
