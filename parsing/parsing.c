@@ -19,7 +19,7 @@
 int set_map(t_tmp_info *tmp_info, t_map *map);
 int ids_done(int check_array[NB_ID]);
 void set_data(t_map *map, t_tmp_info *info);
-void print_map(t_map *map, t_tmp_info *info);
+void print_map(t_map *map);
 int valid_extension(int argc, char **argv);
 t_tmp_info	*init_tmp_info();
 void init_player(t_player *player, t_tmp_info *tmp_info);
@@ -69,13 +69,14 @@ int main(int argc, char **argv)
 	free(tmp_info);
 */
 	////////////////////////////////////////////////////////
+	print_map(&map);
 	window(map.map, player, rays);
 	////////////////////////////////////////////////////////
 	
-	free(map.NO);
-	free(map.SO);
-	free(map.WE);
-	free(map.EA);
+	free(map.no);
+	free(map.so);
+	free(map.we);
+	free(map.ea);
 	free_tab(map.map);
 	return (0);
 }
@@ -191,12 +192,13 @@ int valid_extension(int argc, char **argv)
 	return (0);
 }
 
-void print_map(t_map *map, t_tmp_info *info)
+void print_map(t_map *map)
 {
 	int i;
 
-	printf("NO = %s\nSO = %s\nWE = %s\nEA = %s\n", map->NO, map->SO, map->WE, map->EA);
+	printf("NO = %s\nSO = %s\nWE = %s\nEA = %s\n", map->no, map->so, map->we, map->ea);
 	printf("F = %d,%d,%d\nC = %d,%d,%d\n", map->F_C[0], map->F_C[1],map->F_C[2],map->C_C[0],map->C_C[1],map->C_C[2]);
+	printf("Fhex = %X\nChex = %X\n", map->floor_c, map->ceiling_c);
 	i = 0;
 	while(map->map[i])
 	{
@@ -204,7 +206,6 @@ void print_map(t_map *map, t_tmp_info *info)
 		i++;
 	}
 	printf("width = %d, height = %d\n", map->width, map->height);
-	printf("player dir = %c,  x_player = %d, y_player  = %d\n", info->dir_player, info->x_player, info->y_player);
 }
 
 int ids_done(int check_array[NB_ID])
