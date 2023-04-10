@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 11:21:31 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 14:46:59 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define H 0
 # define DIV 64
 # ifdef __linux__
-#  include "mlx_linux/mlx.h"
+#  include "../mlx_linux/mlx.h"
 #  define W 119
 #  define S 115
 #  define D 100

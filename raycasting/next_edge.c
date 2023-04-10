@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:11:07 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 14:24:42 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 14:32:47 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ t_point	goto_next_edge(t_point start, t_ray *ray)
 	fct[SLOPE] = ray->dir.y / ray->dir.x;
 	fct[B] = start.y - (fct[SLOPE] * start.x);
 	if (ray->dir.x > 0)
-		wallv.x = ((((int)start.x / DIV) + 1) * DIV);
+		wallv.x = ((((int)start.x / DIV)) * DIV) + DIV;
 	else
 		wallv.x = (((((int)start.x) / DIV)) * DIV) - 0.00000000001;
 	if (ray->dir.y > 0)
-		wallh.y = ((((int)start.y / DIV) + 1) * DIV);
+		wallh.y = ((((int)start.y / DIV)) * DIV) + DIV;
 	else
 		wallh.y = ((((int)start.y / DIV)) * DIV) - 0.00000000001;
 	wallv.y = fct[SLOPE] * wallv.x + fct[B];

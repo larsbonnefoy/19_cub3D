@@ -6,9 +6,9 @@
 
 NAME = raycaster
 
-FILES =  raycaster.c 
+FILES =  raycaster.c raycasting_visualizer.c next_edge.c in_wall.c ray_len.c rays_gen.c turn.c frame.c move.c key_management.c
 
-SRCS = raycaster.c raycasting_visualizer.c next_edge.c in_wall.c ray_len.c rays_gen.c turn.c frame.c move.c key_management.c
+SRCS = $(addprefix raycasting/, $(FILES))
 
 OBJ = $(SRCS:.c=.o)
 
@@ -39,7 +39,7 @@ GNL = $(GNL_DIR)/gnl.a
 
 ifeq ($(DETECTED_OS), Linux)
 
-MLX_DIR = mlx_linux 
+MLX_DIR = mlx_linux
 
 MLX_PATH = $(MLXDIR)/libmlx_linux.a
 
@@ -47,7 +47,7 @@ MLX = -Lmlx_linux -lmlx_Linux -L/usr/lib -I$(MLX_DIR) -lXext -lX11 -lm -lz
 
 else
 
-MLX_DIR = mlx 
+MLX_DIR = ../mlx 
 
 MLX_PATH = $(MLXDIR)/libmlx.a
 
