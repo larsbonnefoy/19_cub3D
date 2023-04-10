@@ -5,34 +5,51 @@
 #                                                     +:+ +:+         +:+      #
 #    By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/11/15 08:30:21 by lbonnefo          #+#    #+#              #
-#    Updated: 2023/04/06 15:45:29 by lbonnefo         ###   ########.fr        #
+#    Created: 2022/11/11 13:10:56 by lbonnefo          #+#    #+#              #
+#    Updated: 2023/04/10 10:55:25 by lbonnefo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = gnl.a
+NAME = cub3D 
 
-SRCS =	get_next_line.c \
-		get_next_line_utils.c \
+FILES = parsing.c error.c check_id.c check_id_utils.c map_validation.c map_validation_utils.c\
+
+SRCS = $(FILES)
 
 OBJ = $(SRCS:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=address
+
+###LIB INCLUDES###
+
+LIBFT_DIR = ../libft
+
+LIBFT = $(LIBFT_DIR)/libft.a
+
+GNL_DIR = ../gnl
+
+GNL = $(GNL_DIR)/gnl.a
 
 $(NAME): $(OBJ)
-		@ar -rc $(NAME) $(OBJ)
-
+		@make -C $(LIBFT_DIR)
+		@make -C $(GNL_DIR)
+		@cc $(CFLAGS) -g $(OBJ) $(LIBFT) $(GNL) -o $(NAME)
 .c.o:
 		@cc $(CFLAGS) -c $< -o $(<:.c=.o)
 
 all: $(NAME)
 
 clean:
+		@make --no-print-directory clean -C $(LIBFT_DIR)
+		@make --no-print-directory clean -C $(GNL_DIR)
 		rm -f $(OBJ) 
 
 fclean: clean
+		@make --no-print-directory fclean -C $(LIBFT_DIR)
+		@make --no-print-directory fclean -C $(GNL_DIR)
 		rm -f $(NAME)
 
 re :	fclean $(NAME)
 	
 .PHONY: all clean fclean re 
+
