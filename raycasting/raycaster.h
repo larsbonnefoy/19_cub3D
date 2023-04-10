@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 00:02:03 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 11:21:31 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,4 +132,6 @@ void	put_walls(t_arg *arg, t_ray *rays);
 void	move(t_arg *arg, double speed, int x, int y);
 int		pressed(int keycode, t_arg *arg);
 int		unpressed(int keycode, t_arg *arg);
+int		unfocused(int keycode, t_arg *arg);
+int		ft_exit_success(t_arg *arg);
 #endif

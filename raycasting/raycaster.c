@@ -6,11 +6,30 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 11:51:52 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/10 14:20:55 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
 #include "raycaster.h"
+
+void init_player(t_player *player)
+{
+	player->pos.x = X_RES / 2 ;
+	player->pos.y = Y_RES / 2;
+	player->cam.size = 10;
+	player->cam.pos.x = player->pos.x;
+	player->cam.pos.y = player->pos.y - 10;
+	// player->cam.line.x = 0.6;
+	// player->cam.line.y = 0;
+	player->cam.dir.x = player->pos.x ;
+	player->cam.dir.y = player->pos.y - 10;
+	player->cam.start.x = player->cam.dir.x - player->cam.size / 2;
+	player->cam.start.y = player->cam.dir.y;
+	player->cam.end.x = player->cam.dir.x + player->cam.size / 2;
+	player->cam.end.y = player->cam.dir.y;
+	player->cam.dist = sqrt(pow(player->cam.dir.x - player->pos.x, 2) + pow(player->cam.dir.y - player->pos.y, 2));
+}
+
 int	main()
 {
 	t_ray 		rays[X_RES];
@@ -31,26 +50,13 @@ int	main()
 		while (++j < X_RES / DIV)
 		{
 			val = '0';
-			if (i == 0 || j == 0 || i == (Y_RES / DIV) - 1|| j == (X_RES / DIV) - 1 )//|| i == 400 || j == 400 || i == 600 || j == 600)
+			if (i == 0 || j == 0 || i == (Y_RES / DIV) - 1|| j == (X_RES / DIV) - 1 || i == 400 || j == 400 || i == 600 || j == 600)
 				val = '1';
 			sub[j] = val;
 		}
 		map[i] = sub;
 	}
-	player.pos.x = X_RES / 2 ;
-	player.pos.y = Y_RES / 2;
-	player.cam.size = 10;
-	player.cam.pos.x = player.pos.x;
-	player.cam.pos.y = player.pos.y - 10;
-	// player.cam.line.x = 0.6;
-	// player.cam.line.y = 0;
-	player.cam.dir.x = player.pos.x ;
-	player.cam.dir.y = player.pos.y - 10;
-	player.cam.start.x = player.cam.dir.x - player.cam.size / 2;
-	player.cam.start.y = player.cam.dir.y;
-	player.cam.end.x = player.cam.dir.x + player.cam.size / 2;
-	player.cam.end.y = player.cam.dir.y;
-	player.cam.dist = sqrt(pow(player.cam.dir.x - player.pos.x, 2) + pow(player.cam.dir.y - player.pos.y, 2));
+	init_player(&player);
 	printf("cam end y %f\n", player.cam.end.y);
 	// rays_gen(&player, rays);
 	printf("cam end y %f\n", player.cam.end.y);

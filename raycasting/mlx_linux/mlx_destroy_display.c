@@ -1,21 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   in_wall.c                                          :+:      :+:    :+:   */
+/*   mlx_destroy_display.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
+/*   By: mg <mg@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/09 19:14:55 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 13:44:16 by hdelmas          ###   ########.fr       */
+/*   Created: 2020/10/03 18:56:35 by mg                #+#    #+#             */
+/*   Updated: 2020/10/04 01:55:35 by mg               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "raycaster.h"
+#include "mlx_int.h"
 
-int	in_wall(t_point pos, char **map)
+int	mlx_destroy_display(t_xvar *xvar)
 {
-	if (!(pos.x < X_RES && pos.x >= 0 && pos.y < Y_RES && pos.y >= 0)
-		|| map[(int)(pos.y / DIV)][(int)(pos.x / DIV)] == '1')
-		return (1);
-	return (0);
+	XCloseDisplay(xvar->display);
 }

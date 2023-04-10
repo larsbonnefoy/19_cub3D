@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 20:16:23 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/09 23:59:21 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 14:25:03 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	move(t_arg *arg, double speed, int x, int y)
 	double	cam_dist;
 	t_point	move_vector;
 	t_point	vect_cam;
-	t_point	vect_dir;
+	//t_point	vect_dir;
 
 	vect_cam.x = (arg->player.cam.dir.x - arg->player.pos.x);
 	vect_cam.y = (arg->player.cam.dir.y - arg->player.pos.y);

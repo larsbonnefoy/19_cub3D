@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:57:17 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/09 20:12:21 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 14:24:46 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static unsigned int	set_color(char face)
 static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 {
 	int				y;
-	double			beta;
+//	double			beta;
 	int				wall_size ;
 	t_pixel			pxl;
 	unsigned int	color;
@@ -64,7 +64,7 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 void	put_walls(t_arg *arg, t_ray *rays)
 {
 	int			i;
-	double		x;
+	//double		x;
 	t_point		ray_pos;
 
 	i = -1;

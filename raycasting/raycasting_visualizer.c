@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 00:01:15 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 14:21:25 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int	next_frame(t_arg *arg)
 	rays_gen(&(arg->player), arg->rays);
 	put_walls(arg, arg->rays);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
+	return (0);
 }
 
 
@@ -75,6 +76,7 @@ void	window(char **map, t_player player, t_ray *rays)
 	arg = arg_init(map, player, rays);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	mlx_hook(arg->mlx_win, 17, 0, ft_exit_success, arg);
+	mlx_hook(arg->mlx_win, 10, 1L << 21, unfocused, arg);
 	mlx_hook(arg->mlx_win, 2, 1L << 0, pressed, arg);
 	mlx_hook(arg->mlx_win, 3, 1L << 1, unpressed, arg);
 	mlx_loop_hook(arg->mlx, next_frame, arg);
