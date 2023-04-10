@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 00:01:05 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 14:27:24 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/10 14:26:09 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,5 @@ int	unfocused(int keycode, t_arg *arg)
 	arg->horizontal_vector = 0;
 	arg->moment_vector = 0;
 	arg->moment_vector = 0;
-	return (0);
+    return (0);
 }

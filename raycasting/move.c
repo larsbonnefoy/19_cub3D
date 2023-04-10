@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 20:16:23 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 14:25:03 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/10 17:21:33 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,13 @@ static t_point	movement(t_point vect_cam, double speed, int x, int y)
 		res.y += x * vect_cam.x;
 	}
 	res_size = sqrt(pow(res.x, 2) + pow(res.y, 2));
-	res.x = res.x / res_size;
-	res.y = res.y / res_size;
-	res.x *= speed;
-	res.y *= speed;
+	if (res_size != 0)
+	{
+		res.x = res.x / res_size;
+		res.y = res.y / res_size;
+		res.x *= speed;
+		res.y *= speed;
+	}
 	return (res);
 }
 
@@ -61,7 +64,6 @@ void	move(t_arg *arg, double speed, int x, int y)
 	double	cam_dist;
 	t_point	move_vector;
 	t_point	vect_cam;
-	//t_point	vect_dir;
 
 	vect_cam.x = (arg->player.cam.dir.x - arg->player.pos.x);
 	vect_cam.y = (arg->player.cam.dir.y - arg->player.pos.y);

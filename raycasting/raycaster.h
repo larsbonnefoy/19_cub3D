@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 14:34:11 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/10 17:25:01 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define H 0
 # define DIV 64
 # ifdef __linux__
-#  include "mlx_linux/mlx.h"
+#  include "../mlx_linux/mlx.h"
 #  define W 119
 #  define S 115
 #  define D 100
@@ -114,7 +114,6 @@ typedef struct s_arg
 	void			*mlx_win;
 	t_ray			*rays;
 	t_img			*frame;
-	t_img			*mini;
 	unsigned int	roof_color;
 	unsigned int	ground_color;
 	int				vertical_vector;

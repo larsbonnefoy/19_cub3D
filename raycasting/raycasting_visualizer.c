@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 14:21:25 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/10 14:18:36 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,8 @@ int	next_frame(t_arg *arg)
 	rays_gen(&(arg->player), arg->rays);
 	put_walls(arg, arg->rays);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
-	return (0);
+    return (0);
 }
-
 
 void	window(char **map, t_player player, t_ray *rays)
 {
