@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 00:01:05 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 00:01:30 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 14:06:00 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,15 @@ int	unpressed(int keycode, t_arg *arg)
 		arg->moment_vector += 1;
 	if (keycode == LEFT)
 		arg->moment_vector -= 1;
+}
+
+int	unfocused(int keycode, t_arg *arg)
+{
+	(void)keycode;
+	arg->vertical_vector = 0;
+	arg->vertical_vector = 0;
+	arg->horizontal_vector = 0;
+	arg->horizontal_vector = 0;
+	arg->moment_vector = 0;
+	arg->moment_vector = 0;
 }
