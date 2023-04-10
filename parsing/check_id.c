@@ -77,9 +77,6 @@ int	get_id(char *s)
 
 int	handle_id(int id, char **tab, t_map *map)
 {
-	char	**color;
-
-	color = NULL;
 	if (0 <= id && id <= 3)
 	{
 		if (id == NO)

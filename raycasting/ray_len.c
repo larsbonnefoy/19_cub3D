@@ -15,7 +15,7 @@
 void	ray_len(t_point start, t_ray *ray, char **map)
 {		
 	t_point	ray_pos;
-	t_point	last_pos;
+	//t_point	last_pos;
 	//double	dist_wall_x;
 	///double	fct[2];
 	//double	dist_wall_y;
@@ -24,7 +24,7 @@ void	ray_len(t_point start, t_ray *ray, char **map)
 	ray_pos.y = start.y;
 	while (!in_wall(ray_pos, map))
 	{
-		last_pos = ray_pos;
+		//last_pos = ray_pos;
 		ray_pos = goto_next_edge(ray_pos, (ray));
 	}
 	ray->start = start;
