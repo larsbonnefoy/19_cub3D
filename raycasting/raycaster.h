@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 14:46:59 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 17:25:01 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ typedef struct s_arg
 	void			*mlx_win;
 	t_ray			*rays;
 	t_img			*frame;
-	t_img			*mini;
 	unsigned int	roof_color;
 	unsigned int	ground_color;
 	int				vertical_vector;

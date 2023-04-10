@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 20:16:23 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 14:27:00 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 17:21:33 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,13 @@ static t_point	movement(t_point vect_cam, double speed, int x, int y)
 		res.y += x * vect_cam.x;
 	}
 	res_size = sqrt(pow(res.x, 2) + pow(res.y, 2));
-	res.x = res.x / res_size;
-	res.y = res.y / res_size;
-	res.x *= speed;
-	res.y *= speed;
+	if (res_size != 0)
+	{
+		res.x = res.x / res_size;
+		res.y = res.y / res_size;
+		res.x *= speed;
+		res.y *= speed;
+	}
 	return (res);
 }
 
