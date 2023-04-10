@@ -6,11 +6,12 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/06 15:58:38 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/10 12:09:54 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+#include "../raycasting/raycaster.h"
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -21,19 +22,26 @@ void set_data(t_map *map, t_tmp_info *info);
 void print_map(t_map *map, t_tmp_info *info);
 int valid_extension(int argc, char **argv);
 t_tmp_info	*init_tmp_info();
+void init_player(t_player *player, t_tmp_info *tmp_info);
 
 /*
  * init both struct
  */
 int main(int argc, char **argv)
 {
-	(void) argc;
 	t_map map;
 	int		fd;
 	t_tmp_info *tmp_info;
+	
+	////////////////////////////////////////////////////////
+	t_player player;
+	t_ray	rays[X_RES];
+	////////////////////////////////////////////////////////
 
 	map.height = 0;
 	tmp_info = malloc(sizeof(t_tmp_info));
+	if (!tmp_info)
+		return (1);
 	init_tmp_info(tmp_info);
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
@@ -53,6 +61,12 @@ int main(int argc, char **argv)
 		ft_error("No player on the map", 1);
 	printf("---------------\n");
 	print_map(&map, tmp_info);
+	
+	////////////////////////////////////////////////////////
+	init_player(&player, tmp_info);
+	window(map.map, player, rays);
+	////////////////////////////////////////////////////////
+	
 	free(map.NO);
 	free(map.SO);
 	free(map.WE);
@@ -61,6 +75,22 @@ int main(int argc, char **argv)
 	free(tmp_info);
 	free_tab(map.map);
 	return (0);
+}
+
+void init_player(t_player *player, t_tmp_info *tmp_info)
+{
+	player->pos.x = (double)tmp_info->x_player * DIV;
+	player->pos.y = (double)tmp_info->y_player * DIV;
+	player->cam.size = 10;
+	player->cam.pos.x = player->pos.x;
+	player->cam.pos.y = player->pos.y - 10;
+	player->cam.dir.x = player->pos.x ;
+	player->cam.dir.y = player->pos.y - 10;
+	player->cam.start.x = player->cam.dir.x - player->cam.size / 2;
+	player->cam.start.y = player->cam.dir.y;
+	player->cam.end.x = player->cam.dir.x + player->cam.size / 2;
+	player->cam.end.y = player->cam.dir.y;
+	player->cam.dist = sqrt(pow(player->cam.dir.x - player->pos.x, 2) + pow(player->cam.dir.y - player->pos.y, 2));
 }
 
 /*
