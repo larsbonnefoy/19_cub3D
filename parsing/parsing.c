@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/10 12:09:54 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/10 15:49:31 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,20 @@ void print_map(t_map *map, t_tmp_info *info);
 int valid_extension(int argc, char **argv);
 t_tmp_info	*init_tmp_info();
 void init_player(t_player *player, t_tmp_info *tmp_info);
+void parsing(int argc, char **argv, t_player *player, t_map *map);
 
-/*
- * init both struct
- */
 int main(int argc, char **argv)
 {
 	t_map map;
-	int		fd;
-	t_tmp_info *tmp_info;
+	//int		fd;
+	//t_tmp_info *tmp_info;
 	
 	////////////////////////////////////////////////////////
 	t_player player;
 	t_ray	rays[X_RES];
+	parsing(argc, argv, &player, &map);
 	////////////////////////////////////////////////////////
-
+/*
 	map.height = 0;
 	tmp_info = malloc(sizeof(t_tmp_info));
 	if (!tmp_info)
@@ -64,6 +63,12 @@ int main(int argc, char **argv)
 	
 	////////////////////////////////////////////////////////
 	init_player(&player, tmp_info);
+	////////////////////////////////////////////////////////
+
+	free(tmp_info->str_map);
+	free(tmp_info);
+*/
+	////////////////////////////////////////////////////////
 	window(map.map, player, rays);
 	////////////////////////////////////////////////////////
 	
@@ -71,10 +76,39 @@ int main(int argc, char **argv)
 	free(map.SO);
 	free(map.WE);
 	free(map.EA);
-	free(tmp_info->str_map);
-	free(tmp_info);
 	free_tab(map.map);
 	return (0);
+}
+
+void parsing(int argc, char **argv, t_player *player, t_map *map)
+{
+	t_tmp_info *tmp_info;
+	int fd;
+
+	map->height = 0;
+	tmp_info = malloc(sizeof(t_tmp_info));
+	if (!tmp_info)
+		ft_error("Could not allocate memory", 1);
+	init_tmp_info(tmp_info);
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+        ft_error((char *)strerror(errno), 1);
+	valid_extension(argc, argv);
+	while (1)
+	{
+		tmp_info->line = get_next_line(fd);
+		if (!tmp_info->line) 
+			break;
+		set_data(map, tmp_info);
+		free(tmp_info->line);
+	}
+    map->map = ft_split(tmp_info->str_map, '\n'); 
+	map_validation(map, tmp_info);
+	if (tmp_info->dir_player == '0')
+		ft_error("No player on the map", 1);
+	init_player(player, tmp_info);
+	free(tmp_info->str_map);
+	free(tmp_info);
 }
 
 void init_player(t_player *player, t_tmp_info *tmp_info)

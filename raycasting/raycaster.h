@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 11:21:31 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 14:34:11 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 #  define LEFT 65361
 #  define ESC 65307   
 # else
-#  include "mlx/mlx.h"
+#  include "../mlx/mlx.h"
 #  define W 13
 #  define S 1
 #  define D 2
