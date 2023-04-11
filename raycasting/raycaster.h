@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/11 11:05:54 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/11 12:56:52 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <math.h>
 
 # define PI 3.141592653589793
-# define X_RES 1000
+# define X_RES 500
 # define Y_RES 1000
 # define SLOPE 0
 # define B 1
