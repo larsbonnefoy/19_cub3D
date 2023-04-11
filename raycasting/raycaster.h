@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/11 13:50:18 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/11 14:08:14 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 # include <math.h>
 
 # define PI 3.141592653589793
-# define X_RES 1000
-# define Y_RES 1000
+# define X_RES 2500
+# define Y_RES 1400
 # define SLOPE 0
 # define B 1
 # define V 1
 # define H 0
-# define DIV 64 
+# define DIV 64
 # ifdef __linux__
 #  include "../mlx_linux/mlx.h"
 #  define W 119
