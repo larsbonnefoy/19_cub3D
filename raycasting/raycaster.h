@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 17:25:01 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/11 13:50:18 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define B 1
 # define V 1
 # define H 0
-# define DIV 64
+# define DIV 64 
 # ifdef __linux__
 #  include "../mlx_linux/mlx.h"
 #  define W 119
@@ -80,11 +80,9 @@ typedef struct s_pixel
 typedef struct s_camera
 {
 	t_point	dir;
-	t_point	pos;
 	t_point	start;
 	t_point	end;
 	double	size;
-	t_point	line;
 	double	dist;
 }	t_camera;
 
@@ -106,6 +104,14 @@ typedef struct s_img
 	int		endian;
 }	t_img;
 
+typedef struct s_walls
+{
+	t_img	no;
+	t_img	so;
+	t_img	ea;
+	t_img	we;
+}	t_walls;
+
 typedef struct s_arg
 {
 	char			**map;
@@ -119,6 +125,7 @@ typedef struct s_arg
 	int				vertical_vector;
 	int				horizontal_vector;
 	int				moment_vector;
+	t_walls			walls;
 }	t_arg;
 
 void	rays_gen(t_player *player, t_ray rays[X_RES]);
@@ -133,4 +140,6 @@ int		pressed(int keycode, t_arg *arg);
 int		unpressed(int keycode, t_arg *arg);
 int		unfocused(int keycode, t_arg *arg);
 int		ft_exit_success(t_arg *arg);
+void	arg_walls_init(t_arg *arg);
+void	set_dir(t_player *player, char dir);
 #endif

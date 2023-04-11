@@ -6,11 +6,35 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:57:17 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 14:28:10 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/11 13:31:48 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycaster.h"
+
+static t_img	textures_init(t_arg *arg, char *path)
+{
+	t_img	sprite;
+
+	sprite.path = path;
+	sprite.img = mlx_xpm_file_to_image(arg->mlx, sprite.path, &sprite.width,
+			&sprite.height);
+	// if (!sprite.img)
+	// 	ft_exit_failure(arg);
+	sprite.addr = mlx_get_data_addr(sprite.img, &sprite.bpp,
+			&sprite.line_len, &sprite.endian);
+	// if (!sprite.addr)
+	// 	ft_exit_failure(arg);
+	return (sprite);
+}
+
+void	arg_walls_init(t_arg *arg)
+{
+	arg->walls.no = textures_init(arg, "wall1.xpm");
+	arg->walls.so = textures_init(arg, "wall2.xpm");
+	arg->walls.we = textures_init(arg, "wall3.xpm");
+	arg->walls.ea = textures_init(arg, "wall4.xpm");
+}
 
 static void	set_pixel_color(t_img *dst, t_pixel pxl, size_t	clr)
 {
@@ -39,25 +63,28 @@ static unsigned int	set_color(char face)
 static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 {
 	int				y;
-	// double			beta;
 	int				wall_size ;
 	t_pixel			pxl;
 	unsigned int	color;
+	//double			beta;
 
 	y = -1;
 	// beta = arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2));
 	// ray->size = ray->size * sin(atan(beta));
-	wall_size = (X_RES / ray->size) * (1 * DIV);
+	wall_size = (X_RES / ray->size) * (DIV * (arg->player.cam.dist / arg->player.cam.size));
 	pxl.x = x;
 	while (++y < Y_RES)
 	{
 		pxl.y = y;
-		color = set_color(ray->face[0]);
-		set_pixel_color(frame, pxl, color);
 		if (y <= (Y_RES / 2) - wall_size / 2)
 			set_pixel_color(frame, pxl, arg->ground_color);
 		else if (y >= (Y_RES / 2) + wall_size / 2)
 			set_pixel_color(frame, pxl, arg->roof_color);
+		else
+		{
+			color = set_color(ray->face[0]);
+			set_pixel_color(frame, pxl, color);
+		}
 	}
 }
 

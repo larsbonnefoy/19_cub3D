@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/11 13:27:01 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/11 13:48:22 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,16 +90,9 @@ int	file_check(int argc, char **argv)
 
 void	init_player(t_player *player, t_tmp_info *tmp_info)
 {
-	player->pos.x = (double)tmp_info->x_player * DIV;
-	player->pos.y = (double)tmp_info->y_player * DIV;
-	player->cam.size = 10;
-	player->cam.dir.x = player->pos.x ;
-	player->cam.dir.y = player->pos.y - 10;
-	player->cam.start.x = player->cam.dir.x - player->cam.size / 2;
-	player->cam.start.y = player->cam.dir.y;
-	player->cam.end.x = player->cam.dir.x + player->cam.size / 2;
-	player->cam.end.y = player->cam.dir.y;
-	player->cam.dist = sqrt(pow(player->cam.dir.x - player->pos.x, 2) + pow(player->cam.dir.y - player->pos.y, 2));
+	player->pos.x = (double)tmp_info->x_player * DIV + (DIV / 2);
+	player->pos.y = (double)tmp_info->y_player * DIV + (DIV / 2);
+	set_dir(player, tmp_info->dir_player);
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:11:07 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 16:58:00 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/10 17:34:28 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ t_point	goto_next_edge(t_point start, t_ray *ray)
 		wallh.y = ((((int)start.y / DIV) + 1) * DIV);
 	else
 		wallh.y = ((((int)start.y / DIV)) * DIV) - 0.00000000001;
-	// printf("%d %d\n", (((int)start.x / DIV) + 1), (((int)start.y / DIV) + 1));
 	wallv.y = fct[SLOPE] * wallv.x + fct[B];
 	wallh.x = (wallh.y - fct[B]) / fct[SLOPE];
 	dist_wall[V] = sqrt(pow(start.x - wallv.x, 2) + pow(start.y - wallv.y, 2));
