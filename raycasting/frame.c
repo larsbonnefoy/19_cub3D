@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:57:17 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/11 13:12:49 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/11 14:48:58 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 
 	y = -1;
 	beta = arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2));
-	ray->size = ray->size * cos(atan(beta));
+	ray->size = ray->size * sin(atan(beta));
 	wall_size = (X_RES / ray->size) * (DIV * (arg->player.cam.dist / arg->player.cam.size));
 	pxl.x = x;
 	while (++y < Y_RES)
@@ -94,9 +94,9 @@ void	put_walls(t_arg *arg, t_ray *rays)
 	t_point		ray_pos;
 
 	i = -1;
-	ray_pos = arg->player.pos;
 	while (++i < X_RES)
 	{
+		ray_pos = rays[i].start;
 		ray_len(ray_pos, &(rays[i]), arg->map);
 		draw_wall(arg, &(rays[i]), arg->frame, i);
 	}

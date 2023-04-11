@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:14:56 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/11 11:01:50 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/11 14:36:02 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	init_player(t_player *player)
 {
 	player->pos.x = X_RES / 2 ;
 	player->pos.y = Y_RES / 2;
-	set_dir(player, 'W');
+	set_dir(player, 'N');
 }
 
 int	main()
