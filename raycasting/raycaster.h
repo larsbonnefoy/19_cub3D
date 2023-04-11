@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/11 14:28:56 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/11 16:36:06 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,14 +105,6 @@ typedef struct s_img
 	int		endian;
 }	t_img;
 
-typedef struct s_walls
-{
-	t_img	no;
-	t_img	so;
-	t_img	ea;
-	t_img	we;
-}	t_walls;
-
 typedef struct s_arg
 {
 	char			**map;
@@ -126,7 +118,10 @@ typedef struct s_arg
 	int				vertical_vector;
 	int				horizontal_vector;
 	int				moment_vector;
-	t_walls			walls;
+	t_img	no;
+	t_img	so;
+	t_img	ea;
+	t_img	we;
 }	t_arg;
 
 void	rays_gen(t_player *player, t_ray rays[X_RES]);

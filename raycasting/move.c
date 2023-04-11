@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 20:16:23 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 17:21:33 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/11 15:09:25 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,14 @@ static t_point	movement(t_point vect_cam, double speed, int x, int y)
 void	add_movement(t_arg *arg, t_point move_vector)
 {
 	t_point	pos;
+	t_point	check;
+	t_point	check2;
 
 	pos.x = move_vector.x + arg->player.pos.x;
 	pos.y = move_vector.y + arg->player.pos.y;
-	if (!in_wall(pos, arg->map))
+	check.x = move_vector.x + arg->player.cam.dir.x;
+	check.y = move_vector.y + arg->player.cam.dir.y;
+	if (!in_wall(check, arg->map))
 	{
 		arg->player.pos.x += move_vector.x;
 		arg->player.cam.dir.x += move_vector.x;
