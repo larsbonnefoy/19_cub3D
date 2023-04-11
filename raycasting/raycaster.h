@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 19:37:30 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/11 11:05:54 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 #  define LEFT 65361
 #  define ESC 65307   
 # else
-#  include "mlx/mlx.h"
+#  include "../mlx/mlx.h"
 #  define W 13
 #  define S 1
 #  define D 2
@@ -80,11 +80,9 @@ typedef struct s_pixel
 typedef struct s_camera
 {
 	t_point	dir;
-	t_point	pos;
 	t_point	start;
 	t_point	end;
 	double	size;
-	t_point	line;
 	double	dist;
 }	t_camera;
 
@@ -143,4 +141,5 @@ int		unpressed(int keycode, t_arg *arg);
 int		unfocused(int keycode, t_arg *arg);
 int		ft_exit_success(t_arg *arg);
 void	arg_walls_init(t_arg *arg);
+void	set_dir(t_player *player, char dir);
 #endif

@@ -5,7 +5,7 @@
 
 NAME = raycaster
 
-FILES =  raycaster.c raycasting_visualizer.c next_edge.c in_wall.c ray_len.c rays_gen.c turn.c frame.c move.c key_management.c
+FILES =  set_dir.c raycaster.c raycasting_visualizer.c next_edge.c in_wall.c ray_len.c rays_gen.c turn.c frame.c move.c key_management.c
 
 SRCS = $(addprefix raycasting/, $(FILES))
 
@@ -46,7 +46,7 @@ MLX = -Lmlx_linux -lmlx_Linux -L/usr/lib -I$(MLX_DIR) -lXext -lX11 -lm -lz
 
 else
 
-MLX_DIR = ../mlx 
+MLX_DIR = mlx 
 
 MLX_PATH = $(MLXDIR)/libmlx.a
 
