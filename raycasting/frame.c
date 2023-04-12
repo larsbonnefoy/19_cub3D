@@ -6,35 +6,11 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:57:17 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/12 17:25:18 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/12 18:29:20 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycaster.h"
-
-static t_img	textures_init(t_arg *arg, char *path)
-{
-	t_img	sprite;
-
-	sprite.path = path;
-	sprite.img = mlx_xpm_file_to_image(arg->mlx, sprite.path, &sprite.width,
-			&sprite.height);
-	if (!sprite.img)
-		exit(12);
-	sprite.addr = mlx_get_data_addr(sprite.img, &sprite.bpp,
-			&sprite.line_len, &sprite.endian);
-	if (!sprite.addr)
-		exit(12);
-	return (sprite);
-}
-
-void	arg_walls_init(t_arg *arg)
-{
-	arg->no = textures_init(arg, "Wall1.xpm");
-	arg->so = textures_init(arg, "Wall2.xpm");
-	arg->we = textures_init(arg, "Wall3.xpm");
-	arg->ea = textures_init(arg, "wall4.xpm");
-}
 
 static void	set_pixel_color(t_img *dst, t_pixel pxl, size_t	clr)
 {
@@ -47,85 +23,54 @@ static void	set_pixel_color(t_img *dst, t_pixel pxl, size_t	clr)
 static unsigned int	set_color(t_arg *arg, t_ray *ray, char face, int y)
 {
 	unsigned int	color;
-	t_pixel			wall;
 
 	color = 0xff00ff;
 	if (face == 'W')
-	{
-		wall.x = (int)ray->end.y % (int)DIV;
-		wall.y = y;
-		color = *(unsigned int *)(arg->we.addr + (wall.y * arg->we.line_len
-				+ wall.x * (arg->we.bpp / 8)));
-		// color = 0x0000ff;
-	}
+		color = color_from_texture(&arg->we, ray->end.y, y);
 	if (face == 'N')
-	{
-		wall.x = (int)ray->end.x % (int)DIV;
-		wall.y = y;
-		color = *(unsigned int *)(arg->no.addr + (wall.y * arg->no.line_len
-				+ wall.x * (arg->no.bpp / 8)));
-		// color = 0x00ff00;
-	}
+		color = color_from_texture(&arg->no, ray->end.x, y);
 	if (face == 'S')
-	{
-		wall.x = (int)ray->end.x % (int)DIV;
-		wall.y = y;
-		color = *(unsigned int *)(arg->so.addr + (wall.y * arg->so.line_len
-				+ wall.x * (arg->so.bpp / 8)));
-		// color = 0xff0000;
-	}
+		color = color_from_texture(&arg->so, ray->end.x, y);
 	if (face == 'E')
-	{
-		wall.x = (int)ray->end.y % (int)DIV;
-		wall.y = y;
-		color = *(unsigned int *)(arg->ea.addr + (wall.y * arg->ea.line_len
-				+ wall.x * (arg->ea.bpp / 8)));
-		// color = 0xff00ff;
-	}
+		color = color_from_texture(&arg->ea, ray->end.y, y);
 	return (color);
+}
+
+static void	set_wall_textures(t_arg *arg, t_ray *ray,
+	t_pixel pxl, t_point *j_incr)
+{
+	unsigned int	color;
+
+	color = set_color(arg, ray, ray->face[0], (int)j_incr->x);
+	set_pixel_color(arg->frame, pxl, color);
+	j_incr->x = (j_incr->x + j_incr->y);
 }
 
 static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 {
 	int				y;
-	double			j;
+	t_point			j_incr;
 	double			wall_size ;
 	t_pixel			pxl;
-	unsigned int	color;
-	double			beta;
-	double			incr;
 
 	y = -1;
-	j = 0;
-	
-	beta = arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2));
-	ray->size = ray->size * sin(atan(beta));
-	if (ray->size != 0)
-		wall_size = (X_RES / ray->size) * (DIV * (arg->player.cam.dist / arg->player.cam.size));
-	incr = DIV / wall_size;
+	j_incr.x = 0;
+	find_perpendicular_len(arg, ray);
+	wall_size = (X_RES / ray->size)
+		* (DIV * (arg->player.cam.dist / arg->player.cam.size));
+	j_incr.y = DIV / wall_size;
 	if (wall_size > Y_RES)
-	{
-		j = (wall_size - Y_RES) / 2;
-		j =  (j / wall_size) * DIV;
-		// printf("x = %d incr = %f wall = %f beta = %f end = %f\n", x, incr, wall_size, beta, ray->end.x);
-		// printf(">j = %f\n", j);
-	}
-	pxl.x = x; 
+		j_incr.x = (((wall_size - Y_RES) / 2) / wall_size) * DIV;
+	pxl.x = x;
 	while (++y < Y_RES)
 	{
 		pxl.y = y;
 		if (y < (Y_RES / 2) - (int)(wall_size / 2))
-			set_pixel_color(frame, pxl, arg->ground_color); 
+			set_pixel_color(frame, pxl, arg->ground_color);
 		else if (y > (Y_RES / 2) + (int)(wall_size / 2))
 			set_pixel_color(frame, pxl, arg->roof_color);
 		else
-		{
-			// printf("j = %d y = %d\n", j, y - (Y_RES / 2) - wall_size / 2);
-			color = set_color(arg, ray, ray->face[0], (int)j);
-			set_pixel_color(frame, pxl, color);
-			j = (j + incr) ;
-			// printf("%f\n", j);
-		}
+			set_wall_textures(arg, ray, pxl, &j_incr);
 	}
 }
 

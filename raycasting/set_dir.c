@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:44:27 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/11 15:41:09 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/12 18:08:20 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	north(t_player *player)
 {
 		player->cam.dir.x = player->pos.x ;
-		player->cam.dir.y = player->pos.y - 10;
+		player->cam.dir.y = player->pos.y - 1;
 		player->cam.start.x = player->cam.dir.x - player->cam.size / 2;
 		player->cam.start.y = player->cam.dir.y;
 		player->cam.end.x = player->cam.dir.x + player->cam.size / 2;
@@ -25,7 +25,7 @@ static void	north(t_player *player)
 static void	south(t_player *player)
 {
 	player->cam.dir.x = player->pos.x ;
-	player->cam.dir.y = player->pos.y + 10;
+	player->cam.dir.y = player->pos.y + 1;
 	player->cam.start.x = player->cam.dir.x + player->cam.size / 2;
 	player->cam.start.y = player->cam.dir.y;
 	player->cam.end.x = player->cam.dir.x - player->cam.size / 2;
@@ -34,7 +34,7 @@ static void	south(t_player *player)
 
 static void	east(t_player *player)
 {
-	player->cam.dir.x = player->pos.x + 10;
+	player->cam.dir.x = player->pos.x + 1;
 	player->cam.dir.y = player->pos.y;
 	player->cam.start.x = player->cam.dir.x;
 	player->cam.start.y = player->cam.dir.y - player->cam.size / 2;
@@ -44,7 +44,7 @@ static void	east(t_player *player)
 
 static void	west(t_player *player)
 {
-	player->cam.dir.x = player->pos.x - 10;
+	player->cam.dir.x = player->pos.x - 1;
 	player->cam.dir.y = player->pos.y;
 	player->cam.start.x = player->cam.dir.x;
 	player->cam.start.y = player->cam.dir.y + player->cam.size / 2;
@@ -54,7 +54,7 @@ static void	west(t_player *player)
 
 void	set_dir(t_player *player, char dir)
 {
-	player->cam.size = 10;
+	player->cam.size = 1;
 	if (dir == 'S')
 	{
 		south(player);

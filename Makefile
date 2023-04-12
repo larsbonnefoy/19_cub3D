@@ -5,8 +5,7 @@
 
 NAME = raycaster
 
-FILES =  set_dir.c raycaster.c raycasting_visualizer.c next_edge.c in_wall.c ray_len.c rays_gen.c turn.c frame.c move.c key_management.c
-
+FILES =  set_dir.c raycaster.c raycasting_visualizer.c next_edge.c in_wall.c ray_len.c rays_gen.c turn.c frame.c move.c key_management.c texture.c
 SRCS = $(addprefix raycasting/, $(FILES))
 
 OBJ = $(SRCS:.c=.o)
