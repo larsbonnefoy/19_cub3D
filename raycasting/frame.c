@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:57:17 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/12 12:17:49 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/12 17:25:18 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,34 @@ static unsigned int	set_color(t_arg *arg, t_ray *ray, char face, int y)
 	{
 		wall.x = (int)ray->end.y % (int)DIV;
 		wall.y = y;
-		// printf("%d %d\n", wall.y, y);
 		color = *(unsigned int *)(arg->we.addr + (wall.y * arg->we.line_len
 				+ wall.x * (arg->we.bpp / 8)));
 		// color = 0x0000ff;
 	}
 	if (face == 'N')
-		color = 0x00ff00;
+	{
+		wall.x = (int)ray->end.x % (int)DIV;
+		wall.y = y;
+		color = *(unsigned int *)(arg->no.addr + (wall.y * arg->no.line_len
+				+ wall.x * (arg->no.bpp / 8)));
+		// color = 0x00ff00;
+	}
 	if (face == 'S')
-		color = 0xff0000;
+	{
+		wall.x = (int)ray->end.x % (int)DIV;
+		wall.y = y;
+		color = *(unsigned int *)(arg->so.addr + (wall.y * arg->so.line_len
+				+ wall.x * (arg->so.bpp / 8)));
+		// color = 0xff0000;
+	}
 	if (face == 'E')
-		color = 0xff00ff;
+	{
+		wall.x = (int)ray->end.y % (int)DIV;
+		wall.y = y;
+		color = *(unsigned int *)(arg->ea.addr + (wall.y * arg->ea.line_len
+				+ wall.x * (arg->ea.bpp / 8)));
+		// color = 0xff00ff;
+	}
 	return (color);
 }
 
@@ -80,23 +97,25 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 
 	y = -1;
 	j = 0;
+	
 	beta = arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2));
 	ray->size = ray->size * sin(atan(beta));
-	wall_size = (X_RES / ray->size) * (DIV * (arg->player.cam.dist / arg->player.cam.size));
-	// incr = wall_size / DIV;
+	if (ray->size != 0)
+		wall_size = (X_RES / ray->size) * (DIV * (arg->player.cam.dist / arg->player.cam.size));
 	incr = DIV / wall_size;
 	if (wall_size > Y_RES)
 	{
-		j = (wall_size / Y_RES);
-		incr = (DIV - j) / Y_RES;
+		j = (wall_size - Y_RES) / 2;
+		j =  (j / wall_size) * DIV;
+		// printf("x = %d incr = %f wall = %f beta = %f end = %f\n", x, incr, wall_size, beta, ray->end.x);
+		// printf(">j = %f\n", j);
 	}
-	pxl.x = x;
-	printf("incr = %f wall = %f %f\n", incr, wall_size, j);
+	pxl.x = x; 
 	while (++y < Y_RES)
 	{
 		pxl.y = y;
 		if (y < (Y_RES / 2) - (int)(wall_size / 2))
-			set_pixel_color(frame, pxl, arg->ground_color);
+			set_pixel_color(frame, pxl, arg->ground_color); 
 		else if (y > (Y_RES / 2) + (int)(wall_size / 2))
 			set_pixel_color(frame, pxl, arg->roof_color);
 		else

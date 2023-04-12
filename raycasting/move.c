@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 20:16:23 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/11 15:09:25 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/12 17:34:07 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,15 @@ void	add_movement(t_arg *arg, t_point move_vector)
 {
 	t_point	pos;
 	t_point	check;
-	t_point	check2;
+	t_point	check1;
 
 	pos.x = move_vector.x + arg->player.pos.x;
 	pos.y = move_vector.y + arg->player.pos.y;
 	check.x = move_vector.x + arg->player.cam.dir.x;
 	check.y = move_vector.y + arg->player.cam.dir.y;
-	if (!in_wall(check, arg->map))
+	check1.x = move_vector.x + arg->player.cam.start.x;
+	check1.y = move_vector.y + arg->player.cam.start.y;
+	if (!in_wall(check, arg->map) && !in_wall(check1, arg->map))
 	{
 		arg->player.pos.x += move_vector.x;
 		arg->player.cam.dir.x += move_vector.x;
