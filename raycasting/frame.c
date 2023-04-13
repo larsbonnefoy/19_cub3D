@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:57:17 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/10 14:28:10 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/12 18:29:20 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,44 +20,57 @@ static void	set_pixel_color(t_img *dst, t_pixel pxl, size_t	clr)
 	*(size_t *)pxl_addr = clr;
 }
 
-static unsigned int	set_color(char face)
+static unsigned int	set_color(t_arg *arg, t_ray *ray, char face, int y)
 {
 	unsigned int	color;
 
 	color = 0xff00ff;
 	if (face == 'W')
-		color = 0x0000ff;
+		color = color_from_texture(&arg->we, ray->end.y, y);
 	if (face == 'N')
-		color = 0x00ff00;
+		color = color_from_texture(&arg->no, ray->end.x, y);
 	if (face == 'S')
-		color = 0xff0000;
+		color = color_from_texture(&arg->so, ray->end.x, y);
 	if (face == 'E')
-		color = 0xff00ff;
+		color = color_from_texture(&arg->ea, ray->end.y, y);
 	return (color);
+}
+
+static void	set_wall_textures(t_arg *arg, t_ray *ray,
+	t_pixel pxl, t_point *j_incr)
+{
+	unsigned int	color;
+
+	color = set_color(arg, ray, ray->face[0], (int)j_incr->x);
+	set_pixel_color(arg->frame, pxl, color);
+	j_incr->x = (j_incr->x + j_incr->y);
 }
 
 static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 {
 	int				y;
-	// double			beta;
-	int				wall_size ;
+	t_point			j_incr;
+	double			wall_size ;
 	t_pixel			pxl;
-	unsigned int	color;
 
 	y = -1;
-	// beta = arg->player.cam.dist / sqrt(pow(arg->player.cam.dir.x - ray->start.x, 2) + pow(arg->player.cam.dir.y - ray->start.y, 2));
-	// ray->size = ray->size * sin(atan(beta));
-	wall_size = (X_RES / ray->size) * (1 * DIV);
+	j_incr.x = 0;
+	find_perpendicular_len(arg, ray);
+	wall_size = (X_RES / ray->size)
+		* (DIV * (arg->player.cam.dist / arg->player.cam.size));
+	j_incr.y = DIV / wall_size;
+	if (wall_size > Y_RES)
+		j_incr.x = (((wall_size - Y_RES) / 2) / wall_size) * DIV;
 	pxl.x = x;
 	while (++y < Y_RES)
 	{
 		pxl.y = y;
-		color = set_color(ray->face[0]);
-		set_pixel_color(frame, pxl, color);
-		if (y <= (Y_RES / 2) - wall_size / 2)
+		if (y < (Y_RES / 2) - (int)(wall_size / 2))
 			set_pixel_color(frame, pxl, arg->ground_color);
-		else if (y >= (Y_RES / 2) + wall_size / 2)
+		else if (y > (Y_RES / 2) + (int)(wall_size / 2))
 			set_pixel_color(frame, pxl, arg->roof_color);
+		else
+			set_wall_textures(arg, ray, pxl, &j_incr);
 	}
 }
 
@@ -67,9 +80,9 @@ void	put_walls(t_arg *arg, t_ray *rays)
 	t_point		ray_pos;
 
 	i = -1;
-	ray_pos = arg->player.pos;
 	while (++i < X_RES)
 	{
+		ray_pos = rays[i].start;
 		ray_len(ray_pos, &(rays[i]), arg->map);
 		draw_wall(arg, &(rays[i]), arg->frame, i);
 	}
