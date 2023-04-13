@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/13 11:04:49 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 13:02:30 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static t_arg	*arg_init(t_map *map, t_player player, t_ray *rays)
 int	next_frame(t_arg *arg)
 {
 	move(arg, 10, arg->horizontal_vector, arg->vertical_vector);
-	turn(arg, PI / 64, arg->moment_vector);
+	turn(arg, PI / 48, arg->moment_vector);
 	rays_gen(&(arg->player), arg->rays);
 	put_walls(arg, arg->rays);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
