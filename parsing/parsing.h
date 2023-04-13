@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:14:01 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/13 09:01:52 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 10:14:06 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define PARSING_H
 
 # include <fcntl.h>
+# include <stdio.h>
+# include <string.h>
+# include <errno.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include "../libft/libft.h"
@@ -35,9 +38,9 @@ typedef enum e_id
 typedef enum e_map_char
 {
 	EMPTY_SPACE = -1,
-    UNVALID, 
-    MAP_CHAR,
-    PLAYER_CHAR,
+	UNVALID,
+	MAP_CHAR,
+	PLAYER_CHAR,
 	NEW_LINE,
 	SPACE,
 	EMPTY,
@@ -62,8 +65,8 @@ typedef struct s_map
 	char			*ea;
 	unsigned int	floor_c;
 	unsigned int	ceiling_c;
-	int				F_C[3];
-	int				C_C[3];
+	int				f_c[3];
+	int				c_c[3];
 	char			**map;
 	int				width;
 	int				height;
@@ -77,19 +80,22 @@ typedef struct s_check_line
 	int		len_next;
 	int		len_prev;
 }	t_check_line;
+//parsing_utils.c
+int			file_check(int argc, char **argv);
+t_tmp_info	*init_tmp_info(t_tmp_info *info);
 
 //map_validation.c
-void	map_validation(t_map *map, t_tmp_info *tmp_info);
+void		map_validation(t_map *map, t_tmp_info *tmp_info);
 //map_validation_utils.c
-int		is_map_char(char c);
-int		is_map_line(char *line);
+int			is_map_char(char c);
+int			is_map_line(char *line);
 //check_id.c
-int		set_meta_data(t_tmp_info *tmp_info, t_map *map);
+int			set_meta_data(t_tmp_info *tmp_info, t_map *map);
 //check_id_utils.c
-int		is_rgb(char **color);
-char	*del_endl(char *s);
-void	free_tab(char **tab);
+int			is_rgb(char **color);
+char		*del_endl(char *s);
+void		free_tab(char **tab);
 //
-int		ft_error(char *s, int ret_val);
-char	*get_next_line(int fd);
+int			ft_error(char *s, int ret_val);
+char		*get_next_line(int fd);
 #endif
