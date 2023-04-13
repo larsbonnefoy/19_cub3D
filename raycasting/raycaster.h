@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/13 09:43:47 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 10:05:17 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 # define PI 3.141592653589793
 # define ALPHA 1.0471975512
-# define X_RES 2000
+# define X_RES 1000
 # define Y_RES 1000
 # define SLOPE 0
 # define B 1
