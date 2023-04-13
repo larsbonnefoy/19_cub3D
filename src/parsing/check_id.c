@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 15:37:40 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/13 10:15:39 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/13 14:23:23 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	set_meta_data(t_tmp_info *tmp_info, t_map *map)
 	else
 		ft_error("Duplicate Meta Data", 1);
 	tmp_tab = ft_split(tmp_info->line, ' ');
+	if (tmp_tab[1] == NULL || ft_strncmp(tmp_tab[1], "\n", 1) == 0)
+		ft_error("Unvalid Meta Data", 2);
 	if (tmp_tab[2] != NULL && ft_strncmp(tmp_tab[2], "\n", 1) != 0)
 		ft_error("Unvalid Meta Data", 2);
 	handle_id(id, tmp_tab, map);

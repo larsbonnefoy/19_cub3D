@@ -6,11 +6,13 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 14:22:14 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/13 10:07:22 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/13 14:37:28 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parsing.h"
+
+int	len_tab(char **tab);
 
 char	*del_endl(char *s)
 {
@@ -46,9 +48,11 @@ int	is_rgb(char **color)
 	char	*str_color;
 
 	i = 0;
+	if (len_tab(color) != 3)
+		return (0);
 	while (color[i])
 	{
-		if (i > 2)
+		if (i > 2 || ft_strncmp(color[i], "\n", 1) == 0)
 			return (0);
 		str_color = color[i];
 		j = 0;
@@ -61,4 +65,14 @@ int	is_rgb(char **color)
 		i++;
 	}
 	return (1);
+}
+
+int	len_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+		i++;
+	return (i);
 }
