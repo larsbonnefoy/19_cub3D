@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/13 09:19:08 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 09:43:47 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct s_img
 typedef struct s_arg
 {
 	char			**map;
+	t_map			*s_map;
 	t_player		player;
 	void			*mlx;
 	void			*mlx_win;

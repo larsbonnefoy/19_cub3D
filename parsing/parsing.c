@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/13 09:17:27 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 09:46:09 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,7 @@ int	main(int argc, char **argv)
 	parsing(argc, argv, &player, &map);
 	print_map(&map);
 	window(&map, player, rays);
-	free_parsing_structs(&map);
 	return (0);
-}
-
-void	free_parsing_structs(t_map *map)
-{
-	free(map->no);
-	free(map->so);
-	free(map->we);
-	free(map->ea);
-	free_tab(map->map);
 }
 
 void	parsing(int argc, char **argv, t_player *player, t_map *map)

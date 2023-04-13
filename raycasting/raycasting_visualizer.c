@@ -6,19 +6,12 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/13 09:16:54 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 09:27:50 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycaster.h"
 
-int	ft_exit_success(t_arg *arg)
-{
-	mlx_destroy_image(arg->mlx, arg->frame->img);
-	mlx_destroy_window(arg->mlx, arg->mlx_win);
-	exit(EXIT_SUCCESS);
-	return (1);
-}
 
 static	void	frame_init(t_arg *arg)
 {
@@ -36,6 +29,10 @@ void	arg_walls_init(t_arg *arg, t_map *map)
 	arg->so = textures_init(arg, map->so);
 	arg->we = textures_init(arg, map->we);
 	arg->ea = textures_init(arg, map->ea);
+	free(map->no);
+	free(map->so);
+	free(map->we);
+	free(map->ea);
 }
 
 static t_arg	*arg_init(t_map *map, t_player player, t_ray *rays)
@@ -63,6 +60,7 @@ static t_arg	*arg_init(t_map *map, t_player player, t_ray *rays)
 	arg->moment_vector = 0;
 	arg->ground_color = map->floor_c;
 	arg->roof_color = map->ceiling_c;
+	arg->s_map = map;
 	return (arg);
 }
 
