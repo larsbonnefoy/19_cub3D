@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
-#include <stdio.h>
+#include "../../includes/parsing.h"
 
 char	*del_endl(char *s)
 {

@@ -6,29 +6,18 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/13 10:14:24 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/13 11:15:35 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
-#include "../raycasting/raycaster.h"
+#include "../../includes/parsing.h"
+#include "../../includes/raycaster.h"
 
 int			set_map(t_tmp_info *tmp_info, t_map *map);
 int			ids_done(int check_array[NB_ID]);
 void		set_data(t_map *map, t_tmp_info *info);
 void		parsing(int argc, char **argv, t_player *player, t_map *map);
 void		init_player(t_player *player, t_tmp_info *tmp_info);
-
-int	main(int argc, char **argv)
-{
-	t_map		map;
-	t_player	player;
-	t_ray		rays[X_RES];
-
-	parsing(argc, argv, &player, &map);
-	window(&map, player, rays);
-	return (0);
-}
 
 void	parsing(int argc, char **argv, t_player *player, t_map *map)
 {
