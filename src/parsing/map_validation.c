@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
-#include <stdio.h>
+#include "../../includes/parsing.h"
 
 int		valid_pos(int curr_x, int curr_y, t_check_line *s_line, t_map *map);
 void	set_player_info(t_tmp_info *info, int x_pos, int y_pos, char *line);

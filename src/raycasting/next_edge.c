@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "raycaster.h"
+#include "../../includes/raycaster.h"
 
 static void	set_face(t_ray *ray, double dist_wall_v, double dist_wall_h)
 {

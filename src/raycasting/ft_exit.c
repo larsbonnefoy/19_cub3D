@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "raycaster.h"
+#include "../../includes/raycaster.h"
 
 int	ft_exit_success(t_arg *arg)
 {

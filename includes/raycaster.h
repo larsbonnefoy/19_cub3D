@@ -12,7 +12,7 @@
 
 #ifndef RAYCASTER_H
 # define RAYCASTER_H
-# include "../parsing/parsing.h"
+# include "../includes/parsing.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <limits.h>

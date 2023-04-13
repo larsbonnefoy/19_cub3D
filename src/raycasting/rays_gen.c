@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "raycaster.h"
+#include "../../includes/raycaster.h"
 
 void	rays_gen(t_player *player, t_ray rays[X_RES])
 {

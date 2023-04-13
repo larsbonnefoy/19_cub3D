@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "raycaster.h"
+#include "../../includes/raycaster.h"
 
 static t_point	movement(t_point vect_cam, double speed, int x, int y)
 {

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "raycaster.h"
+#include "../../includes/raycaster.h"
 
 static t_point	rotate_point(t_point point, t_point center,
 	double ccos, double csin)

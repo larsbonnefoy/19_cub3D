@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../../includes/parsing.h"
 
 int		get_id(char *s);
 int		handle_id(int id, char **tab, t_map *map);

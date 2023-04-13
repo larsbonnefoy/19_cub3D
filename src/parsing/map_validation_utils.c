@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../../includes/parsing.h"
 
 int	is_map_char(char c)
 {

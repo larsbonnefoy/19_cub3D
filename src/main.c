@@ -10,8 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/parsing.h"
 #include "../includes/raycaster.h"
+#include "../includes/parsing.h"
+
+void	parsing(int argc, char **argv, t_player *player, t_map *map);
 
 int	main(int argc, char **argv)
 {

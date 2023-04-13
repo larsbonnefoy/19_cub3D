@@ -19,7 +19,7 @@
 # include <errno.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include "../libft/libft.h"
+# include "../src/libft/libft.h"
 
 # define NB_ID 6
 
@@ -80,10 +80,10 @@ typedef struct s_check_line
 	int		len_next;
 	int		len_prev;
 }	t_check_line;
+
 //parsing_utils.c
 int			file_check(int argc, char **argv);
 t_tmp_info	*init_tmp_info(t_tmp_info *info);
-
 //map_validation.c
 void		map_validation(t_map *map, t_tmp_info *tmp_info);
 //map_validation_utils.c

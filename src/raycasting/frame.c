@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "raycaster.h"
+#include "../../includes/raycaster.h"
 
 static void	set_pixel_color(t_img *dst, t_pixel pxl, size_t	clr)
 {

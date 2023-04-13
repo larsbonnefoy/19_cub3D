@@ -12,11 +12,13 @@
 
 NAME = cub3D 
 
+FILE_MAIN = main.c
+
 FILES_PARSING = parsing.c parsing_utils.c error.c check_id.c check_id_utils.c map_validation.c map_validation_utils.c\
 
 FILES_RAYCASTING = raycasting_visualizer.c next_edge.c in_wall.c ray_len.c rays_gen.c turn.c frame.c move.c key_management.c texture.c set_dir.c ft_exit.c\
 
-SRCS = $(addprefix parsing/, $(FILES_PARSING)) $(addprefix raycasting/, $(FILES_RAYCASTING))
+SRCS = $(addprefix src/parsing/, $(FILES_PARSING)) $(addprefix src/raycasting/, $(FILES_RAYCASTING)) $(addprefix src/, $(FILE_MAIN))
 
 OBJ = $(SRCS:.c=.o)
 
@@ -26,11 +28,11 @@ FFLAGS = -fsanitize=address -g
 
 ###LIB INCLUDES###
 
-LIBFT_DIR = libft
+LIBFT_DIR = src/libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-GNL_DIR = gnl
+GNL_DIR = src/gnl
 
 GNL = $(GNL_DIR)/gnl.a
 
