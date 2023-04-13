@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 09:53:18 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/13 10:16:38 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/13 12:52:42 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,18 @@ int	valid_extension(int argc, char **argv)
 	if (ft_strncmp(&argv[1][len - 4], ".cub", 4) != 0)
 		ft_error("Not a .cub map file", 1);
 	return (0);
+}
+
+int	ids_done(int check_array[NB_ID])
+{
+	int	i;
+
+	i = 0;
+	while (i < NB_ID)
+	{
+		if (check_array[i] == 0)
+			return (0);
+		i++;
+	}
+	return (1);
 }

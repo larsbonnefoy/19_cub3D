@@ -1,7 +1,7 @@
-NO ../textures/Wall1.xpm
-SO ../textures/Wall2.xpm
-WE ../textures/Wall3.xpm
-EA ../textures/Wall5.xpm
+NO ./textures/Wall1.xpm
+SO ./textures/Wall2.xpm
+WE ./textures/Wall3.xpm
+EA ./textures/Wall4.xpm
 
 F 220,100,0
 C 225,30,0

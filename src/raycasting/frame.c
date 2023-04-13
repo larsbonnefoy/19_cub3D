@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:57:17 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/12 18:29:20 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 12:04:52 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ static void	draw_wall(t_arg *arg, t_ray *ray, t_img *frame, int x)
 	{
 		pxl.y = y;
 		if (y < (Y_RES / 2) - (int)(wall_size / 2))
-			set_pixel_color(frame, pxl, arg->ground_color);
-		else if (y > (Y_RES / 2) + (int)(wall_size / 2))
 			set_pixel_color(frame, pxl, arg->roof_color);
+		else if (y > (Y_RES / 2) + (int)(wall_size / 2))
+			set_pixel_color(frame, pxl, arg->ground_color);
 		else
 			set_wall_textures(arg, ray, pxl, &j_incr);
 	}

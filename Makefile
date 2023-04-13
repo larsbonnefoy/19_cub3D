@@ -6,7 +6,7 @@
 #    By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/11 13:10:56 by lbonnefo          #+#    #+#              #
-#    Updated: 2023/04/13 10:26:18 by hdelmas          ###   ########.fr        #
+#    Updated: 2023/04/13 12:56:01 by lbonnefo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,9 +46,9 @@ $(NAME): $(OBJ)
 		@make -C $(LIBFT_DIR)
 		@make -C $(GNL_DIR)
 		@make -C $(MLX_DIR)
-		@cc $(CFLAGS) $(FFLAGS) -g $(OBJ) $(LIBFT) $(GNL) $(MLX) -o $(NAME)
+		@cc $(CFLAGS) -g $(OBJ) $(LIBFT) $(GNL) $(MLX) -o $(NAME)
 .c.o:
-		@cc $(CFLAGS) $(FFLAGS) -c $< -o $(<:.c=.o)
+		@cc $(CFLAGS) -c $< -o $(<:.c=.o)
 
 all: $(NAME)
 
@@ -66,4 +66,3 @@ fclean: clean
 re :	fclean $(NAME)
 	
 .PHONY: all clean fclean re 
-

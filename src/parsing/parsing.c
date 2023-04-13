@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:13:20 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/13 11:15:35 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/13 12:52:27 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 #include "../../includes/raycaster.h"
 
 int			set_map(t_tmp_info *tmp_info, t_map *map);
-int			ids_done(int check_array[NB_ID]);
 void		set_data(t_map *map, t_tmp_info *info);
-void		parsing(int argc, char **argv, t_player *player, t_map *map);
 void		init_player(t_player *player, t_tmp_info *tmp_info);
+void		split_map(t_map *map, t_tmp_info *tmp_info, t_player *player);
 
 void	parsing(int argc, char **argv, t_player *player, t_map *map)
 {
@@ -34,17 +33,26 @@ void	parsing(int argc, char **argv, t_player *player, t_map *map)
 	{
 		tmp_info->line = get_next_line(fd);
 		if (!tmp_info->line)
+		{
+			if (!ids_done(tmp_info->check_id_array))
+				ft_error("Unvalid map", 1);
 			break ;
+		}
 		set_data(map, tmp_info);
 		free(tmp_info->line);
 	}
+	split_map(map, tmp_info, player);
+	free(tmp_info->str_map);
+	free(tmp_info);
+}
+
+void	split_map(t_map *map, t_tmp_info *tmp_info, t_player *player)
+{
 	map->map = ft_split(tmp_info->str_map, '\n');
 	map_validation(map, tmp_info);
 	if (tmp_info->dir_player == '0')
 		ft_error("No player on the map", 1);
 	init_player(player, tmp_info);
-	free(tmp_info->str_map);
-	free(tmp_info);
 }
 
 void	set_data(t_map *map, t_tmp_info *tmp_info)
@@ -79,20 +87,6 @@ int	set_map(t_tmp_info *tmp_info, t_map *map)
 		tmp_info->str_map = ft_strjoinf(tmp_info->str_map, tmp_info->line);
 		if ((int)ft_strlen(tmp_info->line) - 1 > map->width)
 			map->width = ft_strlen(tmp_info->line) - 1;
-	}
-	return (1);
-}
-
-int	ids_done(int check_array[NB_ID])
-{
-	int	i;
-
-	i = 0;
-	while (i < NB_ID)
-	{
-		if (check_array[i] == 0)
-			return (0);
-		i++;
 	}
 	return (1);
 }

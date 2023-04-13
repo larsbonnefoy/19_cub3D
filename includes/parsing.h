@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:14:01 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/04/13 10:14:06 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/04/13 12:52:18 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct s_check_line
 //parsing_utils.c
 int			file_check(int argc, char **argv);
 t_tmp_info	*init_tmp_info(t_tmp_info *info);
+int			ids_done(int check_array[NB_ID]);
 //map_validation.c
 void		map_validation(t_map *map, t_tmp_info *tmp_info);
 //map_validation_utils.c
