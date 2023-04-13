@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/13 10:05:17 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 10:21:01 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,4 +143,5 @@ void			arg_walls_init(t_arg *arg, t_map *map);
 void			set_dir(t_player *player, char dir);
 unsigned int	color_from_texture(t_img *texture, int x, int y);
 t_img			textures_init(t_arg *arg, char *path);
+int				ft_exit_error(t_arg *arg);
 #endif

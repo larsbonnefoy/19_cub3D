@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 18:28:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/13 09:16:16 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 10:23:50 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,17 @@ t_img	textures_init(t_arg *arg, char *path)
 	sprite.img = mlx_xpm_file_to_image(arg->mlx, sprite.path, &sprite.width,
 			&sprite.height);
 	if (!sprite.img)
-		exit(12);
+	{
+		write(2, "Texture error\n", 14);
+		ft_exit_error(arg);
+	}
 	sprite.addr = mlx_get_data_addr(sprite.img, &sprite.bpp,
 			&sprite.line_len, &sprite.endian);
 	if (!sprite.addr)
-		exit(12);
+	{
+		write(2, "Texture error\n", 14);
+		ft_exit_error(arg);
+	}
 	return (sprite);
 }
 

@@ -6,25 +6,30 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/13 10:03:03 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 11:04:49 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycaster.h"
 
-
 static	void	frame_init(t_arg *arg)
 {
 	arg->frame->img = mlx_new_image(arg->mlx, X_RES, Y_RES);
-	if (!arg->frame->addr)
-		exit(EXIT_FAILURE);
+	if (!arg->frame->img)
+		ft_exit_error(arg);
 	arg->frame->addr = mlx_get_data_addr(arg->frame->img, &arg->frame->bpp,
 			&arg->frame->line_len, &arg->frame->endian);
+	if (!arg->frame->addr)
+		ft_exit_error(arg);
 	arg->frame->path = NULL;
 }
 
 void	arg_walls_init(t_arg *arg, t_map *map)
 {
+	arg->no.img = NULL;
+	arg->so.img = NULL;
+	arg->we.img = NULL;
+	arg->ea.img = NULL;
 	arg->no = textures_init(arg, map->no);
 	arg->so = textures_init(arg, map->so);
 	arg->we = textures_init(arg, map->we);
@@ -41,16 +46,16 @@ static t_arg	*arg_init(t_map *map, t_player player, t_ray *rays)
 
 	arg = malloc(sizeof(t_arg));
 	if (!arg)
-		exit(EXIT_FAILURE);
+		ft_exit_error(arg);
 	arg->mlx = mlx_init();
 	if (!arg->mlx)
-		exit(EXIT_FAILURE);
+		ft_exit_error(arg);
 	arg->mlx_win = mlx_new_window(arg->mlx, X_RES, Y_RES, "raycaster");
 	if (!arg->mlx_win)
-		exit(EXIT_FAILURE);
+		ft_exit_error(arg);
 	arg->frame = malloc(sizeof(t_img));
 	if (!arg->frame)
-		exit(EXIT_FAILURE);
+		ft_exit_error(arg);
 	frame_init(arg);
 	arg->map = map->map;
 	arg->player = player;
