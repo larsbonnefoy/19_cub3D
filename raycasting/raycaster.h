@@ -6,12 +6,13 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:14:51 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/12 18:30:23 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 10:05:17 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RAYCASTER_H
 # define RAYCASTER_H
+# include "../parsing/parsing.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <limits.h>
@@ -19,7 +20,7 @@
 
 # define PI 3.141592653589793
 # define ALPHA 1.0471975512
-# define X_RES 2000
+# define X_RES 1000
 # define Y_RES 1000
 # define SLOPE 0
 # define B 1
@@ -108,6 +109,7 @@ typedef struct s_img
 typedef struct s_arg
 {
 	char			**map;
+	t_map			*s_map;
 	t_player		player;
 	void			*mlx;
 	void			*mlx_win;
@@ -126,7 +128,7 @@ typedef struct s_arg
 
 void			rays_gen(t_player *player, t_ray rays[X_RES]);
 t_point			goto_next_edge(t_point start, t_ray *ray);
-void			window(char **map, t_player player, t_ray rays[X_RES]);
+void			window(t_map *map, t_player player, t_ray rays[X_RES]);
 int				in_wall(t_point pos, char **map);
 void			ray_len(t_point start, t_ray *ray, char **map);
 void			find_perpendicular_len(t_arg *arg, t_ray *ray);
@@ -137,7 +139,8 @@ int				pressed(int keycode, t_arg *arg);
 int				unpressed(int keycode, t_arg *arg);
 int				unfocused(int keycode, t_arg *arg);
 int				ft_exit_success(t_arg *arg);
-void			arg_walls_init(t_arg *arg);
+void			arg_walls_init(t_arg *arg, t_map *map);
 void			set_dir(t_player *player, char dir);
 unsigned int	color_from_texture(t_img *texture, int x, int y);
+t_img			textures_init(t_arg *arg, char *path);
 #endif

@@ -6,19 +6,12 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/12 18:31:55 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 10:03:03 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycaster.h"
 
-int	ft_exit_success(t_arg *arg)
-{
-	mlx_destroy_image(arg->mlx, arg->frame->img);
-	mlx_destroy_window(arg->mlx, arg->mlx_win);
-	exit(EXIT_SUCCESS);
-	return (1);
-}
 
 static	void	frame_init(t_arg *arg)
 {
@@ -30,7 +23,19 @@ static	void	frame_init(t_arg *arg)
 	arg->frame->path = NULL;
 }
 
-static t_arg	*arg_init(char **map, t_player player, t_ray *rays)
+void	arg_walls_init(t_arg *arg, t_map *map)
+{
+	arg->no = textures_init(arg, map->no);
+	arg->so = textures_init(arg, map->so);
+	arg->we = textures_init(arg, map->we);
+	arg->ea = textures_init(arg, map->ea);
+	free(map->no);
+	free(map->so);
+	free(map->we);
+	free(map->ea);
+}
+
+static t_arg	*arg_init(t_map *map, t_player player, t_ray *rays)
 {
 	t_arg		*arg;
 
@@ -47,33 +52,34 @@ static t_arg	*arg_init(char **map, t_player player, t_ray *rays)
 	if (!arg->frame)
 		exit(EXIT_FAILURE);
 	frame_init(arg);
-	arg->map = map;
+	arg->map = map->map;
 	arg->player = player;
 	arg->rays = rays;
 	arg->horizontal_vector = 0;
 	arg->vertical_vector = 0;
 	arg->moment_vector = 0;
-	arg->ground_color = 0xece75f;
-	arg->roof_color = 0x3CB371;
+	arg->ground_color = map->floor_c;
+	arg->roof_color = map->ceiling_c;
+	arg->s_map = map;
 	return (arg);
 }
 
 int	next_frame(t_arg *arg)
 {
 	move(arg, 10, arg->horizontal_vector, arg->vertical_vector);
-	turn(arg, PI / 48, arg->moment_vector);
+	turn(arg, PI / 64, arg->moment_vector);
 	rays_gen(&(arg->player), arg->rays);
 	put_walls(arg, arg->rays);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	return (0);
 }
 
-void	window(char **map, t_player player, t_ray *rays)
+void	window(t_map *map, t_player player, t_ray *rays)
 {
 	t_arg		*arg;
 
 	arg = arg_init(map, player, rays);
-	arg_walls_init(arg);
+	arg_walls_init(arg, map);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	mlx_hook(arg->mlx_win, 17, 0, ft_exit_success, arg);
 	mlx_hook(arg->mlx_win, 2, 1L << 0, pressed, arg);
