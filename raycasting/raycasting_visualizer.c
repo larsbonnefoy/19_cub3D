@@ -6,7 +6,7 @@
 /*   By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:09:31 by hdelmas           #+#    #+#             */
-/*   Updated: 2023/04/12 18:31:55 by hdelmas          ###   ########.fr       */
+/*   Updated: 2023/04/13 09:16:54 by hdelmas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,15 @@ static	void	frame_init(t_arg *arg)
 	arg->frame->path = NULL;
 }
 
-static t_arg	*arg_init(char **map, t_player player, t_ray *rays)
+void	arg_walls_init(t_arg *arg, t_map *map)
+{
+	arg->no = textures_init(arg, map->no);
+	arg->so = textures_init(arg, map->so);
+	arg->we = textures_init(arg, map->we);
+	arg->ea = textures_init(arg, map->ea);
+}
+
+static t_arg	*arg_init(t_map *map, t_player player, t_ray *rays)
 {
 	t_arg		*arg;
 
@@ -47,14 +55,14 @@ static t_arg	*arg_init(char **map, t_player player, t_ray *rays)
 	if (!arg->frame)
 		exit(EXIT_FAILURE);
 	frame_init(arg);
-	arg->map = map;
+	arg->map = map->map;
 	arg->player = player;
 	arg->rays = rays;
 	arg->horizontal_vector = 0;
 	arg->vertical_vector = 0;
 	arg->moment_vector = 0;
-	arg->ground_color = 0xece75f;
-	arg->roof_color = 0x3CB371;
+	arg->ground_color = map->floor_c;
+	arg->roof_color = map->ceiling_c;
 	return (arg);
 }
 
@@ -68,12 +76,12 @@ int	next_frame(t_arg *arg)
 	return (0);
 }
 
-void	window(char **map, t_player player, t_ray *rays)
+void	window(t_map *map, t_player player, t_ray *rays)
 {
 	t_arg		*arg;
 
 	arg = arg_init(map, player, rays);
-	arg_walls_init(arg);
+	arg_walls_init(arg, map);
 	mlx_put_image_to_window(arg->mlx, arg->mlx_win, arg->frame->img, 0, 0);
 	mlx_hook(arg->mlx_win, 17, 0, ft_exit_success, arg);
 	mlx_hook(arg->mlx_win, 2, 1L << 0, pressed, arg);

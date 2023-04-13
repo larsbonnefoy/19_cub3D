@@ -6,7 +6,7 @@
 #    By: hdelmas <hdelmas@student.s19.be>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/11 13:10:56 by lbonnefo          #+#    #+#              #
-#    Updated: 2023/04/13 08:38:43 by hdelmas          ###   ########.fr        #
+#    Updated: 2023/04/13 08:47:53 by hdelmas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = cub3D
 
 FILES_PARSING = parsing.c error.c check_id.c check_id_utils.c map_validation.c map_validation_utils.c\
 
-FILES_RAYCASTING = raycasting_visualizer.c next_edge.c in_wall.c ray_len.c rays_gen.c turn.c frame.c move.c key_management.c texture.c\
+FILES_RAYCASTING = raycasting_visualizer.c next_edge.c in_wall.c ray_len.c rays_gen.c turn.c frame.c move.c key_management.c texture.c set_dir.c\
 
 SRCS = $(addprefix parsing/, $(FILES_PARSING)) $(addprefix raycasting/, $(FILES_RAYCASTING))
 
